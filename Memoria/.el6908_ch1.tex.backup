@@ -1,0 +1,91 @@
+\chapter{Contexto - Objetivos}
+
+\section{Fundamentación y objetivos generales}
+
+Esta memoria se enmarca en el desarrollo del proyecto SUCHAI que consiste en la implementación, lanzamiento y operación de un pico-satélite Cubesat, siendo esta la primera aproximación en esta materia para la universidad y el país. Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de dar inteligencia y operatividad al satélite durante todo su tiempo de vida útil en el espacio. En el caso de un pico-satélite se tiene el desafío de dotar de todas la funcionalidades estándar de un satélite en un sistema computacional de recursos extremadamente limitados, estamos hablando de sistemas embebidos que utilizan microcontroladores de baja potencia y capacidad de cómputo como microcontroladores PIC24 o PIC18.
+
+El objetivo de este trabajo es el diseño, desarrollo e implementación del \textit{software} que gobierna el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de hardware hasta la aplicación final para el control de satélite. Esta arquitectura debe cumplir con requerimientos de calidad de \textit{software} como modularidad, expansibilidad y facilidad de mantenimiento estando adaptada en específico a sistemas embebidos que emplean microcontroladores de gama media.
+
+La implementación se llevará a cabo en específico para el satélite SUCHAI y busca proveer la funcionalidad básica de este sistema que incluye la interacción de un computador a bordo, un sistema de control de energía y un sistema de comunicaciones. De esta manera el \textit{software} de control se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
+
+\section{Bibliografía y Estado del Arte}
+\subsection{Satélites}
+\subsubsection{Pico-satélites}
+\subsection{Satélites tipo Cubesat}
+\paragraph{Estándar}
+\paragraph{Aplicaciones}
+
+\subsection{Microcontroladores}
+\subsubsection{Microcontroladores PIC}
+\paragraph{Descripción}
+\paragraph{Arquitectura}
+\paragraph{Aplicaciones}
+
+\section{Objetivos específicos}
+Los objetivos específicos del proyecto se enumeran a continuación
+
+\begin{itemize}
+ \item Diseñar una arquitectura de \textit{software} para el sistema de control del satélite
+ \item Implementar controladores de hardware para el microcontrolador
+ \item Implementar controladores de periféricos principales (Transceiver, EPS y RTC)
+ \item Integrar un sistema operativo de tiempo real multitarea como sistema embebido 
+ \item Implementar el flujo principal de la arquitectura del \textit{software} de control del satélite
+ \item Integrar sistema de comunicaciones al \textit{software} de control
+ \item Integrar sistema de energía al \textit{software} de control
+ \item Pruebas del sistema integrado
+\end{itemize}
+
+El listado de objetivos presenta un orden temporal en la ejecución de estas tareas puesto que objetivo es dependiente del cumplimiento de los objetivos anteriores. El trabajo se puede considerar terminado cuando se ha probado la implementación e integración del \textit{software} con los módulos de comunicaciones y energía obteniendo un sistema satelital con las mínimas funcionalidades.
+
+\section{Antecedentes generales}
+\paragraph{Carrera satelital chilena}
+
+\section{Antecedentes específicos}
+\paragraph{SUCHAI proposal}
+\paragraph{Investigaciones asociadas}
+\paragraph{Lagmo}
+
+\section{Hipótesis de trabajo y metodología}
+
+\section{Plan de trabajo}
+
+
+\section{Infraestructura disponible}
+\subsection{Instalaciones}
+El proyecto se desarrolla en las dependencias de la facultad, específicamente el laboratorio SPEL (\textit{Spacial and Planetary Exploration Laboratory}), tercer piso del edificio de Electrotecnologías. Este laboratorio alberga proyectos relacionados el desarrollo de radiosondas para monitoreo de condiciones climáticas, radares y proyectos aeroespaciales como el SUCHAI.
+
+\subsection{Hardware}
+\paragraph{Cubesat Kit}
+Parte fundamental del hardware disponible corresponde a un Cubesat Kit adquirido a la compañía Pumpkins. El kit incluye la estructura de un Cubesat de una unidad con un microcontrolador PIC24F256GA110; una placa de desarrollo para el mismo sistema; y herramientas de programación y \textit{debug} para el microcontrolador.
+
+%···················· FIGURE ····················
+\begin{figure}[!h] 
+\centering \includegraphics[scale=1.3]{img/cubesatkit.jpg}
+\caption{Cubesat Kit} \label{cubesatkit}
+\end{figure}
+%················································
+
+\paragraph{Transceiver}
+Se cuenta con un sistema de comunicaciones que consta de un \textit{transceiver} satelital FSK para la banda de 430MHz de la empresa ALLSPACE adaptado al estándar Cubesat. Es el sistema encargado de recibir los telecomandos desde tierra y transmitir hacia la estación terrena la telemetría generada por el satélite.\\
+
+Se cuenta además con una estación terrena dotada con un sistema de radio en la banda de 430MHz, incluyendo antena y control de posición de la misma; un TNC para digitalizar la señal de radio; y un servidor para controlar los equipos de forma remota.
+
+\paragraph{EPS}
+Se adquiere un sistema de control de energía para el satélite que incluye baterías de litio, panales solares y un sistema de control para medir variables importantes de energía y ajustar su funcionamiento.
+
+\paragraph{Equipos de medición}
+El laboratorio cuenta con un osciloscopios; analizadores de espectro; generadores de señales; cajas limpias, para pruebas que requieren entornos descontaminados; entre otros.
+
+\subsection{Software}
+La mayor parte del software utilizado por el proyecto es de código libre o gratuito. Se desataca la amplia utilización de sistemas Linux para el desarrollo de este trabajo.
+
+\subsubsection{Entorno de desarrollo}
+Para el desarrollo de la aplicación para el microcontrolador PIC24F se utiliza el entorno de desarrollo MPLABX de Microchip, que es gratuita; se utiliza el compilador MPLAB C30, en versión lite, gratuito; se tiene un sistema de control de versiones mediante SVN.
+
+\subsubsection{Sistema operativo}
+Para dotar de funcionalidades avanzadas de multitarea al microcontrolador se ha utilizado el sistema operativo de tiempo real FreeRTOS de código libre y gratuito; adaptado especialmente a microcontroladores de gama media como el utilizado en el proyecto.
+
+\section{Condiciones contractuales}
+El desarrollo de este trabajo se enmarca dentro del proyecto SUCHAI el cual es patrocinado y financiado por la Facultad de Ciencias Físicas y Matemáticas de la Universidad de Chile.
+
+Parte del trabajo realizado para esta memoria ha sido considerado en el desarrollo de los cursos Seminario de Diseño e Innovación Tecnológica I, II y III (ME4030, EL5030, EL6030).

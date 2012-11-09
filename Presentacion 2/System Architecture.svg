@@ -1,0 +1,2306 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1095.8846"
+   height="575.71344"
+   version="1.2"
+   id="svg2"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="System Architecture.svg">
+  <metadata
+     id="metadata414">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Qt Svg Document</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1280"
+     inkscape:window-height="747"
+     id="namedview412"
+     showgrid="false"
+     fit-margin-top="1"
+     fit-margin-left="1"
+     fit-margin-right="1"
+     fit-margin-bottom="1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="0.90028971"
+     inkscape:cx="421.0477"
+     inkscape:cy="276.93734"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g6949" />
+  <title
+     id="title4">Qt Svg Document</title>
+  <desc
+     id="desc6">Generated with Qt</desc>
+  <defs
+     id="defs8">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible">
+      <path
+         id="path4302"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Tail"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Tail"
+       style="overflow:visible">
+      <g
+         id="g4323"
+         transform="scale(-1.2,-1.2)">
+        <path
+           id="path4325"
+           d="M -3.8048674,-3.9585227 0.54352094,0"
+           style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:round;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4327"
+           d="M -1.2866832,-3.9585227 3.0617053,0"
+           style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:round;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4329"
+           d="M 1.3053582,-3.9585227 5.6537466,0"
+           style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:round;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4331"
+           d="M -3.8048674,4.1775838 0.54352094,0.21974226"
+           style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:round;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4333"
+           d="M -1.2866832,4.1775838 3.0617053,0.21974226"
+           style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:round;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4335"
+           d="M 1.3053582,4.1775838 5.6537466,0.21974226"
+           style="fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:round;marker-start:none;marker-end:none"
+           inkscape:connector-curvature="0" />
+      </g>
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart"
+       style="overflow:visible">
+      <path
+         id="path4293"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path4296"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <g
+     id="g10"
+     transform="translate(31.092496,66.365413)"
+     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;display:inline">
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g12"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;stroke-dasharray:4, 2;stroke-dashoffset:0;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,410 220,410 "
+         id="polyline14"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="220,410 220,330 "
+         id="polyline16"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="220,330 260,330 "
+         id="polyline18"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g20"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="400,190 400,230 "
+         id="polyline22"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="400,230 440,230 "
+         id="polyline24"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,230 440,270 "
+         id="polyline26"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="480,190 480,230 "
+         id="polyline28"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="280,350 280,400 "
+         id="polyline30"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="480,230 440,230 "
+         id="polyline32"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,230 440,270 "
+         id="polyline34"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="640,190 640,230 "
+         id="polyline36"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="640,230 440,230 "
+         id="polyline38"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,230 440,270 "
+         id="polyline40"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="410,450 440,450 "
+         id="polyline42"
+         style="fill:none"
+         transform="translate(0,-12)" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="240,190 240,230 "
+         id="polyline44"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="240,230 440,230 "
+         id="polyline46"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,230 440,270 "
+         id="polyline48"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,330 249,323 "
+         id="polyline50"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,330 249,337 "
+         id="polyline52"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g54"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#6c6969;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 110,100 650,0 0,100 -650,0 0,-100"
+         id="path56"
+         inkscape:connector-curvature="0"
+         style="stroke:#6c6969;stroke-opacity:1" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g58"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 447,259 "
+         id="polyline60"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="280,400 287,389 "
+         id="polyline62"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="280,400 273,389 "
+         id="polyline64"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 433,259 "
+         id="polyline66"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 447,259 "
+         id="polyline68"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 433,259 "
+         id="polyline70"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 447,259 "
+         id="polyline72"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 433,259 "
+         id="polyline74"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 447,259 "
+         id="polyline76"
+         style="fill:none" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="440,270 433,259 "
+         id="polyline78"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g80"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="256.5"
+         y="223"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text82"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">New Commands</text>
+    </g>
+    <g
+       transform="translate(-30,-50)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g84"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <g
+         id="g6880" />
+      <text
+         xml:space="preserve"
+         x="212.10364"
+         y="378.28745"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text86"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Next command</text>
+      <text
+         xml:space="preserve"
+         x="325.14401"
+         y="424.91922"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text86-2"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Call</text>
+      <text
+         xml:space="preserve"
+         x="337.22162"
+         y="466.51434"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text86-2-7"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Ret</text>
+      <text
+         xml:space="preserve"
+         style="font-size:8.01903343px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+         x="348.12509"
+         y="20.484484"
+         id="text6527-8-3"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan6529-3-2"
+           x="348.12509"
+           y="20.484484" /></text>
+    </g>
+    <g
+       inkscape:groupmode="layer"
+       id="layer3"
+       inkscape:label="Frame"
+       style="display:inline">
+      <g
+         transform="matrix(1.0121966,0,0,1.004729,-37.105426,-51.64605)"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;display:inline;font-family:DejaVu Sans"
+         id="g6978">
+        <g
+           id="g6949">
+          <g
+             id="g7244">
+            <rect
+               y="-12.959059"
+               x="7.4826407"
+               height="569.81445"
+               width="1079.6503"
+               id="rect6493"
+               style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1.00212169;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;display:inline;font-family:DejaVu Sans" />
+            <g
+               id="g7213">
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6487"
+                 y="7.8169694"
+                 x="139.36627"
+                 style="font-size:18.10755348px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="7.8169694"
+                   x="139.36627"
+                   id="tspan6489"
+                   sodipodi:role="line">Flight Software Arquitechture</tspan><tspan
+                   id="tspan6491"
+                   y="30.451412"
+                   x="139.36627"
+                   sodipodi:role="line" /></text>
+              <path
+                 inkscape:connector-curvature="0"
+                 id="path6499"
+                 d="m 136.29069,-13.163366 0,62.681356"
+                 style="fill:none;stroke:#000000;stroke-width:0.97921503px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+              <path
+                 transform="translate(7.48158,43.787472)"
+                 inkscape:connector-curvature="0"
+                 id="path6501"
+                 d="m 128.41639,-30.240471 296.10386,0"
+                 style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+              <path
+                 transform="translate(7.48158,43.787472)"
+                 inkscape:connector-curvature="0"
+                 id="path6503"
+                 d="m 128.41639,-17.673729 296.10386,0"
+                 style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+              <path
+                 inkscape:connector-curvature="0"
+                 id="path6505"
+                 d="m 136.29069,37.109642 296.0346,0"
+                 style="fill:none;stroke:#000000;stroke-width:1.00187814px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+              <path
+                 inkscape:connector-curvature="0"
+                 id="path6507"
+                 d="m 244.62746,13.142589 0,12.495977 0.55538,0"
+                 style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+              <path
+                 inkscape:connector-curvature="0"
+                 id="path6507-6"
+                 d="m 347.37217,13.281434 0,12.495977 0.55538,0"
+                 style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:DejaVu Sans" />
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6527"
+                 y="20.468571"
+                 x="139.14331"
+                 style="font-size:8.01903343px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="20.468571"
+                   x="139.14331"
+                   id="tspan6529"
+                   sodipodi:role="line">Date:</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6527-8"
+                 y="20.61783"
+                 x="246.1192"
+                 style="font-size:8.01903343px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="20.61783"
+                   x="246.1192"
+                   id="tspan6529-3"
+                   sodipodi:role="line">Revision:</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6527-5"
+                 y="33.113808"
+                 x="138.65379"
+                 style="font-size:8.01903343px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="33.113808"
+                   x="138.65379"
+                   id="tspan6529-4"
+                   sodipodi:role="line">Autor:</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6527-5-3"
+                 y="44.74865"
+                 x="137.83824"
+                 style="font-size:8.01903343px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   id="tspan6615"
+                   y="44.74865"
+                   x="137.83824"
+                   sodipodi:role="line">Revisor:</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6619"
+                 y="23.891191"
+                 x="182.01967"
+                 style="font-size:10.41878128px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="23.891191"
+                   x="182.01967"
+                   id="tspan6621"
+                   sodipodi:role="line">05/11/2012</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6619-6"
+                 y="23.851271"
+                 x="331.13168"
+                 style="font-size:10.73944664px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="23.851271"
+                   x="331.13168"
+                   id="tspan6621-2"
+                   sodipodi:role="line">1.1</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6619-8"
+                 y="35.695992"
+                 x="318.93008"
+                 style="font-size:10.41878128px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="35.695992"
+                   x="318.93008"
+                   id="tspan6621-7"
+                   sodipodi:role="line">Carlos González Cortés</tspan></text>
+              <text
+                 sodipodi:linespacing="125%"
+                 id="text6619-8-8"
+                 y="47.097282"
+                 x="340.1875"
+                 style="font-size:10.41878128px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+                 xml:space="preserve"><tspan
+                   y="47.097282"
+                   x="340.1875"
+                   id="tspan6621-7-5"
+                   sodipodi:role="line">Tomás Opazo Toro</tspan></text>
+              <g
+                 id="g7209">
+                <rect
+                   style="fill:none;stroke:#000000;stroke-width:1.11041057;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+                   id="rect6497"
+                   width="425.27277"
+                   height="62.440998"
+                   x="7.4815798"
+                   y="-13.042302" />
+                <image
+                   width="112.5719"
+                   height="57.518223"
+                   xlink:href="data:image/png;base64,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
++AAAAABJRU5ErkJggg==
+"
+                   id="image7206"
+                   x="16.88763"
+                   y="-10.398293" />
+              </g>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g88"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 120,110 150,0 0,80 -150,0 0,-80"
+         id="path90"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g92"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="160"
+         y="118"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text94"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">DebugConsole</text>
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="120,120 269,120 "
+         id="polyline96"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g98"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="125"
+         y="128"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text100"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Listen: Serial Port</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g102"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="120,130 269,130 "
+         id="polyline104"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g106"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 610,110 140,0 0,80 -140,0 0,-80"
+         id="path108"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g110"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="645"
+         y="118"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text112"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Housekeeping</text>
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="610,120 749,120 "
+         id="polyline114"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g116"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="615"
+         y="128"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text118"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Listen: System Tick</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g120"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="610,130 749,130 "
+         id="polyline122"
+         style="fill:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.2118622,-116.39635,-139.4574)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g124"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 260,400 150,0 0,80 -150,0 0,-80"
+         id="path126"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g128"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="313.5"
+         y="408"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text130"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Executer</text>
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,410 409,410 "
+         id="polyline132"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g134"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,415 409,415 "
+         id="polyline136"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g138"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="94.5"
+         y="93"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text140"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
+           style="font-style:oblique;-inkscape-font-specification:DejaVu Sans Oblique"
+           id="tspan3496">Command pattern - </tspan><tspan
+           style="font-style:oblique;font-weight:normal;-inkscape-font-specification:DejaVu Sans Oblique"
+           id="tspan3494">Clients</tspan></text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g142"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="234"
+         y="263"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text144"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
+           style="font-style:oblique;-inkscape-font-specification:DejaVu Sans Oblique"
+           id="tspan3498">Command pattern - Invoker</tspan></text>
+    </g>
+    <g
+       transform="translate(-116.39635,-72.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g146"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="273.5"
+         y="525"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text148"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
+           style="font-style:oblique;-inkscape-font-specification:DejaVu Sans Oblique"
+           id="tspan3500">Command pattern - Reciver</tspan></text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g150"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 440,430 150,0 0,40 -150,0 0,-40"
+         id="path152"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-30,-50)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g154"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans" />
+    <g
+       transform="translate(-116.39635,-50.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g158"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="469.5"
+         y="448"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text160"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">CommandFunction</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g162"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 920,460 110,0 0,30 -110,0 0,-30"
+         id="path164"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g166"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="947"
+         y="468"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text168"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">«datatype»</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g170"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="962"
+         y="478"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text172"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">cmd4</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g174"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="145"
+         y="373"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text176"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Return Code</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g178"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 260,270 360,0 0,80 -360,0 0,-80"
+         id="path180"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g182"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="414"
+         y="278"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text184"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Dispatcher</text>
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,280 619,280 "
+         id="polyline186"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g188"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="260,285 619,285 "
+         id="polyline190"
+         style="fill:none" />
+    </g>
+    <g
+       transform="matrix(1,0,0,1.1667116,-116.39635,-119.73006)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g192"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#a0a0a0;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 250,390 350,0 0,110 -350,0 0,-110"
+         id="path194"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g196"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 790,420 110,0 0,30 -110,0 0,-30"
+         id="path198"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g200"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="817"
+         y="428"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text202"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">«datatype»</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g204"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="832"
+         y="438"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text206"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">cmd1</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g208"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 920,420 110,0 0,30 -110,0 0,-30"
+         id="path210"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g212"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="947"
+         y="428"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text214"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">«datatype»</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g216"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="962"
+         y="438"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text218"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">cmd2</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g230"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 450,110 140,0 0,80 -140,0 0,-80"
+         id="path232"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g234"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="495.5"
+         y="118"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text236"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">FlightPlan</text>
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="450,120 589,120 "
+         id="polyline238"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g240"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="455"
+         y="128"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text242"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Listen: Current Location</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g244"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="450,130 589,130 "
+         id="polyline246"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g248"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 290,110 140,0 0,80 -140,0 0,-80"
+         id="path250"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g252"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="319.5"
+         y="118"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text254"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Communications</text>
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="290,120 429,120 "
+         id="polyline256"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g258"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="295"
+         y="128"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text260"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Listen: TRx</text>
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g262"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="290,130 429,130 "
+         id="polyline264"
+         style="fill:none" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g266"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 790,460 110,0 0,30 -110,0 0,-30"
+         id="path268"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g270"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="817"
+         y="468"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text272"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">«datatype»</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g274"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="832"
+         y="478"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text276"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">cmd3</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-194.87847)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g278"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,240 50,0 0,10 -50,0 0,-10"
+         id="path280"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,249 280,0 0,100 -280,0 0,-100"
+         id="path282"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-49.519793,-194.87847)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g284"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="878"
+         y="263"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text286"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">StatusRepository</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g288"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,370 50,0 0,10 -50,0 0,-10"
+         id="path290"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,379 280,0 0,30 -280,0 0,-30"
+         id="path292"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-49.519793,-44.635238)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g294"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="869"
+         y="393"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text296"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">CommandRepository</text>
+    </g>
+    <g
+       transform="translate(-49.519793,-45.874202)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g298"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,410 280,0 0,90 -280,0 0,-90"
+         id="path300"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="g3475"
+       transform="translate(-90.976938,-20.286521)">
+      <g
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans"
+         id="g302"
+         font-style="normal"
+         font-weight="700"
+         font-size="9"
+         transform="matrix(0.84208562,0,0,0.70553736,210.28597,-75.570629)">
+        <path
+           style="fill-rule:evenodd"
+           inkscape:connector-curvature="0"
+           id="path304"
+           d="m 890,290 0,49 219,0 0,-39 -10,-10 -209,0"
+           vector-effect="non-scaling-stroke" />
+        <polyline
+           style="fill:none"
+           id="polyline306"
+           points="1099,290 1099,300 "
+           vector-effect="non-scaling-stroke" />
+        <polyline
+           style="fill:none"
+           id="polyline308"
+           points="1099,300 1109,300 "
+           vector-effect="non-scaling-stroke" />
+      </g>
+      <g
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans"
+         id="g310"
+         font-style="normal"
+         font-weight="400"
+         font-size="9"
+         transform="translate(68.940661,-159.93407)">
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text312"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="303"
+           x="897"
+           xml:space="preserve"> Stores, give access and organize all</text>
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text314"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="313"
+           x="897"
+           xml:space="preserve">system status variables.</text>
+      </g>
+    </g>
+    <g
+       transform="matrix(1,0,0,0.6695692,-116.39635,-24.190988)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g320"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#5b5b5b;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 480,50 0,39 269,0 0,-29 -10,-10 -259,0"
+         id="path322"
+         inkscape:connector-curvature="0"
+         style="fill:none;stroke:#5b5b5b;stroke-opacity:1" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="739,50 739,60 "
+         id="polyline324"
+         style="fill:none;stroke:#5b5b5b;stroke-opacity:1" />
+      <polyline
+         vector-effect="non-scaling-stroke"
+         points="739,60 749,60 "
+         id="polyline326"
+         style="fill:none;stroke:#5b5b5b;stroke-opacity:1" />
+    </g>
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="8"
+       font-weight="400"
+       font-style="normal"
+       id="g328"
+       style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace">
+      <text
+         xml:space="preserve"
+         x="485"
+         y="75"
+         font-size="8"
+         font-weight="400"
+         font-style="normal"
+         id="text330"
+         style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace"> Listens system events and generates corresponding</text>
+      <text
+         xml:space="preserve"
+         x="489.31982"
+         y="82.95945"
+         font-size="8"
+         font-weight="400"
+         font-style="normal"
+         id="text332"
+         style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace">commands</text>
+      <path
+         style="fill:none;stroke:#7b6f6f;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1, 1;stroke-dashoffset:0"
+         d="m 436.0718,49.483567 0,-21.986813 35.72857,0"
+         id="path3512"
+         inkscape:connector-curvature="0"
+         transform="translate(8.013186,50)" />
+    </g>
+    <g
+       id="g3405"
+       transform="translate(-77.235179,-5.628645)">
+      <g
+         id="g3502"
+         transform="translate(70.541027,-4.5805862)">
+        <g
+           transform="matrix(0.9070624,0,0,0.5623132,-24.135113,143.3554)"
+           font-size="8"
+           font-weight="400"
+           font-style="normal"
+           id="g334"
+           style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace">
+          <path
+             vector-effect="non-scaling-stroke"
+             d="m 40,440 0,59 199,0 0,-49 -10,-10 -189,0"
+             id="path336"
+             inkscape:connector-curvature="0"
+             style="fill-rule:evenodd" />
+          <polyline
+             vector-effect="non-scaling-stroke"
+             points="229,440 229,450 "
+             id="polyline338"
+             style="fill:none" />
+          <polyline
+             vector-effect="non-scaling-stroke"
+             points="229,450 239,450 "
+             id="polyline340"
+             style="fill:none" />
+        </g>
+        <g
+           transform="translate(-30,-50)"
+           font-size="8"
+           font-weight="400"
+           font-style="normal"
+           id="g342"
+           style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace">
+          <text
+             xml:space="preserve"
+             x="45"
+             y="451"
+             font-size="8"
+             font-weight="400"
+             font-style="normal"
+             id="text344"
+             style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace"> Reads a commands and execute the</text>
+          <text
+             xml:space="preserve"
+             x="45"
+             y="460"
+             font-size="8"
+             font-weight="400"
+             font-style="normal"
+             id="text346"
+             style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace">corresponding function. Report the</text>
+          <text
+             xml:space="preserve"
+             x="45"
+             y="469"
+             font-size="8"
+             font-weight="400"
+             font-style="normal"
+             id="text348"
+             style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace">results.</text>
+        </g>
+      </g>
+    </g>
+    <g
+       transform="translate(-163.11833,-160.06601)"
+       font-size="8"
+       font-weight="400"
+       font-style="normal"
+       id="g362"
+       style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace">
+      <g
+         id="g5814">
+        <g
+           style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace"
+           id="g350"
+           font-style="normal"
+           font-weight="400"
+           font-size="8"
+           transform="matrix(0.92651748,0,0,0.63087991,39.753781,177.05991)">
+          <path
+             style="fill-rule:evenodd"
+             inkscape:connector-curvature="0"
+             id="path352"
+             d="m 580,480 0,49 109,0 0,-39 -10,-10 -99,0"
+             vector-effect="non-scaling-stroke" />
+          <polyline
+             style="fill:none"
+             id="polyline354"
+             points="679,480 679,490 "
+             vector-effect="non-scaling-stroke" />
+          <polyline
+             style="fill:none"
+             id="polyline356"
+             points="679,490 689,490 "
+             vector-effect="non-scaling-stroke" />
+        </g>
+        <g
+           style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace"
+           id="g358"
+           font-style="normal"
+           font-weight="400"
+           font-size="8"
+           transform="translate(-2.748352,0)">
+          <text
+             style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace"
+             id="text360"
+             font-style="normal"
+             font-weight="400"
+             font-size="8"
+             y="491"
+             x="585"
+             xml:space="preserve"> Thread pool</text>
+        </g>
+        <text
+           style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace"
+           id="text364"
+           font-style="normal"
+           font-weight="400"
+           font-size="8"
+           y="500"
+           x="585"
+           xml:space="preserve">pattern may be used</text>
+      </g>
+    </g>
+    <g
+       transform="translate(-30,-50)"
+       font-size="8"
+       font-weight="400"
+       font-style="normal"
+       id="g366"
+       style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace" />
+    <g
+       transform="translate(-116.39635,-54.712528)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g382"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <g
+         id="g3399"
+         transform="matrix(0.93903503,0,0,0.59532132,421.51196,151.03062)">
+        <path
+           style="fill-rule:evenodd"
+           inkscape:connector-curvature="0"
+           id="path384"
+           d="m 30.647793,269.47367 0,49 218.999997,0 0,-39 -10,-10 -208.999997,0"
+           vector-effect="non-scaling-stroke" />
+        <g
+           id="g3395">
+          <polyline
+             vector-effect="non-scaling-stroke"
+             points="239,270 239,280 "
+             id="polyline386"
+             style="fill:none" />
+          <polyline
+             vector-effect="non-scaling-stroke"
+             points="239,280 249,280 "
+             id="polyline388"
+             style="fill:none" />
+        </g>
+      </g>
+    </g>
+    <g
+       transform="translate(303.37332,-12.606002)"
+       font-size="8"
+       font-weight="400"
+       font-style="normal"
+       id="g390"
+       style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace">
+      <text
+         xml:space="preserve"
+         x="35"
+         y="281"
+         font-size="8"
+         font-weight="400"
+         font-style="normal"
+         id="text392"
+         style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace"> Queue up commands and decides the next</text>
+      <text
+         xml:space="preserve"
+         x="35"
+         y="290"
+         font-size="8"
+         font-weight="400"
+         font-style="normal"
+         id="text394"
+         style="font-size:8px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:Monospace">to execute. Monitors task execution.</text>
+    </g>
+    <g
+       id="g3484"
+       transform="translate(-81.21401,-10.542663)">
+      <g
+         style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace"
+         id="g396"
+         font-style="normal"
+         font-weight="400"
+         font-size="8"
+         transform="matrix(0.79289454,0,0,0.70921835,224.97864,109.167)">
+        <path
+           style="fill-rule:evenodd"
+           inkscape:connector-curvature="0"
+           id="path398"
+           d="m 900,510 0,59 189,0 0,-49 -10,-10 -179,0"
+           vector-effect="non-scaling-stroke" />
+        <polyline
+           style="fill:none"
+           id="polyline400"
+           points="1079,510 1079,520 "
+           vector-effect="non-scaling-stroke" />
+        <polyline
+           style="fill:none"
+           id="polyline402"
+           points="1079,520 1089,520 "
+           vector-effect="non-scaling-stroke" />
+      </g>
+      <g
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans"
+         id="g404"
+         font-style="normal"
+         font-weight="400"
+         font-size="9"
+         transform="translate(36.876558,-39.92271)">
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text406"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="523"
+           x="907"
+           xml:space="preserve"> Stores all commands as data</text>
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text408"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="533"
+           x="907"
+           xml:space="preserve">structures and the list of</text>
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text410"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="543"
+           x="907"
+           xml:space="preserve">functions.</text>
+      </g>
+    </g>
+    <g
+       transform="translate(-48.895969,73.113721)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g220"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,110 50,0 0,10 -50,0 0,-10"
+         id="path222"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+      <path
+         vector-effect="non-scaling-stroke"
+         d="m 780,119 270,0 0,100 -270,0 0,-100"
+         id="path224"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd" />
+    </g>
+    <g
+       transform="translate(-48.895969,73.113721)"
+       font-size="9"
+       font-weight="700"
+       font-style="normal"
+       id="g226"
+       style="font-size:9px;font-style:normal;font-weight:700;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="877"
+         y="133"
+         font-size="9"
+         font-weight="700"
+         font-style="normal"
+         id="text228"
+         style="font-size:9px;font-style:normal;font-weight:700;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans">DataRepository</text>
+    </g>
+    <g
+       id="g3466"
+       transform="translate(-90.976938,-23.95099)">
+      <g
+         style="font-size:8px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:Monospace"
+         id="g368"
+         font-style="normal"
+         font-weight="400"
+         font-size="8"
+         transform="matrix(0.87693456,0,0,0.64977379,182.63462,170.38456)">
+        <path
+           style="fill-rule:evenodd"
+           inkscape:connector-curvature="0"
+           id="path370"
+           d="m 890,160 0,49 199,0 0,-39 -10,-10 -189,0"
+           vector-effect="non-scaling-stroke" />
+        <polyline
+           style="fill:none"
+           id="polyline372"
+           points="1079,160 1079,170 "
+           vector-effect="non-scaling-stroke" />
+        <polyline
+           style="fill:none"
+           id="polyline374"
+           points="1079,170 1089,170 "
+           vector-effect="non-scaling-stroke" />
+      </g>
+      <g
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans"
+         id="g376"
+         font-style="normal"
+         font-weight="400"
+         font-size="9"
+         transform="translate(73.228954,114.47094)">
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text378"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="173"
+           x="897"
+           xml:space="preserve"> Stores, give access and organizes</text>
+        <text
+           style="font-size:9px;font-style:normal;font-weight:400;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+           id="text380"
+           font-style="normal"
+           font-weight="400"
+           font-size="9"
+           y="183"
+           x="897"
+           xml:space="preserve">data generate by commands.</text>
+      </g>
+    </g>
+    <g
+       transform="translate(514.72643,-289.82552)"
+       font-size="9"
+       font-weight="400"
+       font-style="normal"
+       id="g174-6"
+       style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#323232;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1;font-family:DejaVu Sans">
+      <text
+         xml:space="preserve"
+         x="146.61948"
+         y="360.36804"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text176-8"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Reads Status</text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2, 1;stroke-dashoffset:0"
+         d="m 215.13417,710.90675 -115.95489,0 0,-274.59573"
+         id="path5574"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccc" />
+      <text
+         xml:space="preserve"
+         x="49.434612"
+         y="458.45224"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text176-8-1"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Gets Cmd</text>
+      <text
+         xml:space="preserve"
+         x="-27.151728"
+         y="693.60101"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text176-8-1-5"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">New Data</text>
+      <text
+         xml:space="preserve"
+         x="-27.145134"
+         y="666.90302"
+         font-size="9"
+         font-weight="400"
+         font-style="normal"
+         id="text176-8-1-5-5"
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Update Status</text>
+      <path
+         style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2, 1;stroke-dashoffset:0;font-family:DejaVu Sans"
+         d="m 214.48361,725.20083 -130.612761,0 0,-197.7616 -94.360075,0.57778"
+         id="path5574-4"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccc" />
+      <path
+         style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:2, 1;stroke-dashoffset:0;font-family:DejaVu Sans"
+         d="m 214.02556,740.83469 -143.438415,0 0,-20.03486 -292.241395,0.57778"
+         id="path5574-4-8"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccc" />
+    </g>
+  </g>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 761.277,139.97423 -86.15643,0"
+     id="path5544"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 686.95655,132.93936 -12.01171,7.20967 11.77975,7.50787"
+     id="path5520"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccc" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 652.35698,222.09574 -7.20966,-12.01171 -7.50788,11.77975"
+     id="path5520-0"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccc" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 343.14081,457.07279 12.01171,-7.20967 -11.77975,-7.50787"
+     id="path5520-05"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccc" />
+  <polyline
+     vector-effect="non-scaling-stroke"
+     points="410,450 440,450 "
+     id="polyline42-5"
+     style="font-size:9px;font-style:normal;font-weight:400;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:4, 4;stroke-dashoffset:0;font-family:DejaVu Sans"
+     transform="matrix(-1,0,0,1,764.86232,18.438854)" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 336.41766,475.62974 -12.01171,-7.20967 11.77975,-7.50787"
+     id="path5520-05-7"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccc" />
+  <g
+     id="g5726"
+     transform="translate(-77.290669,61.652883)">
+    <path
+       inkscape:connector-curvature="0"
+       id="path5705"
+       d="m 582.36565,412.25849 183.97312,0 39.51536,0 0,-183.97313 32.38963,0"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       sodipodi:nodetypes="ccc"
+       inkscape:connector-curvature="0"
+       id="path5520-0-8"
+       d="m 826.35116,235.64412 12.01171,-7.20966 -11.77975,-7.50788"
+       style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+  <g
+     transform="translate(-77.02152,36.176794)"
+     id="g5726-1">
+    <path
+       inkscape:connector-curvature="0"
+       id="path5705-3"
+       d="m 581.07006,412.25849 c 66.93858,0 208.96872,0 208.96872,0 l 0.0556,-291.18283 48.14941,-0.32389"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       sodipodi:nodetypes="cccc" />
+    <path
+       sodipodi:nodetypes="ccc"
+       inkscape:connector-curvature="0"
+       id="path5520-0-8-8"
+       d="m 826.35116,128.11053 12.01171,-7.20966 -11.77975,-7.50788"
+       style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 548.01045,297.07841 -12.01171,7.20966 11.77975,7.50788"
+     id="path5520-0-89"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccc" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:0.98076373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 336.66173,505.18735 -12.01171,-7.20967 11.77975,-7.50787"
+     id="path5520-05-7-3"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccc" />
+</svg>
