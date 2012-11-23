@@ -1,12 +1,13 @@
 \chapter{Contextualización}
 
-\section{Fundamentación y objetivos generales}
-
-Esta memoria se enmarca en el desarrollo del proyecto SUCHAI que consiste en la implementación, lanzamiento y operación de un pico-satélite Cubesat, siendo esta la primera aproximación en esta materia para la universidad y el país. Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de dar inteligencia y operatividad al satélite durante todo su tiempo de vida útil en el espacio. En el caso de un pico-satélite se tiene el desafío de dotar de todas la funcionalidades estándar de un satélite en un sistema computacional de recursos extremadamente limitados, estamos hablando de sistemas embebidos que utilizan microcontroladores de baja potencia y capacidad de cómputo como microcontroladores PIC24 o PIC18.
-
-El objetivo de este trabajo es el diseño, desarrollo e implementación del \textit{software} que gobierna el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de hardware hasta la aplicación final para el control de satélite. Esta arquitectura debe cumplir con requerimientos de calidad de \textit{software} como modularidad, expansibilidad y facilidad de mantenimiento estando adaptada en específico a sistemas embebidos que emplean microcontroladores de gama media.
-
-La implementación se llevará a cabo en específico para el satélite SUCHAI y busca proveer la funcionalidad básica de este sistema que incluye la interacción de un computador a bordo, un sistema de control de energía y un sistema de comunicaciones. De esta manera el \textit{software} de control se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
+En este capítulo se hace una revisión bibliográfica del los conceptos fundamentales para el desarrollo del trabajo de título. Se puede considerar como una contextualización en cuanto sirve como base para comprender el trabajo realizado.
+% \section{Fundamentación y objetivos generales}
+% 
+% Esta memoria se enmarca en el desarrollo del proyecto SUCHAI que consiste en la implementación, lanzamiento y operación de un pico-satélite Cubesat, siendo esta la primera aproximación en esta materia para la universidad y el país. Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de dar inteligencia y operatividad al satélite durante todo su tiempo de vida útil en el espacio. En el caso de un pico-satélite se tiene el desafío de dotar de todas la funcionalidades estándar de un satélite en un sistema computacional de recursos extremadamente limitados, estamos hablando de sistemas embebidos que utilizan microcontroladores de baja potencia y capacidad de cómputo como microcontroladores PIC24 o PIC18.
+% 
+% El objetivo de este trabajo es el diseño, desarrollo e implementación del \textit{software} que gobierna el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de hardware hasta la aplicación final para el control de satélite. Esta arquitectura debe cumplir con requerimientos de calidad de \textit{software} como modularidad, expansibilidad y facilidad de mantenimiento estando adaptada en específico a sistemas embebidos que emplean microcontroladores de gama media.
+% 
+% La implementación se llevará a cabo en específico para el satélite SUCHAI y busca proveer la funcionalidad básica de este sistema que incluye la interacción de un computador a bordo, un sistema de control de energía y un sistema de comunicaciones. De esta manera el \textit{software} de control se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
 
 \section{Bibliografía y Estado del Arte}
 
@@ -16,21 +17,21 @@ Se deben revisar los siguientes temas que son parte del contexto del proyecto re
 En general sobre lo qué es una satélite y tópicos transversales a todo proyecto aeroespacial.
 
 \subsubsection{Pico-satélites}
-Satélites de menos de hasta 1Kg de peso y un volumen inferior a 1L.
+% Satélites de menos de hasta 1Kg de peso y un volumen inferior a 1L.
 \subsection{Satélites tipo Cubesat}
-Estándar y aplicaciones de satélites tipo Cubesat desarrollados por Calpoly.
+% Estándar y aplicaciones de satélites tipo Cubesat desarrollados por Calpoly.
 \paragraph{Estándar}
 \paragraph{Aplicaciones}
 
 \subsection{Microcontroladores}
-Tópicos relacionados con microcontroladores de gama media, especialmente tipo PIC24. Su arquitectura, forma de trabajo y aplicaciones.
+% Tópicos relacionados con microcontroladores de gama media, especialmente tipo PIC24. Su arquitectura, forma de trabajo y aplicaciones.
 \subsubsection{Microcontroladores PIC}
 \paragraph{Descripción}
 \paragraph{Arquitectura}
 \paragraph{Aplicaciones}
 
 \subsection{Sistemas operativos}
-Tópicos de sistemas operativos, en especial sistemas operativos de tiempo real para el desarrollo de sistemas embebidos.
+% Tópicos de sistemas operativos, en especial sistemas operativos de tiempo real para el desarrollo de sistemas embebidos.
 
 \subsubsection{FreeRTOS}
 
@@ -38,21 +39,21 @@ Tópicos de sistemas operativos, en especial sistemas operativos de tiempo real p
 \subsubsection{Patrones de diseño}
 \paragraph{Command Pattern}
 
-\section{Objetivos específicos}
-Los objetivos específicos del proyecto se enumeran a continuación
-
-\begin{itemize}
- \item Diseñar una arquitectura de \textit{software} para el sistema de control del satélite
- \item Implementar controladores de hardware para el microcontrolador
- \item Implementar controladores de periféricos principales (Transceiver, EPS y RTC)
- \item Integrar un sistema operativo de tiempo real multitarea como sistema embebido 
- \item Implementar el flujo principal de la arquitectura del \textit{software} de control del satélite
- \item Integrar sistema de comunicaciones al \textit{software} de control
- \item Integrar sistema de energía al \textit{software} de control
- \item Pruebas del sistema integrado
-\end{itemize}
-
-El listado de objetivos presenta un orden temporal en la ejecución de estas tareas puesto que objetivo es dependiente del cumplimiento de los objetivos anteriores. El trabajo se puede considerar terminado cuando se ha probado la implementación e integración del \textit{software} con los módulos de comunicaciones y energía obteniendo un sistema satelital con las mínimas funcionalidades.
+% \section{Objetivos específicos}
+% Los objetivos específicos del proyecto se enumeran a continuación
+% 
+% \begin{itemize}
+%  \item Diseñar una arquitectura de \textit{software} para el sistema de control del satélite
+%  \item Implementar controladores de hardware para el microcontrolador
+%  \item Implementar controladores de periféricos principales (Transceiver, EPS y RTC)
+%  \item Integrar un sistema operativo de tiempo real multitarea como sistema embebido 
+%  \item Implementar el flujo principal de la arquitectura del \textit{software} de control del satélite
+%  \item Integrar sistema de comunicaciones al \textit{software} de control
+%  \item Integrar sistema de energía al \textit{software} de control
+%  \item Pruebas del sistema integrado
+% \end{itemize}
+% 
+% El listado de objetivos presenta un orden temporal en la ejecución de estas tareas puesto que objetivo es dependiente del cumplimiento de los objetivos anteriores. El trabajo se puede considerar terminado cuando se ha probado la implementación e integración del \textit{software} con los módulos de comunicaciones y energía obteniendo un sistema satelital con las mínimas funcionalidades.
 
 % \section{Antecedentes generales}
 % \paragraph{Carrera satelital chilena}

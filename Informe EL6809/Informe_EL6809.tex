@@ -109,26 +109,18 @@ La implementación se llevará a cabo en específico para el satélite SUCHAI y 
 
 \section{Bibliografía y Estado del Arte}
 
-Se debe detallar el estado de los siguiente tópicos: satélites; pico-satélites; satélites Cubesat, su estándar y aplicaciones; microcontroladores; sistemas operativos, en especial sistemas operativos para microcontroladores de gama media; arquitectura de software, en especial patrones de diseño.
+Para el desarrollo del trabajo de título serán fundamental la siguiente bibliografía:
+\begin{itemize}
+	\item R. Barry, \textit{Using the FreeRTOS Real Time Kernel. A Practical Guide, PIC32 Edition.}, 1st ed., USA: Real Time Engineers, 2009.
+	\item I. Sommerville, \textit{Software Engineering}, 9nd ed., USA: Addison-Wesley, 2011.
+	\item S. Heat, \textit{Embedded Systems Design}, 2nd ed., England: Newnes, 2003.
+	\item L. Di Jasio \textit{Programming 16-Bit PIC Microcontrollers in C} , 1st ed. USA: Elsevier, 2007.
+\end{itemize}
 
-% \subsection{Satélites}
-% \subsubsection{Pico-satélites}
-% \subsection{Satélites tipo Cubesat}
-% \paragraph{Estándar}
-% \paragraph{Aplicaciones}
-% 
-% \subsection{Microcontroladores}
-% \subsubsection{Microcontroladores PIC}
-% \paragraph{Descripción}
-% \paragraph{Arquitectura}
-% \paragraph{Aplicaciones}
-% 
-% \subsection{Sistemas operativos}
-% \subsubsection{FreeRTOS}
-% 
-% \subsection{Arquitectura de Software}
-% \subsubsection{Patrones de diseño}
-% \paragraph{Command Pattern}
+Lo tópicos relacionados con el desarrollo de sistemas embebidos utilizando microcontroladores PIC y sistemas operativos de tiempo real como FreeRTOS se encuentran bastante desarrollados y bien documentados, en este sentido lo más interesante es tener una visión detallada del funcionamiento de un sistema embebido desde la perspectiva de arquitectura de hardware para un trabajo a muy bajo nivel. Esto se suma a la necesidad de utilizar herramientas de ingeniería de software para desarrollar una arquitectura que logre cumplir con los requerimientos de una misión crítica como la que corresponde al proyecto SUCHAI.\\
+
+Por otro lado se encuentra el desarrolla de un sistema de control para un satélite, específicamente un satélite tipo Cubesat. Esta es un área totalmente nueva donde la mayoría de la información disponible no es formal y se basa en experiencias previas desarrolladas por otras unidades educativas en el extranjero. En la universidad de Chile y en el país no se han desarrollado proyectos similares hasta ahora, de modo que este trabajo sienta un precedente importante para futuras misiones aeroespaciales en la región, proyectos que tendrán una base bastante sólida sobre la cual comenzar.
+
 
 \section{Objetivos específicos}
 Los objetivos específicos del proyecto se enumeran a continuación
@@ -160,7 +152,6 @@ El proyecto se encuentra en considerable estado de avance, pero este trabajo de 
 
 No obstante el proyecto comienza desde cero, debido a que el conocimiento sobre desarrollo de proyectos aeroespaciales en la universidad y en el país se encontraba completamente detenido.
 
-\newpage
 \section{Infraestructura disponible}
 \subsection{Instalaciones}
 El proyecto se desarrolla en las dependencias de la facultad, específicamente el laboratorio SPEL (\textit{Spacial and Planetary Exploration Laboratory}), tercer piso del edificio de Electrotecnologías. Este laboratorio alberga proyectos relacionados el desarrollo de radiosondas para monitoreo de condiciones climáticas, radares y proyectos aeroespaciales como el SUCHAI.
@@ -203,7 +194,7 @@ Para el desarrollo de la aplicación para el microcontrolador PIC24F se utiliza 
 \paragraph{Sistema operativo:}
 Para dotar de funcionalidades avanzadas de multitarea al microcontrolador se ha utilizado el sistema operativo de tiempo real FreeRTOS de código libre y gratuito; adaptado especialmente a microcontroladores de gama media como el utilizado en el proyecto.
 
-\section{Condiciones contractuales:}
+\section{Condiciones contractuales}
 El desarrollo de este trabajo se enmarca dentro del proyecto SUCHAI el cual es patrocinado y financiado por la Facultad de Ciencias Físicas y Matemáticas de la Universidad de Chile.
 
 Siendo alumno regular de la carrera Ingeniería Civil Electricista de la Universidad de Chile, parte del trabajo realizado para esta memoria ha sido considerado en el desarrollo de los cursos Seminario de Diseño e Innovación Tecnológica I, II y III (ME4030, EL5030, EL6030).
