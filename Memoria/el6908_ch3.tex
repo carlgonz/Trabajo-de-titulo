@@ -1,8 +1,53 @@
-\chapter{Implementación}
+\chapter{Diseño del software}
 
-En este capítulo se describe el proceso de diseño e implementación del software de control para el satélite. Considera el diseño de una arquitectura de software a nivel global y sobre todo el detalle de la aplicación final. La aplicación debe considerar requisitos de diseño tales como: ser modular; ser compacta en su ejecución; ser extensible.\\
+\section{Resumen}
+
+En este capítulo se describe el proceso de diseño del software de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos funcionales de la misión así, requerimientos generales de desarrollo, así como la plataforma de hardware sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final.
+
+El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global en base a módulo y se centra en específico en la aplicación de un determinado patrón de diseño que guía la solución propuesta en forma de una arquitectura basada en \textit{command patern}
 
 Para el diseño de la arquitectura se ha utilizado un patrón de diseño llamado \textit{command pattern} el cual se programa en lenguaje C para el compilador Microchip MPLAB C30 V3.3x utilizando el sistema operativo FreeRTOS. Todo esto sobre una plataforma de desarrollo CubesatKit que cuenta con un procesador PIC24FJ256GA110.
+
+\section{Requerimientos}
+\subsection{Requerimientos generales}
+\subsection{Requerimientos operacionales}
+Los requerimientos operacionales se refieren a las funcionalidades que se espera que el computador a bordo del bus SUCHAI deba realizar. Estos requerimientos son los requisitos básicos que el sistema debe cumplir para considerar que se cuenta con un satélite capaz de llevar a cabo la misión del proyecto SUCHAI. Estos requerimientos son agrupados por área para un mejor ****
+
+\subsubsection{Área de comunicaciones}
+\paragraph{Configuración inicial del \textit{transcevier}}
+\paragraph{Despliegue de antenas}
+\paragraph{Procesamiento de telecomandos}
+\paragraph{Protocolo de enlace}
+\paragraph{Envío de telemetría}
+
+
+\subsubsection{Control central}
+\paragraph{Organizar telemetría}
+\paragraph{Programa de vuelo}
+\paragraph{Obtener el estado del sistema}
+\paragraph{Tolerancia a fallos de software}
+\paragraph{Secuencia de inicio}
+\paragraph{Inicialización del sistema}
+
+\subsubsection{Área de energía}
+\paragraph{Estimación de la carga de la batería}
+\paragraph{Presupuesto de energía}
+
+\subsubsection{Órbita}
+\paragraph{Actualizar parámetros de órbita}
+
+\subsubsection{\textit{Payloads}}
+\paragraph{Ejecución de comandos de \textit{payloads}}
+
+\subsubsection{Tolerancia a fallos}
+\paragraph{Estado de salud del sistema}
+\paragraph{Mucho tiempo sin conexión a tierra}
+\paragraph{Problemas al desplegar la antena}
+\paragraph{\textit{Watchdog}}
+\paragraph{Fallos de hardware}
+
+\section{Plataforma}
+Se describe la plataforma final donde se ejecutará la aplicación, en este caso un sistema embebido consistente de un PIC24FJ256GA110
 
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
