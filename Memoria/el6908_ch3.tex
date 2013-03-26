@@ -74,17 +74,21 @@ El sistema de control debe tener la capacidad de controlar diferentes subsistema
 \paragraph{\textit{Watchdog}.}
 \paragraph{Fallos de hardware.}
 
-\section{Requerimientos mínimos}
+\subsection{Requerimientos mínimos}
 
-\section{Consideraciones de diseño}
+\subsection{Requerimientos no funcionales}
+Por requerimientos no funcionales se entienden aquellos atributos asociados a la calidad del software o criterios que permiten determinar cómo debería ser el software que se está diseñando. A diferencia del los requerimientos funcionales que explican lo que el software debería hacer, los requerimientos no funcionales explican las cualidades y restricciones que guiarán el proceso de diseño.
+
+Los siguientes aspectos relacionados con la calidad del software y basados en el estándar ISO 25010\cite{ISO25010}, fueron tomados en consideración para evaluar su importancia en el diseño de la arquitectura del software de control.
+
 \begin{itemize}
-	\item Rendimiento
-	\item Escalable
+	\item \textbf{Rendimiento.}  Se refiere a la eficiencia del código implementado, la velocidad de ejecución, el uso de recursos de hardware y memoria del satélite.
+	\item \textbf{Escalable.} 
 	\item Modificable
 	\item Seguridad
 	\item Confiable
 \end{itemize}
-%Explicar en un parrafo cada punto y agregar una tabla con la importancia de cada tema
+%Explicar en cada punto y agregar una tabla con la importancia de cada tema
 
 \section{Plataforma}
 Se describe la plataforma final donde se ejecutará la aplicación, en este caso un sistema embebido consistente de un PIC24FJ256GA110

@@ -14,8 +14,22 @@
 \usepackage[T1]{fontenc}
 \usepackage{acronym} %Acronimos
 
+% ========== COMANDOS PERSONALIZADOS =======
+
+% >>> figura 
+%[1: ruta imagen, 2: medida, 3: caption, 4: label]
+%Ej: \figura{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
+\newcommand{\figura}[5]
+{
+   \begin{figure}[#5]
+     \centering \includegraphics[#2]{#1} 
+     \caption{#3}\label{#4}
+   \end{figure}
+}
+
 \begin{document}
 
+% ========= PRIMERAS PAGINAS =========
 \frontmatter
 \maketitle
 
@@ -38,6 +52,7 @@
 \cleardoublepage
 \listoffigures
 
+% ================ CAPITULOS =========
 \mainmatter
 \input{el6908_ch1.tex}
 \input{el6908_ch2.tex}
@@ -45,6 +60,9 @@
 \input{el6908_ch4.tex}
 \input{el6908_ch5.tex}
 
+% ============= BIBLIOGRAFIA ==========
+\newpage
+\addcontentsline{toc}{chapter}{Bibliografía}
 \nocite{*}
 \bibliographystyle{plain}
 \bibliography{bibliografia}

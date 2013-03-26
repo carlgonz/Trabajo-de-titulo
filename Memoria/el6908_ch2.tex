@@ -212,6 +212,94 @@ A continuación se detalla el encabezado que debería incluir cada fichero del pro
 
 % \subsubsection{Arquitectura de Software}
 
+% ============= CALIDAD DE SOFTWARE =============
+\subsubsection{Calidad de software}
+Los requerimientos no funcionales de un proyecto de software puede definirse como los parámetros de calidad buscados en producto en sí. Como parámetros de calidad se pueden entender una serie de calificativos muy subjetivos y tal vez difícilmente medibles como: rapidez, seguridad, escalabilidad o modularidad. Algunos conceptos pueden ser utilizados de manera poco clara o equivalentes como lo extensible o escalable que puede ser un software, sin dejar claro las diferencias o acotaciones de estos conceptos. Es por esto que se han creado normas en torno a las metodologías para desarrollar y utilizar modelos de calidad de software que permitan establecer de manera clara los parámetros a medir. 
+
+En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua norma ISO/IEC 9126, que plantea un modelo de calidad software que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de software durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; identificación de los objetivos del diseño del software; identificación de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto de software está completo \cite{ISO25010}.
+
+A continuación se definen los parámetros de calidad fijados en la norma ISO/IEC 25010 para productos de software, así como un resumen a través de la figura \ref{img:ch2:iso25010}.
+
+\begin{itemize}
+\item \textbf{Idoneidad Funcional}. Grado en que un producto provee la funciones requeridas.
+	\begin{itemize}
+	\item \textbf{Completitud funcional}. Grado en que las funciones cubren todas las tareas especificadas u objetivos.
+	\item \textbf{Correctitud funcional}. Grado en que el producto provee resultados correctos según el grado de precisión.
+	\item \textbf{Adecuación Funcional}. Grado en que las funciones facilitan el cumplimiento de las tareas requeridas.
+	\end{itemize}
+
+\item \textbf{Eficiencia del desempeño}. Desempeño relativo a la cantidad de recursos usado bajo ciertas condiciones.
+	\begin{itemize}
+	\item \textbf{Tiempo}. El grado en que el sistema cumple con requerimientos de tiempo de respuesta y tasa de rendimiento.
+	\item \textbf{Utilización de recursos}. Grado en que la cantidad y tipos de recursos usados por el sistema cumple los requerimientos.
+	\item \textbf{Capacidad}. Grado en que los límites máximos de un sistema cumplelos requerimientos
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Compatibilidad}. Grado en que el producto puede compartir información con otros productos o sistemas, y realizar sus funciones mientras se comparte el mismo entorno de hardware o software.
+	\begin{itemize}
+	\item \textbf{Coexistencia}. Cómo un producto puede llevar a cabo sus funciones mientras comparte un entorno y recursos comunes con otros productos sin afectarlos.
+	\item \textbf{Interoperación}. Cómo un producto puede compartir y usar información con otro.
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Usabilidad}. Cómo el producto puede ser usado para sus fines determinados de manera efectiva, eficiente y satisfactoria.
+	\begin{itemize}
+	\item \textbf{Reconocible como apropiado}. Grado en que los usuarios pueden reconocer que el producto es apropiado para sus necesidades.
+	\item \textbf{Aprendizaje}. Grado en que el producto se puede aprender a usar de manera efectiva, sin riesgos y satisfactoria.
+	\item \textbf{Operatividad}. Grado en que el producto tiene atributos que lo hacen fácil de operar
+	\item \textbf{Protección de cometer errores}. Grado en que el sistema protege al usuario de cometer errores.
+	\item \textbf{Estética de la interfaz de usuario}. Grado en que la interfaz de usuario permite una interacción placentera y satisfactoria.
+	\item \textbf{Accesibilidad}. Cómo el producto puede ser usado por personas con variedad de características y capacidades.
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item Fiabilidad. Grado en que el producto o sus componentes cumplen las funciones especificadas por un determinado periodo de tiempo.
+	\begin{itemize}
+	\item \textbf{Madurez}. Grado en que el sistema cumples las necesidades de fiabilidad bajo una operación normal.
+	\item \textbf{Disponibilidad}. Grado en que el sistema es operacional y accesible cuando se requiere su uso.
+	\item \textbf{Tolerancia a fallas.} Grado en que el sistema o sus componentes operan como es debido a pesar de la ocurrencia de fallos de software o hardware.
+	\item \textbf{Capacidad de recuperación}. La capacidad del sistema de recuperar los datos afectados y restablecer el estado deseado del sistema ante una interrupción o falla.
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Seguridad}. Cómo un sistema protege la información y los datos de modo que las personas, productos o sistemas tengan el grado de acceso a los datos adecuados a sus tipos y niveles de autorización.
+	\begin{itemize}
+	\item \textbf{Confidencialidad}. Grado en que el sistema asegura que los datos sólo son accesibles por las personas autorizadas.
+	\item \textbf{Integridad}. Grado en que el sistema previene el acceso y modificación de los datos o programas.
+	\item \textbf{No rechazo}. Grado en que es posible demostrar que las acciones han tenido lugar, para no poder ser negadas más tarde.
+	\item \textbf{Responsabilidad}. Grado en que las acciones de una entidad puedes ser asociadas de manera inequívoca a esa entidad.
+	\item \textbf{Autenticidad}. Grado en que la identidad de un sujeto o recurso puede ser comprobada.
+	\end{itemize}
+
+\item \textbf{Mantenimiento}. Grado de la eficiencia y eficacia con la que un
+producto o sistema puede ser modificado por los mantenedores.
+	\begin{itemize}
+	\item \textbf{Modularidad}. Grado en que un sistema o software está compuesto por componentes discretos de modo que el cambio en un componente tiene mínimo impacto en el resto del sistema.
+	\item \textbf{Reusabilidad}. Grado en que un activo puede ser usado en más de un sistema, o en la construcción de otro.
+	\item \textbf{Analizable}. Grado en de eficiencia y eficacia con que es posible identificar el impacto de un cambio en una parte del sistema, o diagnosticar deficiencias o fallas en alguna de sus partes, o identificar las partes que deben ser modificadas.
+	\item \textbf{Modificable}. Grado en el sistema puede ser modificado de manera efectiva y eficiente, sin introducir defectos o degradar la calidad existente.
+	\item \textbf{Testeable}. Grado en que es posible establecer un criterio para probar el sistema y las pruebas que pueden ser desarrolladas para determinar que el criterio se ha cumplido.
+	\end{itemize}
+
+\item \textbf{Portabilidad}. Grado de la eficiencia y eficacia con la que un producto o sistema puede ser transferido de un hardware, software u ambiente de uso a otro diferente.
+	\begin{itemize}
+	\item \textbf{Adaptabilidad}. Grado en que el producto puede ser adaptado a un hardware o software diferente de manera eficiente y efectiva.
+	\item \textbf{Instalación}. Grado de efectividad y eficiencia con que el sistema puede ser instalado o desinstalado.
+	\item \textbf{Reemplazo}. Grado en que el producto puede reemplazar a otro para el mismo propósito en el mismo ambiente.
+	\end{itemize}
+\end{itemize}
+
+%Figura - Esquema ISO25010
+\figura{img/ISO25010.jpg}{width=\textwidth}{ISO/IEC 25010, categorías y subcategorías.}{img:ch2:iso25010}{!h}
+
+%Explicar como se aplica este modelo a un proyecto de software
+
+
 % ============= PATRONES DE DISEÑO ==============
 \subsubsection{Patrones de diseño}
 \paragraph{Command Pattern}
