@@ -27,6 +27,17 @@
    \end{figure}
 }
 
+% >>> tabla 
+%[1: ruta imagen, 2: medida, 3: caption, 4: label]
+%Ej: \tabla{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
+\newcommand{\tabla}[5]
+{
+   \begin{table}[#5]
+     \caption{#3}\label{#4}
+     \centering \includegraphics[#2]{#1} 
+   \end{table}
+}
+
 \begin{document}
 
 % ========= PRIMERAS PAGINAS =========
