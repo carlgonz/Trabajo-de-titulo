@@ -9,7 +9,6 @@ El diseño del la aplicación se detalla en diferentes niveles, incluyendo una vis
 Para el diseño de la arquitectura se ha utilizado un patrón de diseño llamado \textit{command pattern} el cual se programa en lenguaje C para el compilador Microchip MPLAB C30 V3.3x utilizando el sistema operativo FreeRTOS. Todo esto sobre una plataforma de desarrollo CubesatKit que cuenta con un procesador PIC24FJ256GA110.
 
 \section{Requerimientos}
-\subsection{Requerimientos generales}
 \subsection{Requerimientos operacionales}
 Los requerimientos operacionales se refieren a las funcionalidades que se espera que el computador a bordo del bus SUCHAI deba realizar. Estos requerimientos son los requisitos básicos que el sistema debe cumplir para considerar que se cuenta con un satélite capaz de llevar a cabo la misión del proyecto SUCHAI y son clasificados según el área de la misión que se ve afectada.
 
@@ -68,18 +67,20 @@ Se debe contar con una estrategia de estimación y actualización de los parámetro
 El sistema de control debe tener la capacidad de controlar diferentes subsistemas asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo del satélite pueden variar de misión en misión e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el sistema de control debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
 
 \subsubsection{Tolerancia a fallos}
-\paragraph{Estado de salud del sistema.}
-\paragraph{Mucho tiempo sin conexión a tierra.}
-\paragraph{Problemas al desplegar la antena.}
-\paragraph{\textit{Watchdog}.}
-\paragraph{Fallos de hardware.}
-
-\subsection{Requerimientos mínimos}
+El sistema debe tener cierto grado de tolerancia a fallos de hardware y software que permitan mantener la misión operativa. Debido las adversas condiciones del medio espacial y la incapacidad de acceder directamente al dispositivo este debe ser capaz de:
+\begin{itemize}
+	\item Restablecer su funcionamiento normal luego de un reinicio, evitando la pérdida de información
+	\item Restablecer el funcionamiento del sistema ante fallas causadas por radiación.
+	\item Recuperarse ante fallas de software
+	\item Establecer estados de funcionamiento según nivel de fallas.
+	\item Detectar y solucionar problemas al desplegar antenas.
+\end{itemize}
 
 \subsection{Requerimientos no funcionales}
 Por requerimientos no funcionales se entienden aquellos atributos asociados a la calidad del software o criterios que permiten determinar cómo debería ser el software que se está diseñando. A diferencia del los requerimientos funcionales que explican lo que el software debería hacer, los requerimientos no funcionales explican las cualidades y restricciones que guiarán el proceso de diseño.
 
-El eje principal para el diseño del software de control del satélite responde a contar con un software que sea altamente mantenible debido a dos factores básicos: primero, el desarrollo del software será incremental, estará a cargo de más de una persona, por lo tanto debe ser flexible en la adición de funcionalidades desacoplando módulos para que las intervenciones en el código sean lo más acotadas posible; segundo, el sistema debe ser la base para futuras misiones aeroespaciales, por lo tanto debe ser fácilmente adaptable a nuevos requerimientos funcionales que incluyen la adición de nuevos \textit{payloads} y sus módulos de control. En el futuro la arquitectura del sistema debe proveer la capacidad de análisis del sistema a los nuevos desarrolladores con el objetivo de determinar claramente qué módulos se deben intervenir para agregar nuevas funcionalidades o corregir posibles errores. Especial mención requiere la necesidad de expandir el sistema, pues se considera como filosofía de trabajo en el proyecto SUCHAI el contar siempre con un sistema funcional ante la eventual posibilidad de lanzar el satélite. Así, se partirá implementado un sistema que realice las operaciones básicas o requerimientos mínimos para así agregar complejidad y funciones al software de manera incremental. Lo anterior conduce a poner especial énfasis en el diseño de una arquitectura que genere un software modular, reusable, analizable y modificable, elementos agrupados en la característica 'mantenible' de la norma ISO/IEC 25010\cite{ISO25010}.
+El eje principal para el diseño del software de control del satélite responde a contar con un software que sea altamente mantenible debido a dos factores básicos: primero, el desarrollo del software será incremental, estará a cargo de más de una persona, por lo tanto debe ser flexible en la adición de funcionalidades desacoplando módulos para que las intervenciones en el código sean lo más acotadas posible; segundo, el sistema debe ser la base para futuras misiones aeroespaciales, por lo tanto debe ser fácilmente adaptable a nuevos requerimientos funcionales que incluyen la adición de nuevos \textit{payloads} y sus módulos de control. En el futuro la arquitectura del sistema debe proveer la capacidad de análisis del sistema a los nuevos desarrolladores con el objetivo de determinar claramente qué módulos se deben intervenir para agregar nuevas funcionalidades o corregir posibles errores. Especial mención requiere la necesidad de expandir el sistema, pues se considera como filosofía de trabajo en el proyecto 
+SUCHAI el contar siempre con un sistema funcional ante la eventual posibilidad de lanzar el satélite. Así, se partirá implementado un sistema que realice las operaciones básicas o requerimientos mínimos para así agregar complejidad y funciones al software de manera incremental. Lo anterior conduce a poner especial énfasis en el diseño de una arquitectura que genere un software modular, reusable, analizable y modificable, elementos agrupados en la característica 'mantenible' de la norma ISO/IEC 25010\cite{ISO25010}.
 
 La fiabilidad del sistema es un elemento importante en cualquier misión espacial debido al ambiente extremo en el cual se desarrolla la misión, lo que incluye grandes cambios de temperatura y los efectos de la radiación solar sobre los componentes electrónicos\cite{REQUERIDA}. Esto significa que el sistema debe tener una nivel de tolerancia a fallas y ser capaz de recuperarse ante una interrupción o fallo. En lo que a software respecta, la característica de tolerancia a fallos será considera en su nivel básico, debido a que por lo general esto significa diseñar sistemas altamente redundantes con una serie de estados de funcionamiento que elevan la complejidad del diseño siguiendo una línea contraria a otros requerimientos no operacionales.
 
@@ -87,14 +88,59 @@ La fiabilidad del sistema es un elemento importante en cualquier misión espacial
 
 La idoneidad funcional es un requisito importante, desde el siguiente punto de vista: si bien en la etapa de diseño no se busca obtener una solución detallada de la implementación de cada uno de los requerimientos operacionales, la arquitectura seleccionada de tener una respuesta a cada función necesaria de implementar para ser considerada como válida. Posiblemente en las primeras iteraciones se busque cumplir con los requisitos mínimos de la misión, pero la arquitectura debe ser la idónea para delinear claramente la forma de agregar todas las funcionalidades requeridas y que las tareas requeridas sean llevadas a cabo de manera correcta.
 
-Existen algunos características de calidad que no serán relevantes en este diseño ya que al ser la primera aproximación en la materia para el equipo se requiere mantener cierto nivel de simplicidad en la solución, luego probarla y así ganar la experiencia necesaria en el desarrollo de tecnología aeroespacial. Por ejemplo el desempeño, referido a términos computacionales, no es una restricción importante por la siguientes razones: se cuenta con una plataforma de baja capacidad de cómputo y limitados recursos energéticos; el sistema requiere realizar una cantidad limitada de tareas; tareas de alta demanda computacional pueden ser realizadas en tierra; y no se consideran tareas que requieran una gran precisión de tiempo. La seguridad tampoco es una componente fundamental, si bien, se podría requerir evitar un uso mal intencionado de la plataforma por parte de otros operadores satelitales -salvo por errores- esto es poco probable; por el contrario se busca obtener la mayor cooperación posible de otros operadores como por ejemplo la comunidad de radioaficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que por la naturaleza de las plataformas a que se apunta se cuenta con muy bajo nivel de estandarización en los niveles más cercanos al hardware.
+Existen algunos características de calidad que no serán relevantes en este diseño ya que al ser la primera aproximación en la materia para el equipo se requiere mantener cierto nivel de simplicidad en la solución, luego probarla y así ganar la experiencia necesaria en el desarrollo de tecnología aeroespacial. Por ejemplo el desempeño, referido a términos computacionales, no es una restricción importante por la siguientes razones: se cuenta con una plataforma de baja capacidad de cómputo y limitados recursos energéticos; el sistema requiere realizar una cantidad limitada de tareas; tareas de alta demanda computacional pueden ser realizadas en tierra; y no se consideran tareas que requieran una gran precisión de tiempo. La seguridad tampoco es una componente fundamental, si bien, se podría requerir evitar un uso mal intencionado de la plataforma por parte de otros operadores satelitales -salvo por errores- esto es poco probable; por el contrario se busca obtener la mayor cooperación posible de otros operadores 
+como por ejemplo la comunidad de radioaficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que por la naturaleza de las plataformas a que se apunta se cuenta con muy bajo nivel de estandarización en los niveles más cercanos al hardware.
 
 Por último la tabla \ref{tbl:ch2:req_no_func} resume los requerimientos no funcionales del proyecto asignándole cierta prioridad o importancia a considerar en el diseño.
 
 \tabla{tablas/req_no_operacionales.pdf}{width=\textwidth}{Requerimientos no funcionales}{tbl:ch2:req_no_func}{!h}
 
+\subsection{Requerimientos mínimos}
+Para que el sistema desarrollado en el proyecto SUCHAI pueda considerarse como un satélite, el vehículo debe satisfacer al menos los requerimientos mínimos dispuestos en la tabla \ref{tbl:ch2:req_min}.
+
+\tabla{tablas/req_minimos.pdf}{scale=1.0}{Requerimientos no mínimos}{tbl:ch2:req_min}{!h}
+
+Dada la naturaleza iterativa de la metodología de trabajo, es importante considerar los requerimientos mínimos a la hora de la implementación de la arquitectura pues dará al sistema la simplicidad necesaria asegurando funcionalidad. La completitud de los requerimientos operacionales se obtendrán como mejoras incrementales sobre los requerimientos mínimos ya mencionados.
+
 \section{Plataforma}
-Se describe la plataforma final donde se ejecutará la aplicación, en este caso un sistema embebido consistente de un PIC24FJ256GA110
+La plataforma para la cual se diseña el software corresponde a un kit Cubesat de una unidad adquirido a la compañía Pumpkins Inc. El kit está compuesto por una chasis de 1U con caras perforadas, un computador abordo con placa madre tipo 
+%TODO COMPLETAR
+
+%Figura - CubesatKit 1U
+\figura{img/cubesatkit_1u.jpg}{scale=1}{Chasis Pumpkins para Cubesat de 1U}{img:ch3:cubesatkit_1u}{!h}
+
+\subsection{Computador a bordo}
+
+%Figura - On board computer
+\begin{figure}[ht!] \centering
+	\subfloat[Placa madre]{\includegraphics[scale=0.4]{img/mb.jpg}}
+	\hspace{1cm} %Espacio horizontal
+	\subfloat[Módulo del procesador]{\includegraphics[scale=0.4]{img/ppm.jpg}}
+	\caption{Dos módulos que componen el computador a bordo del satélite}\label{img:ch3:obc}
+\end{figure}
+
+% \figura2{img/mb.jpg}{scale=0.6}{Placa madre}{img/ppm.jpg}{scale=0.6}{Módulo del procesador}{Dos módulos que componen el computador a bordo del satélite}{img:ch3:obc}
+
+El computador a bordo del satélite está compuesto por una placa madre que contiene un conector PC104 a través del cual se conectan el resto de los subsistemas y por el módulo para el procesador que se conecta directamente a la placa madre.
+
+La placa cuenta además con un reloj de tiempo real que se comunica por I2C el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo; cuenta con una interfaz de memoria SD para contar con un medio de almacenamiento masivo de hasta 2GB; una interfaz USB 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador\cite{CUBESAT_MB}.
+
+El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una memoria flash de 64Mbit con interfaz SPI; osciladores; circuitos de alimentación, protección de sobre corriente y reset. El microcontrolador posee la siguientes características\cite{CUBESAT_PPM}:
+
+\begin{itemize}
+	\item Arquitectura de 16 bit.
+	\item Memoria de programa flash de 256KB.
+	\item 16KB de memoria SRAM.
+	\item Hasta 16MIPS @ 32MHz.
+	\item 4 UARTs, 3SPIs, 3I2Cs.
+	\item ADC de 10bit, 16 canales, 500ksps.
+	\item 5 timers de 16bit.
+	\item RTCC, WDT
+\end{itemize}
+
+%TODO TERMINAR DESCRIPCCION DE PLATAFORMA
+
+
 
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
