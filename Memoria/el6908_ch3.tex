@@ -119,8 +119,6 @@ La plataforma para la cual se diseña el software corresponde a un kit Cubesat de
 	\caption{Dos módulos que componen el computador a bordo del satélite}\label{img:ch3:obc}
 \end{figure}
 
-% \figura2{img/mb.jpg}{scale=0.6}{Placa madre}{img/ppm.jpg}{scale=0.6}{Módulo del procesador}{Dos módulos que componen el computador a bordo del satélite}{img:ch3:obc}
-
 El computador a bordo del satélite está compuesto por una placa madre que contiene un conector PC104 a través del cual se conectan el resto de los subsistemas y por el módulo para el procesador que se conecta directamente a la placa madre.
 
 La placa cuenta además con un reloj de tiempo real que se comunica por I2C el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo; cuenta con una interfaz de memoria SD para contar con un medio de almacenamiento masivo de hasta 2GB; una interfaz USB 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador\cite{CUBESAT_MB}.
@@ -132,15 +130,22 @@ El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una mem
 	\item Memoria de programa flash de 256KB.
 	\item 16KB de memoria SRAM.
 	\item Hasta 16MIPS @ 32MHz.
-	\item 4 UARTs, 3SPIs, 3I2Cs.
+	\item 4 UARTs, 3 SPIs, 3 I2Cs.
 	\item ADC de 10bit, 16 canales, 500ksps.
 	\item 5 timers de 16bit.
 	\item RTCC, WDT
 \end{itemize}
 
-%TODO TERMINAR DESCRIPCCION DE PLATAFORMA
+Como se observa las capacidades de cómputo de las plataformas son muy limitadas, así como la cantidad de memoria de programa y de datos disponible. Esto supone fuertes restricciones tanto en el diseño e implementación del software en tanto no se puede recurrir a alternativas como un sistema operativo Linux o utilizar lenguajes de programación interpretado tipo Java o Python. Las implicancias de las restricciones impuestas por la plataforma de hardware derivan en los siguientes puntos:
 
+\begin{itemize}
+	\item Se deberá utilizar las herramientas de desarrollo que provee el fabricante del microcontrolador, es decir, lenguaje C para el compilador XC16 de Microchip.
+	\item Se debe efectuar un trabajo de bajo nivel implementado drivers para los periféricos del microcontrolador y para cada dispositivo que se agrega al sistema.
+	\item Sólo existen algunos sistemas operativos básicos para este tipo de dispositivos, y en general permiten organizar el software en módulos, procesos o tareas que se ejecuten de manera concurrente.
+	\item Existe una cantidad muy limitada de código previo, reutilizable, para implementar el diseño de la aplicación, descartando de plano la posibilidad de utilizar bases de datos tipo SQL, protocolos TCP, UDP o librerías POSIX.
+\end{itemize}
 
+Con todo el diseño de la aplicación final será a medida y no deriva de un trabajo previo, con el objetivo de ajustarse a los requerimientos y restricciones de la mejor manera posible.
 
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
