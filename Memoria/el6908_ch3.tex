@@ -147,8 +147,41 @@ Como se observa las capacidades de cómputo de las plataformas son muy limitadas,
 
 Con todo el diseño de la aplicación final será a medida y no deriva de un trabajo previo, con el objetivo de ajustarse a los requerimientos y restricciones de la mejor manera posible.
 
+
+
+
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
 \subsection{Controladores de hardware}
 \subsection{Sistema operativo}
+
 \subsection{Aplicación}
+
+Para el diseño de la aplicación se estudió la adaptación de un patrón de diseño utilizado en la programación orientada a objetos, llamado \textit{command pattern}. Este patrón de diseño soluciona la necesidad de realizar peticiones a diferentes objetos sin necesidad de saber cómo se ejecutaran estas acciones, de este modo la petición es encapsulada en como un comando que entrega al objeto adecuado para ser ejecutado. Este patrón entrega algunas ventajas como: separar los módulos que generan los comandos de aquellos que los ejecutan; la posibilidad de gestionar colas de comandos, registros u deshacer acciones; y ofrecer un flujo uniforme para ejecutar las acciones permitiendo extender el software al agregar comandos nuevos.
+
+%TODO: MAS DETALLES DEL PATRON ESTUDIADO
+
+%TODO: *Solo se justifica tener tareas cuando son activas, no cuando se mantienen dormidas todo el tiempo y se deben sincronizar.
+
+Como las restricciones que se han impuesto al diseño de la aplicación indican que no se utilizará un lenguaje de programación orientado a objetos, se realizará una adaptación de la idea de este patrón de diseño, donde los objetos serán representados como módulos estáticos, con posibilidad de generar comunicación y sincronización entre estos módulos.
+
+%TODO: MAS DETALLES DE LA ADAPTACION
+
+Los módulos fundamentales de la arquitectura son lo siguientes:
+
+\paragraph{Listeners}. Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes dentro de \textit{command pattern}. Estos módulos son los únicos encargados de generar los comandos en el sistema. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene del hecho de que la justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de software para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. Estos módulos permiten extender las funcionalidades del satélite en cuanto se requiera un aplicación que dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se puede considerar como un \textit{listener} los siguientes procesos:
+
+\begin{itemize}
+	\item Dado un temporizador, realizar de manera periódica una revisión del estado del sistema.
+	\item Dada la posición actual en la órbita, ejecutar un plan de vuelo.
+	\item Dado que llegan telecomandos desde la estación terrena, procesarlos y ejecutar las solicitudes.
+	\item Dado que se reciben datos por el puerto serial, procesar y ejecutar las acciones solicitadas.
+\end{itemize}
+
+Se hace hincapié en que la existencia de cada \textit{listener} requiere de una subsistema o variable al cual prestar atención, ya sea un temporizador, la posición actual o el arribo de un telecomando por mencionar algunos ejemplos. Una vez definido esto, el programador debe determinar bajo qué condiciones se toma la decisión de generar un determinado comando que realice las acciones requeridas.
+
+Los \textit{listeners} no realizan acciones que involucren directamente el acceso a otros subsistemas, evitando así el uso simultaneo de recursos de hardware -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. Por lo tanto sólo se permite el acceso al repositorio de estados, repositorio de datos y repositorio de comandos. Tampoco en este nivel se ejecutan directamente los comandos, sino que son generados y encolados para su posterior funcionamiento. Esto plantea la limitante de que quien envía el comando no puede saber si fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr la retroalimentación necesaria a través de la lectura por parte del \textit{listener} del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado.
+
+\paragraph{Dispatcher}
+\paragraph{Executer}
+\paragraph{Repositorios}
