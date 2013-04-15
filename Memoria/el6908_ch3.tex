@@ -169,7 +169,8 @@ Como las restricciones que se han impuesto al diseño de la aplicación indican qu
 
 Los módulos fundamentales de la arquitectura son lo siguientes:
 
-\paragraph{Listeners}. Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes dentro de \textit{command pattern}. Estos módulos son los únicos encargados de generar los comandos en el sistema. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene del hecho de que la justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de software para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. Estos módulos permiten extender las funcionalidades del satélite en cuanto se requiera un aplicación que dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se puede considerar como un \textit{listener} los siguientes procesos:
+\paragraph{Listeners.} Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes dentro de \textit{command pattern}. Estos módulos son los únicos encargados de generar los comandos en el sistema. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene del hecho de que la justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de software para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. Estos módulos permiten extender las 
+funcionalidades del satélite en cuanto se requiera un aplicación que dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se puede considerar como un \textit{listener} los siguientes procesos:
 
 \begin{itemize}
 	\item Dado un temporizador, realizar de manera periódica una revisión del estado del sistema.
@@ -182,6 +183,30 @@ Se hace hincapié en que la existencia de cada \textit{listener} requiere de una 
 
 Los \textit{listeners} no realizan acciones que involucren directamente el acceso a otros subsistemas, evitando así el uso simultaneo de recursos de hardware -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. Por lo tanto sólo se permite el acceso al repositorio de estados, repositorio de datos y repositorio de comandos. Tampoco en este nivel se ejecutan directamente los comandos, sino que son generados y encolados para su posterior funcionamiento. Esto plantea la limitante de que quien envía el comando no puede saber si fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr la retroalimentación necesaria a través de la lectura por parte del \textit{listener} del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado.
 
-\paragraph{Dispatcher}
-\paragraph{Executer}
+\paragraph{Dispatcher.} El siguiente nivel en la arquitectura es el módulo \textit{Dispatcher}. Dentro del patrón de diseño original tiene su símil con el objeto denominado \textit{Invoker} en cuanto es el encargado de pedir la ejecución de un comando generado por un \textit{listener}. Todos los comandos que son generados por los múltiples \textit{listeners} llegan a al módulo \textit{dispatcher} y son encolados, en este nivel se realiza un control sobre los comandos que llegan y se pueden establecer políticas de rechazo a la ejecución de comandos. Si el comando es aceptado el \textit{dispatcher} encargará su ejecución al siguiente nivel de la arquitectura. Entre las responsabilidades que pueden ser asignadas se encuentran:
+
+\begin{itemize}
+	\item Recibir todos los comandos generados y decidir si serán enviados para su ejecución.
+	\item Ordenar la ejecución de comandos según prioridades.
+	\item Filtrar comandos según el estado de salud del sistema. Por ejemplo, evitar ejecutar comandos que usan mucha energía cuando
+	el nivel de carga de las baterías sea crítico.
+	\item Filtrar los comandos provenientes o hacia un determinado subsistema que pueda estar causando fallas.
+	\item Llevar un registro de los comandos que se han generado
+	\item Llevar un registro del resultado de la ejecución de comandos.
+\end{itemize}
+
+Sólo una instancia de este módulo existe en el sistema permitiendo centrar en este apartado las estrategias de control de las operaciones que realizan en el sistema sin afectar el funcionamiento de otras áreas. La información que dispone el \textit{dispatcher} para establecer el control son dos: el estado del sistema obtenido desde el repositorio correspondiente y la meta información disponible en los comandos que son encolados.
+
+\paragraph{Executer.} Corresponde al módulo final en el flujo de comandos del sistema, donde estos son ejecutados. Corresponde al objeto \textit{reciver} dentro del patrón de diseño original en cuanto este módulo es quien finalmente realiza las acciones solicitadas. El \textit{Executer} recibe un comando desde el \textit{Dispatcher} y obtiene la función que se debe ejecutar desde el repositorio de comandos. Se ejecuta la función que realiza todas las acciones que implementa dicho comando como: leer datos, acceder a dispositivos, cálculos y guardar resultados, se espera su término y su código de retorno es notificado finalmente al \textit{dispatcher}.
+
+La funciones del \textit{executer} incluyen recibir el comando, identificar y obtener la función a ejecutar, sus parámetros realizar el llamado a la función, recibir el código de retorno y notificar a al \textit{dispatcher} el resultado del comando. En cuánto a la cantidad de \textit{executers} que pueden existir en el sistema se pueden tomar dos aproximaciones:
+
+\begin{itemize}
+	\item \textbf{Executer único:} Tener un sólo \textit{executer} que se ejecuta con máxima prioridad frente a los otros módulos permite brindar acceso exclusivo del sistema al comando en ejecución. Se ahorra de esta manera todos los problemas que surgen de sincronizar el uso compartido de recursos o subsistemas. Sin embargo se debe cuidar que el comando en ejecución no cause una falla que deje al sistema congelado.
+	
+	\item \textbf{Múltiples executers:} Se puede implementar una patrón \textit{Thread Pool}\cite{REQUERIDA} para permitir la ejecución de varios comandos de manera concurrente. Esto implica tener varios \textit{executers} esperando a recibir comandos desde una cola. Cuando un \textit{executer} esté disponible toma un comando y lo ejecuta, encolando también su resultado. Se puede obtener un sistema que funcione de manera más fluida cuando se cuenta con una alta demanda de comandos, sin embargo se requiere una cuidada sincronización de los recursos compartidos que utilice cada comando para evitar situaciones de \textit{data race}.
+\end{itemize}
+
+En el diseño actual se considera la utilización de sólo un \textit{executer} considerando que el sistema no será utilizado bajo una alta demanda de ejecución de comandos según lo expresado en los requerimiento no operacionales y aprovechando la ventaja que implica librarse de requerir una gran cantidad de elementos de sincronización entre procesos concurrentes.
+
 \paragraph{Repositorios}
