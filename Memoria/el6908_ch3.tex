@@ -2,11 +2,7 @@
 
 \section{Resumen}
 
-En este capítulo se describe el proceso de diseño del software de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos funcionales de la misión así, requerimientos generales de desarrollo, así como la plataforma de hardware sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final.
-
-El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global en base a módulo y se centra en específico en la aplicación de un determinado patrón de diseño que guía la solución propuesta en forma de una arquitectura basada en \textit{command patern}
-
-Para el diseño de la arquitectura se ha utilizado un patrón de diseño llamado \textit{command pattern} el cual se programa en lenguaje C para el compilador Microchip MPLAB C30 V3.3x utilizando el sistema operativo FreeRTOS. Todo esto sobre una plataforma de desarrollo CubesatKit que cuenta con un procesador PIC24FJ256GA110.
+En este capítulo se describe el proceso de diseño del software de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos operacionales de la misión; requerimientos no operacionales relacionados con la calidad del software; la plataforma de hardware sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final. El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de ésta y se centra en específico en el diseño de una arquitectura a nivel de aplicación basada en un patrón de diseño. Finalmente se realiza un análisis del diseño para plantear una arquitectura final que permita implementar todas las funcionalidades detalladas en los requerimientos no operacionales.
 
 \section{Requerimientos}
 \subsection{Requerimientos operacionales}
@@ -212,9 +208,7 @@ Los módulos en ejecución requieren del acceso a los datos básicos del sistema, q
 
 La arquitectura de software de la aplicación para la operación del satélite queda descrita por el diagrama de la figura \ref{img:ch3:arch} que describe el flujo de información entre los diferentes módulos que componen el software, así como sus dependencias, principales operaciones y su correspondencia con el patrón de diseño que inspira la arquitectura propuesta.
 
-%TODO: Actualizar imagen, para que quepa bien en una página
-%TODO: Una imagen general, luego en análsis describir la arquitectura que se implementará
-\figura{img/arch.pdf}{width=\textwidth}{Arquitectura de software para el control del satélite}{img:ch3:arch}{!h}
+\figura{img/arch_general.pdf}{width=\textwidth}{Arquitectura de software para el control del satélite}{img:ch3:arch}{!h}
 
 %TODO: Flujo de ejecución de la aplicación.
 
@@ -333,7 +327,6 @@ La arquitectura se completa con los repositorios de datos, que según lo analizad
 
 Con esto, el resultado del diseño de la arquitectura de software queda detallado en la figura \ref{img:ch3:dis:arch} que muestra los módulos participantes y el flujo de información en esta arquitectura:
 
-%TODO: Actualizar imagen, para que quepa bien en una página
 \figura{img/arch_suchai.pdf}{width=\textwidth}{Arquitectura de software para el control del satélite}{img:ch3:dis:arch}{!h}
 
 Las capas inferiores en la arquitectura global no se ven afectados por los requerimientos operaciones, en cuanto su diseño e implementación es menos flexible y siempre necesaria para sostener la arquitectura de nivel de aplicación. En la capa de \textit{drivers} lo importante contar con la librerías de acceso a todos los dispositivos requeridos. La capa de sistema operativo actúa como caja negra en cuanto se utiliza una solución de terceros lo cual es ventajoso en cuanto la interfaz hacia el \textit{middelware} y hacia la capa de aplicación esté bien definida.

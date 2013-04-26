@@ -103,10 +103,10 @@ order=2
 
 [item:Memoria/el6908_ch3.tex]
 archive=true
-column=498
+column=24
 encoding=ISO-8859-15
 highlight=LaTeX
-line=42
+line=210
 mode=LaTeX
 open=true
 order=1
@@ -366,7 +366,7 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch3.tex]
-CursorColumn=498
-CursorLine=42
+CursorColumn=24
+CursorLine=210
 JumpList=
 ViMarks=
