@@ -145,6 +145,14 @@ Con todo el diseño de la aplicación final será a medida y no deriva de un trabaj
 
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
+A nivel global la arquitectura del sistema se divide en tres niveles: controladores de hardware; sistema operativo y aplicación. En este nivel se propone una arquitectura de capas donde cada nivel se interactúa sólo con su capa superior e inferior \cite{SOFTWARE_ING}. Las capas agrupan funcionalidades similares y ven a su capa inferior como un prestador de servicios. Esta arquitectura es una buena forma de proveer sistemas portables entre diferentes plataformas de hardware porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de software en sistemas embebidos.
+
+La capa de más bajo nivel corresponde a los controladores de hardware, que pueden ser varios módulos específicos a cada pieza de hardware o susbistema presente; por lo general existen varias alternativas de hardware disponibles para un mismo objetivo, de modo que esta capa puede cambiar su implementación prestando los mismos servicios a capas superiores. La capa intermedia corresponde al sistema operativo, que provee soporte para la gestión de tareas en el sistema embebido permitiendo la ejecución concurrente de procesos. La capa superior es específica a la aplicación e implementa la funcionalidad final del sistema embebido que se diseña.
+
+Dada la naturaleza de la plataforma en la cual se implementará la arquitectura, puede existir la necesidad de una comunicación entre capas no adyacentes, lo cual se debe evitar en lo posible pues habla de la falta de funciones de una determinada capa intermedia o una inadecuada abstracción de funciones.
+
+\figura{img/arch_global.pdf}{scale=0.9}{Arquitectura de tres capas para un sistema embebido.}{img:ch3:arch_global}{!h}
+
 \subsection{Controladores de hardware}
 \subsection{Sistema operativo}
 
