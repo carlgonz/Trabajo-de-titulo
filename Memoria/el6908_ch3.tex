@@ -145,15 +145,93 @@ Con todo el diseño de la aplicación final será a medida y no deriva de un trabaj
 
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
-A nivel global la arquitectura del sistema se divide en tres niveles: controladores de hardware; sistema operativo y aplicación. En este nivel se propone una arquitectura de capas donde cada nivel se interactúa sólo con su capa superior e inferior \cite{SOFTWARE_ING}. Las capas agrupan funcionalidades similares y ven a su capa inferior como un prestador de servicios. Esta arquitectura es una buena forma de proveer sistemas portables entre diferentes plataformas de hardware porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de software en sistemas embebidos.
-
-La capa de más bajo nivel corresponde a los controladores de hardware, que pueden ser varios módulos específicos a cada pieza de hardware o susbistema presente; por lo general existen varias alternativas de hardware disponibles para un mismo objetivo, de modo que esta capa puede cambiar su implementación prestando los mismos servicios a capas superiores. La capa intermedia corresponde al sistema operativo, que provee soporte para la gestión de tareas en el sistema embebido permitiendo la ejecución concurrente de procesos. La capa superior es específica a la aplicación e implementa la funcionalidad final del sistema embebido que se diseña.
-
-Dada la naturaleza de la plataforma en la cual se implementará la arquitectura, puede existir la necesidad de una comunicación entre capas no adyacentes, lo cual se debe evitar en lo posible pues habla de la falta de funciones de una determinada capa intermedia o una inadecuada abstracción de funciones.
+En este nivel se propone una arquitectura de capas. Las diferentes capas agrupan funcionalidades similares y cada una interactúa sólo con la directamente superior e inferior, en una dinámica donde la capa inferior es una prestadora de servicios para la capa superior\cite{SOFTWARE_ING}. Esta arquitectura es una buena forma de proveer sistemas portables entre diferentes plataformas de hardware porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de software en sistemas embebidos donde se pueden distinguir al menos tres niveles: capa de bajo nivel relacionada con los controladores de hardware, también llamada a menudo como capa de abstracción de hardware o HAL por sus siglas en inglés; la cada intermedia que corresponden al nivel del sistema operativo o gestor de tareas del sistema; y una capa superior que corresponde a la 
+aplicación final del sistema.
 
 \figura{img/arch_global.pdf}{scale=0.9}{Arquitectura de tres capas para un sistema embebido.}{img:ch3:arch_global}{!h}
 
+La capa de más bajo nivel corresponde a los controladores de hardware, que pueden ser varios módulos específicos a cada pieza de hardware o subsistema presente y permite a las capas superior acceder al hardware sin conocer en detalle sus particularidades. Por ejemplo esta capa presta los servicios de acceder a periféricos de comunicaciones o subsistemas de hardware externo como puden ser los diferentes \textit{payloads}. Por lo general existen varias alternativas de hardware disponibles para un mismo objetivo o bien se requiere que el sistema se adapte a la presencia de diferentes \textit{payloads}, la integración de variado hardware en este nivel permite mantener el resto del sistema intacto siempre y cuando se respeten las interfaces entre capas.
+
+La capa intermedia corresponde al sistema operativo, que provee soporte para la gestión de tareas en el sistema embebido permitiendo la ejecución concurrente de procesos. A este nivel de diseño la decisión de qué sistema operativo utilizar no es relevante, pues toda la lógica de gestión de tareas está concentrada en esta capa que utilizará las funcionalidades dadas por la capa de más bajo nivel y provee sus funcionalidades a la capa superior o de aplicación.
+
+La capa superior es específica a la aplicación e implementa la funcionalidad final del sistema embebido que se diseña. Nuevamente se observa la ventaja de utilizar un diseño de capas en la arquitectura global, en cuanto la capa inferior e intermedia será común en cualquier sistema embebido y el diseño de la aplicación final puede contar con estos servicios. Esto significa que al implementar ambos niveles se tiene un porcentaje considerable de un nuevo desarrollo listo.
+
+Una de las principales desventajas de esta arquitectura, sobre todo en sistema embebidos, es puede existir la necesidad de una comunicación entre capas no adyacentes\cite{SOFTWARE_ING} rompiendo la arquitectura. Esto se debe tratar de evitar, o al menos realizarlo de manera controlada.
+
 \subsection{Controladores de hardware}
+En todo sistema computacional se requiere de una capa de bajo nivel que realice la interfaz entre el hardware y el software, para entregar las funcionalidades de configurar, controlar y deshabilitar adecuadamente las diferentes piezas de hardware. Se llaman controladores de hardware o \textit{drivers} a aquellas librerías de software que permiten inicializar y manejar el acceso a este hardware por parte de las capas superiores de sistema operativo y aplicación\cite{EMBEDDED_ARCHITECTURE}.
+
+Se requiere al menos un controlador para cada hardware existente en el sistema embebido, y se diseñan bajo la idea de agrupar hardware de similares características o funcionalidades bajo una interfaz común que permita abstraer las particularidades de la implementación en cada pieza de hardware. Hacia las capas superiores se maneja el ``que hace'' el dispositivo entregando por lo general funciones básicas que persisten entre diferentes arquitecturas de hardware como: la inicialización, encendido o habilitación del dispositivo; su configuración; la lectura de datos desde el dispositivo; la escritura de datos hacia el dispositivo; y finalmente deshabilitar o apagar este dispositivo. Además cada hardware puede poseer funcionalidades específicas que también deben ser accesibles a través del driver.
+
+Hacia la capa de hardware el controlador maneja el ``como'', lo que incluye por lo general el manejo de las interfaces de entrada y salida de datos; manejo de las interrupciones; o manejo de la memoria del dispositivo. Si bien la implementación de cada controlador es específica al dispositivo, se pueden diferenciar al menos tres tipos de arquitecturas comunes en la implementación de estas piezas de software: controladores de entrada y salida síncronos; controladores de entrada y salida asíncronos; y colas de entrada de datos seriales.
+
+\subsubsection{Controladores de entrada y salida síncronos}
+Se considera el uso de una arquitectura de controladores síncronos cuando las tareas que lo invocan necesariamente deben esperar la respuesta del controlador. Si se provee la adecuada sincronización, entonces el resto del sistema puede seguir funcionando mientras la tarea en cuestión se encuentra esperando. Cuando el controlador termina el proceso de entrada o salida de datos, la tarea retoma su funcionamiento.
+
+La arquitectura correspondiente se detalla en la figura \ref{img:ch3:driver:sincrono} donde se observa que el driver se provee como un módulo, o función, que es llamado por alguna capa superior en la arquitectura. Una vez que el controlador tiene acceso al dispositivo a través de alguna estructura de sincronización realiza las operaciones de entrada y salida. Estas operaciones se pueden o no realizar a través de rutinas de atención de interrupciones o bien mediante un \textit{polling} al estado del dispositivo. Si se usa la rutina de atención de interrupciones, esta pieza de software también se considera parte del controlador.
+
+\figura{img/driver_sincrono.pdf}{scale=1.3}{Arquitectura para controladores síncronos}{img:ch3:driver:sincrono}{!h}
+
+El módulo del controlador realiza las siguientes acciones:
+\begin{itemize}
+	\item Iniciar las operaciones de entrada y salida.
+	\item Esperar por una estructura de sincronización.
+	\item Obtener el estado o la información desde el dispositivo.
+	\item Retornar la información requerida.
+\end{itemize}
+
+Cuando se utiliza una rutina de atención de interrupciones, esta se encarga de las siguientes operaciones:
+\begin{itemize}
+	\item Atender la interrupción y restablecer el estado del dispositivo.
+	\item Obtener datos desde, o agregar datos en el dispositivo
+	\item Liberar la estructura de sincronización cuando se terminen las operaciones.
+\end{itemize}
+
+\subsubsection{Controladores de entrada y salida asíncronos}
+En ocasiones la tarea que solicita a acciones al controlador puede continuar su ejecución sin esperar el resultado. En esta caso se habla de un controlador asíncrono. Este tipo de driver no es común de encontrar y por lo general se puede evitar cuando, para la tarea que llama al driver, no tiene mucho sentido avanzar en su ejecución antes de que se terminen las operaciones de entrada y salida. Un caso especial corresponde a la ejecución en diferentes etapas de la operaciones del driver, en donde la tarea mandante puede procesar los datos de una etapa mientras el proceso de entrada o salida continua su ejecución.
+
+La arquitectura para este tipo de drivers se detalla en la figura \ref{img:ch3:driver:asincrono}. Se observa que el driver lo componen el módulo o función que ejecuta la operaciones, la rutina de atención de interrupciones así como una cola de mensajes que almacena los resultados parciales de la operación de entrada o salida. Acá el driver se sincroniza con la tarea a través de una cola de mensajes, donde se almacenan los resultados parciales o de cada etapa del proceso completo para que la tarea pueda procesar en paralelo esta información.
+
+\figura{img/driver_asincrono.pdf}{scale=1.3}{Arquitectura para controladores asíncronos}{img:ch3:driver:asincrono}{!h}
+
+Las operaciones que realiza el controlador son las siguientes:
+\begin{itemize}
+	\item Esperar a que lleguen mensajes a la cola.
+	\item Obtener el mensaje y entregar la información a la tarea.
+	\item Continuar con nuevas operaciones de entrada o salida.
+\end{itemize}
+
+Mientras que en la rutina de atención de interrupciones se realiza lo siguiente:
+\begin{itemize}
+	\item Atender la interrupción y restablecer el estado del dispositivo.
+	\item Obtener la información desde (o enviar hacia) el dispositivo de hardware.
+	\item Empaquetar la información en un mensaje.
+	\item Agregar el mensaje a la cola.
+\end{itemize}
+
+\subsubsection{Cola de entrada de datos seriales}
+Un caso particular de driver asíncrono se observa de manera común en sistema embebidos y corresponde a la entrada de datos seriales asíncronos. En este tipo de controladores se cuenta con la llegada de una gran cantidad de datos y donde el término de la operación está determinada por la cantidad máxima de datos recibido o por algún dato indicador del término de la operación.
+
+La arquitectura que responde a esta situación se detalla en la figura \ref{img:ch3:driver:serial}. En este caso además del módulo o función del controlador, la rutina de atención de interrupciones y una cola de mensajes (opcional) se agrega un \textit{buffer} de memoria que es creado previo inicio de las operaciones de entrada de datos y que es accedido por referencia para evitar el uso adicional de memoria y copia de datos entre llamadas.
+
+\figura{img/driver_serial.pdf}{scale=1.3}{Arquitectura de un controlador de entrada serial}{img:ch3:driver:serial}{!h}
+
+Las operaciones que corresponden al módulo del controlador son:
+\begin{itemize}
+	\item Inicializar un \textit{buffer} de datos.
+	\item Si se implementa como driver asíncrono, entonces se espera por la llega de un nuevo mensaje.
+	\item Extraer los datos desde el \textit{buffer}
+	\item Retornar los datos hacia la tarea
+\end{itemize}
+
+Corresponde a la rutina de atención de interrupciones las siguientes operaciones:
+\begin{itemize}
+	\item Atender la interrupción y restablecer el estado del dispositivo.
+	\item Obtener el nuevo dato desde el dispositivo.
+	\item Agregar nuevo datos al \textit{buffer} (por referencias).
+	\item Si se detectar e final de la operación, señalizar o agregar un mensaje a la cola.
+\end{itemize}
+
 \subsection{Sistema operativo}
 
 \subsection{Aplicación}
