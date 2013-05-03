@@ -233,6 +233,28 @@ Corresponde a la rutina de atención de interrupciones las siguientes operaciones
 \end{itemize}
 
 \subsection{Sistema operativo}
+El sistema operativo es la capa de abstracción entre la capa de aplicación y el hardware en la arquitectura de capas de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo.\cite{EMBEDDED_ARCHITECTURE}
+
+Los servicios básicos que provee el sistema operativo a través de su kernel son:
+\begin{itemize}
+	\item \textbf{Gestión de tareas:} También denominada gestión de procesos. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se debe entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación y posee sus propios recursos y limitaciones de tiempo. Varias tareas pueden existir a la vez en el sistema y el sistema operativo se encarga de proveer de tiempo de procesamiento a cada una de las tareas disponibles. Existen diferentes alternativas apara gestionar la ejecución de las tareas en el sistema, de las cuales sobresalen dos \textit{preemptive} y cooperativo. La implementación de la aplicación y las tareas dependen mucho del modo de gestión de tareas que utiliza el sistema operativo por lo cual se describe cada modo a continuación:
+	\begin{itemize}
+		\item \textbf{Modo \textit{preemptive}:} El gestor de tareas puede interrumpir la tarea en cualquier momento de su ejecución para realizar el cambio de contexto y ceder el procesador a una tarea diferente. Por lo generar se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, entonces el sistema de gestión de tareas se asegura de que siempre se esté ejecutando la tarea de mayor prioridad disponible.
+		
+		\item \textbf{Modo cooperativo:} En el modo cooperativo el sistema operativo nunca inicia un cambio de contexto sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva tarea. El sistema operativo es quien decide la siguiente tarea a ejecutar ya sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas y cooperar con la ejecución del resto de las tareas iniciado el proceso de cambio de contexto.
+	\end{itemize}
+	
+	\item \textbf{Comunicación y sincronización entre tareas:} Si bien cada tarea posee su propio contexto de ejecución y pueden existir varias tareas funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre tareas para compartir estados y mensajes que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de hardware o requerirán de memoria compartida en esquemas tipo productor-consumidor donde el sistema operativo es quien provee las estructuras de sincronización adecuadas. El sistema operativo de encarga de proveer los mecanismos de comunicación y sincronización para asegurar que la información compartida no se corrompa y no existan interferencias entre tareas al acceder a recursos compartidos.
+	
+	\item \textbf{Temporización:} Dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs} para controlar la periodicidad o límites de tiempo de ejecución de cada tarea.
+	
+	\item \textit{Gestión de memoria:}
+	
+	%TODO AGREGAR IMAGEN CON ARUITECTURA GLOBAL DEL SISTEMA OPERATIVO
+	
+\end{itemize}
+
+
 
 \subsection{Aplicación}
 
