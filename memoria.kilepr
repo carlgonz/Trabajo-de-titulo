@@ -61,12 +61,30 @@ Highlighting=LaTeX
 Indentation Mode=normal
 Mode=LaTeX
 
+[document-settings,item:Memoria/el6908_ch4.tex]
+Bookmarks=
+Encoding=ISO-8859-15
+FoldedColumns=
+FoldedLines=
+Highlighting=LaTeX
+Indentation Mode=normal
+Mode=LaTeX
+
+[document-settings,item:Memoria/el6908_ch5.tex]
+Bookmarks=
+Encoding=ISO-8859-15
+FoldedColumns=
+FoldedLines=
+Highlighting=LaTeX
+Indentation Mode=normal
+Mode=LaTeX
+
 [item:Memoria/Memoria.tex]
 archive=true
-column=45
+column=7
 encoding=ISO-8859-15
 highlight=LaTeX
-line=103
+line=91
 mode=LaTeX
 open=true
 order=0
@@ -113,23 +131,23 @@ order=1
 
 [item:Memoria/el6908_ch4.tex]
 archive=true
-column=0
-encoding=
-highlight=
-line=0
-mode=
-open=false
-order=-1
+column=89
+encoding=ISO-8859-15
+highlight=LaTeX
+line=2
+mode=LaTeX
+open=true
+order=3
 
 [item:Memoria/el6908_ch5.tex]
 archive=true
 column=0
-encoding=
-highlight=
+encoding=ISO-8859-15
+highlight=LaTeX
 line=0
-mode=
-open=false
-order=-1
+mode=LaTeX
+open=true
+order=4
 
 [item:Memoria/escudoU.pdf]
 archive=true
@@ -342,8 +360,8 @@ open=false
 order=-1
 
 [view-settings,view=0,item:Memoria/Memoria.tex]
-CursorColumn=45
-CursorLine=103
+CursorColumn=7
+CursorLine=91
 JumpList=
 ViMarks=
 
@@ -368,5 +386,17 @@ ViMarks=
 [view-settings,view=0,item:Memoria/el6908_ch3.tex]
 CursorColumn=74
 CursorLine=281
+JumpList=
+ViMarks=
+
+[view-settings,view=0,item:Memoria/el6908_ch4.tex]
+CursorColumn=89
+CursorLine=2
+JumpList=
+ViMarks=
+
+[view-settings,view=0,item:Memoria/el6908_ch5.tex]
+CursorColumn=0
+CursorLine=0
 JumpList=
 ViMarks=
