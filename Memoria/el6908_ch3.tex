@@ -233,13 +233,12 @@ Corresponde a la rutina de atención de interrupciones las siguientes operaciones
 \end{itemize}
 
 \subsection{Sistema operativo}
-El sistema operativo es la capa de abstracción entre la capa de aplicación y el hardware en la arquitectura de capas de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo.\cite{EMBEDDED_ARCHITECTURE}
+El sistema operativo es la capa de abstracción entre la capa de aplicación y el hardware en la arquitectura de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo\cite{EMBEDDED_ARCHITECTURE}. Los servicios básicos que provee el sistema operativo a través de su kernel son:
 
-Los servicios básicos que provee el sistema operativo a través de su kernel son:
 \begin{itemize}
-	\item \textbf{Gestión de tareas:} También denominada gestión de procesos. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se debe entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación y posee sus propios recursos y limitaciones de tiempo. Varias tareas pueden existir a la vez en el sistema y el sistema operativo se encarga de proveer de tiempo de procesamiento a cada una de las tareas disponibles. Existen diferentes alternativas apara gestionar la ejecución de las tareas en el sistema, de las cuales sobresalen dos \textit{preemptive} y cooperativo. La implementación de la aplicación y las tareas dependen mucho del modo de gestión de tareas que utiliza el sistema operativo por lo cual se describe cada modo a continuación:
+	\item \textbf{Gestión de tareas:} También denominada gestión de procesos. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se debe entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación y posee sus propios recursos y limitaciones de tiempo. Varias tareas pueden existir a la vez en el sistema y el sistema operativo se encarga de proveer de tiempo de procesamiento a cada una de las tareas disponibles. Existen diferentes alternativas apara gestionar la ejecución de las tareas en el sistema, de las cuales sobresalen dos: \textit{preemptive} y cooperativo. La implementación de la aplicación y las tareas dependen mucho del modo de gestión de tareas que utiliza el sistema operativo por lo cual se describe cada uno a continuación:
 	\begin{itemize}
-		\item \textbf{Modo \textit{preemptive}:} El gestor de tareas puede interrumpir la tarea en cualquier momento de su ejecución para realizar el cambio de contexto y ceder el procesador a una tarea diferente. Por lo generar se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, entonces el sistema de gestión de tareas se asegura de que siempre se esté ejecutando la tarea de mayor prioridad disponible.
+		\item \textbf{Modo \textit{preemptive}:} El sistema operativo puede interrumpir la actual tarea cualquier momento de su ejecución para realizar el cambio de contexto y ceder el procesador a una tarea diferente. Por lo generar se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, entonces el sistema de gestión de tareas se asegura de que siempre se esté ejecutando la tarea de mayor prioridad disponible.
 		
 		\item \textbf{Modo cooperativo:} En el modo cooperativo el sistema operativo nunca inicia un cambio de contexto sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva tarea. El sistema operativo es quien decide la siguiente tarea a ejecutar ya sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas y cooperar con la ejecución del resto de las tareas iniciado el proceso de cambio de contexto.
 	\end{itemize}
@@ -248,13 +247,54 @@ Los servicios básicos que provee el sistema operativo a través de su kernel son:
 	
 	\item \textbf{Temporización:} Dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs} para controlar la periodicidad o límites de tiempo de ejecución de cada tarea.
 	
-	\item \textit{Gestión de memoria:}
+	\item \textbf{Gestión de memoria:} Las diferentes tareas y procesos que se ejecutan en el sistema requieren reservar, usar y liberar memoria de datos para su ejecución de manera segura, es decir, sin corromper la memoria utilizada por el resto de los procesos o el propio sistema operativo. Por esto el sistema operativo debe proveer servicios de gestión de memoria, como por ejemplo, la reserva dinámica de memoria de datos.
 	
-	%TODO AGREGAR IMAGEN CON ARUITECTURA GLOBAL DEL SISTEMA OPERATIVO
+	\item \textbf{Gestión de dispositivos de entrada y salida:} Los dispositivos de entrada y salida son compartidos por todas las tareas que se ejecutan, por lo tanto el sistema operativo provee el servicio de gestionar el acceso a estos dispositivos de manera uniforme y organizada.
 	
 \end{itemize}
 
+En cuanto a la arquitectura de software presente en un sistema operativo, se pueden encontrar al menos tres opciones bien conocidas: kernel monolítico, arquitectura en capas y micro kernel\cite{EMBEDDED_ARCHITECTURE}.
 
+\paragraph{Kernel monolítico.} En este tipo de kernel los servicios del sistema operativos se encuentran integrados a lo largo de la arquitectura que provee las cinco funcionalidades mencionadas anteriormente. Dada la dificultad de escalar y depurar este tipo de kernel, existe una variante en la cual los servicios del sistema operativo se integran como módulos. Una arquitectura básica de este tipo de sistemas se refleja en la figura \ref{img:ch3:kernel} a. Algunos sistemas operativos que usan esta arquitectura son: Linux, Jbed RTOS y MicroC/OS-II.
+
+\paragraph{Arquitectura de capas.} Los servicios del sistema operativos se presentan en una arquitectura jerárquica de capas, donde cada capa depende de los funcionalidades que proveen las capas inferiores. Ejemplos son: DOS/eRTOS y VRTX. Esta arquitectura se presenta en la figura \ref{img:ch3:kernel} b.
+
+\paragraph{Micro kernel.} Un sistema operativo con arquitectura de micro kernel provee las funcionalidades mínimas necesarias para su funcionamiento como el gestor de memorias y el gestor de procesos. El resto de las funcionalidades se proveen de manera separada usualmente en una arquitectura tipo cliente-servidor. Este tipo de sistemas es muy común en sistemas embebidos debido a que mantiene controlado el tamaño en memoria del sistema operativo y la velocidad de respuesta del sistema al no incluir componentes que son poco o para nada utilizados. Ejemplos de sistemas operativos con micro kernel son: FreeRTOS, Salvo RTOS y VxWorks. El esquema de estos sistema se aprecia en la figura \ref{img:ch3:kernel} c.
+
+%TODO: REHACER LOS DIAGRAMAS
+%···················· FIGURE ····················
+\begin{figure}[ht!] \centering
+\subfloat[Kernel monolítico]{\includegraphics[width=0.3\textwidth]{img/kernel_monolitico.jpg}}
+\subfloat[Kernel en capas]{\includegraphics[width=0.3\textwidth]{img/kernel_capas.jpg}} \\
+\subfloat[Micro kernel]{\includegraphics[width=0.3\textwidth]{img/kernel_micro.jpg}}
+\caption{Arquitecturas de sistemas operativos}\label{img:ch3:kernel}
+\end{figure}
+%················································
+
+
+En el diseño del software de vuelo el diseño de un sistema operativo está fuera del alcance del proyecto en cuanto existen una serie de alternativas ya disponibles para uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante para la plataforma de hardware utilizada.
+
+\begin{table}[ht!] \caption{Comparación de sistemas operativos para sistemas embebidos}
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright}p{2cm} p{2cm} >{\raggedright}X >{\raggedright}p{2.5cm} X} \hline
+\textbf{Sistema Operativo} & \textbf{Kernel} & \textbf{Gestión de tareas} & \textbf{Gestión de memoria} & \textbf{Sincronización} \\\hline
+FreeRTOS & Micro kernel & Preemptive o cooperativo, ambos con prioridades. & Fija, best fit o dinámica & Semáforos, semáforos binarios, mutex, colas. \\
+Salvo & Micro kernel & Cooperativo con prioridades & No tiene & Semáforos, semáforos binarios, mensajes, colas de mensajes.\\
+AVIX & Monolítico & Preemptive con prioridades & Dinámica & Semáforos, mutex, grupos de eventos, pipes, mensajes.\\ 
+uC/OS-II & Micro kernel & Preemptive con prioridades & Por bloques fijos & Semáforos, eventos, mutex, colas. \\
+Q-Kernel & Monolítico & Preemptive o cooperativo, ambos con prioridades & Dinámica & Semáforos, mutex, eventos, mensajes, pipes.\\
+RoweBots DSPnano & Micro kernel & Preemptive con prioridades & Dinámica & Semáforos, mutex, variables condicionales, barreras, eventos.\\
+embOS & Micro kernel & Preemptive con prioridades & No tiene & Semáforos, mensajes\\
+\hline
+\end{tabularx}\label{tab:chp3:so}
+\end{table}
+
+%REF
+%http://www.avix-rt.com/Products/Specification/specification.html
+%http://micrium.com/rtos/ucosii/features/
+%http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=2519&param=en546021
+%http://www.segger.com/embos.html
+%http://www.quasarsoft.com/products.html
 
 \subsection{Aplicación}
 
