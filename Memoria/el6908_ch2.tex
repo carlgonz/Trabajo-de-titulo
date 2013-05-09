@@ -311,26 +311,75 @@ producto o sistema puede ser modificado por los mantenedores.
 
 % ============= SATELITES ==============
 
-\subsection{Satélites}
-En general sobre lo qué es una satélite y tópicos transversales a todo proyecto aeroespacial.
+\subsection{Pequeños Satélites}
 
-\subsubsection{Pico-satélites}
-% Satélites de menos de hasta 1Kg de peso y un volumen inferior a 1L.
+
 \subsubsection{Satélites tipo Cubesat}
-% Estándar y aplicaciones de satélites tipo Cubesat desarrollados por Calpoly.
-\paragraph{Estándar}
+A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo proveer acceso al espacio a pequeños \textit{payloads} en un corto periodo de desarrollo y abajo costo se provee un nuevo estándar para pico-satélites denominado Cubesat. El estándar considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 [kg] como el detallado en la figura \ref{img:ch2:cubesat} (a). El proyecto contempla tanto las especificaciones generales del satélite así como una plataforma estándar para desplegar los satélites desde el vehículo de lanzamiento, denominada P-POD. Cada P-POD consiste en un compartimiento capaz de albergar tres Cubesat y desplegarlos mediante una sistema de resortes ante la señal generada por el vehículo de lanzamiento. La figura \ref{img:ch2:cubesat} (b) detalla la estructura de un P-POD.
+
+%···················· FIGURE ····················
+\begin{figure}[ht!] \centering
+\subfloat[Cubesat]{\includegraphics[scale=0.6]{img/cubesat.jpg}} \hspace{0.5cm}
+\subfloat[P-POD]{\includegraphics[scale=0.6]{img/ppod.jpg}}
+\caption{Satélite tipo Cubsat}\label{img:ch2:cubesat}
+\end{figure}
+%···············································
+
+\paragraph{Estándar.} Las restricciones que fija el estándar Cubesat se detallan formalmente en las especificaciones de diseño desarrolladas por \textit{California Polytechnic State University}\cite{CUBESAT_CDS} y a continuación se detallan las principales consideraciones:
+\begin{itemize}
+	\item \textbf{Requerimientos generales}
+	\begin{itemize}
+		\item Todos los componentes deben estar fijos al satélite durante el lanzamiento, despliegue y operación. No se permite liberar elementos extras al espacio.
+		\item No se permite ningún tipo de elemento explosivo o pirotécnico.
+		\item La energía química almacenada no debe superar los 100 [Wh]
+	\end{itemize}
+
+	\item \textbf{Requerimientos Mecánicos}
+	\begin{itemize}
+		\item La configuración y dimensiones del satélite deben estar de acuerdo a la figura \ref{img:ch2:cds}
+		\item El cubo debe tener dimensiones de 100x100x113 [mm] en x,y,z respectivamente según la figura \ref{img:ch2:cds}
+		\item Los componentes no deben sobresalir más de 6.5 [mm] en dirección normal a cada cara.
+		\item Sólo los rieles exteriores de la estructura pueden tener contacto con el P-POD.
+		\item El satélite no debe superar los 1.33 [kg] de masa.
+		\item La estructura externa debe estar construida en aluminio 7075 o 6061.
+	\end{itemize}
+
+	 \item \textbf{Requerimientos Eléctricos}
+	 \begin{itemize}
+	 	\item Ningún componente electrónico debe estar activo durante el lanzamiento, esto incluye desactivar completamente o descargar las baterías.
+	 	\item El Cubesat debe poseer un interruptor en la base de uno de sus rieles que permita apagar completamente el satélite cuando está presionado.
+	 	\item Adicionalmente debe contar con un conector tipo \textit{Remove Before Flight} que debe cortar toda la energía del satélite y será removido una vez se integre en el P-POD.
+	 \end{itemize}
+	 
+	 \item \textbf{Requerimientos de operación}
+	 \begin{itemize}
+	 	\item Cubesat con baterías deben ser capaces de recibir el comandos para apagar transmisiones según las regulaciones de la FCC.
+	 	\item Todos los mecanismos de despliegue del satélite no se deben activar antes de 30 minutos luego del despliegue desde el P-POD.
+	 	\item Transmisores de rados de potencia mayor a 1mW no debe transmitir antes de cumplirse 30 minutos luego del despliegue desde el P-POD.
+	 	\item Se debe contar con la licencia de uso de frecuencia de radio. Para frecuencias \textit{amateur} la coordinación se realiza a través de la \textit{International Amateur Radio Union} [IARU].
+	 \end{itemize}
+
+\end{itemize}
+
+El estándar mencionado corresponde a un Cubesat de una unidad (1U). Adicionalmente se pueden combinar hasta tres unidades para obtener Cubesat de 2U o 3U y así contar con mayor volumen para posicionar los componentes físicos del satélite y una mayor superficie para situar panales solares que brinden mayor autonomía energética.
+
+\figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño del estándar Cubsat}{img:ch2:cds}{!h}
+
 \paragraph{Aplicaciones}
+En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa \cite{TODO:REQUERIDA}. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
+
+Desde el punto de vista educacional, dadas las características de rápido desarrollo y a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educaciones y gobiernos de todo el mundo, teniendo como antecedente que la mayoría de los proyectos de satélites Cubesat han sido desarrollados por estudiantes en universidades con componentes comerciales. Contando con una plataforma estándar de vehículo espacial se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico capaces de tomar diferentes datos en el espacio abriendo las posibilidades de desarrollar investigación científica.
+
+%TODO: COMPLETAR APLICACIONES
 
 
 % ============= ANTECEDENTES GENERALES ==============
+% \section{Antecedentes generales}
+% \paragraph{Carrera satelital chilena}
 
-\section{Antecedentes generales}
-\paragraph{Carrera satelital chilena}
 
-
-% ============= ANTECEDENTES ESPECIFICOS ==============
-
-\section{Antecedentes específicos}
-\paragraph{SUCHAI proposal}
+% ============= ANTECEDENTES ESPECIFICOS =============
+\section{Proyecto SUCHAI}
 \paragraph{Investigaciones asociadas}
 \paragraph{Lagmuir Probe}
+\paragraph{Experimento de física}
