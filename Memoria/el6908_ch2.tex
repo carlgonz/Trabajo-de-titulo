@@ -21,9 +21,9 @@ Se deben revisar los siguientes temas que son parte del contexto del proyecto re
 %LEER Y CITAR EMBEDDED_ARCHITECTURE
 
 Los sistemas embebidos a diferencia de un computador personal que es usado con fines generales para una amplia variedad de tareas, son sistemas computacionales normalmente utilizados para atender una cantidad limitada de procesos, realizar tareas específicas o dotar de determinada inteligencia a un sistema más complejo. Un sistema embebido está compuesto por uno o más microcontroladores pequeños que cuentan con periféricos para manejar diferentes protocolos de comunicación; conversores ADC; timers; puertos de entrada y salida digitales, todo en integrado en un mismo chip para guardar espacio y ahorrar energía. Parte fundamental de un sistema embebido es el software que provee la funcionalidad final, usualmente se usa el término firmware para referirse a este código con que se programa el microcontrolador el cual por lo general es específico para la plataforma de hardware y se relaciona a muy bajo nivel. A diferencia de un computador de propósito general donde el usuario puede cargar una serie de programas en 
-él para un amplio rango de usos, el usuario de un sistema embebido no tiene la capacidad de reprogramarlo fuera de las posibilidades que el desarrollador ha brindado al sistema\cite{EMBEDDED}.\\
+él para un amplio rango de usos, el usuario de un sistema embebido no tiene la capacidad de reprogramarlo fuera de las posibilidades que el desarrollador ha brindado al sistema\cite{EMBEDDED_DESIGN}.\\
 
-Para el diseño de sistemas embebidos se debe considerar ciertos aspectos que los diferencian de otros tipos de sistemas de computacionales, tales como\cite{SE}:
+Para el diseño de sistemas embebidos se debe considerar ciertos aspectos que los diferencian de otros tipos de sistemas de computacionales, tales como\cite{SOFTWARE_ING}:
 
 \begin{itemize}
 	\item Un sistema embebido se mantiene siempre funcionando y debe proveer respuesta en tiempo real. Se debe diseñar considerando una operación continua y una posible reconfiguración del sistema estando ya en marcha.
@@ -89,7 +89,7 @@ Un sistema operativo es la aplicación base de un sistema computacional pues brin
 %··········································
 
 \subsubsection{Sistemas Operativos de Tiempo Real}
-Parte fundamental de un sistema operativo es su \textit{scheduler}, módulo encargado de intercambiar entre las múltiples tareas que se deben ejecutar cediendo un espacio de tiempo para utilizar le procesador. La forma en que trabaja el \textit{scheduler} define el tipo de sistema operativo que se posee. Un sistema operativo de tiempo real posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutara en un determinado momento se pueden cumplir los requerimientos estrictos de \textit{timing}\cite{FREERTOS}. Esto es un aspecto de especial interés en sistemas embebidos que normalmente requieren respuesta en tiempo real ante eventos no predecibles.\\
+Parte fundamental de un sistema operativo es su \textit{scheduler}, módulo encargado de intercambiar entre las múltiples tareas que se deben ejecutar cediendo un espacio de tiempo para utilizar le procesador. La forma en que trabaja el \textit{scheduler} define el tipo de sistema operativo que se posee. Un sistema operativo de tiempo real posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutara en un determinado momento se pueden cumplir los requerimientos estrictos de \textit{timing}\cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que normalmente requieren respuesta en tiempo real ante eventos no predecibles.\\
 
 La figura \ref{rtos} demuestra la forma de conseguir un sistema de tiempo real mediante el uso de prioridades para las diferentes tareas. En este ejemplo la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo ante la precencia de ciertos evento el sistema debe responder de manera instantánea cambiado de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica, por ejemplo. En este caso se asigna una alta prioridad para asegurar que el sistema operativo siempre ejecutara esta tarea cuando corresponda.
 
@@ -305,8 +305,8 @@ producto o sistema puede ser modificado por los mantenedores.
 %LEER Y CITAR EMBEDDED_ARCHITECTURE
 
 % ============= PATRONES DE DISEÑO ==============
-\subsubsection{Patrones de diseño}
-\paragraph{Command Pattern}
+% \subsubsection{Patrones de diseño}
+% \paragraph{Command Pattern}
 
 
 % ============= SATELITES ==============
@@ -366,12 +366,13 @@ El estándar mencionado corresponde a un Cubesat de una unidad (1U). Adicionalmen
 \figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño del estándar Cubsat}{img:ch2:cds}{!h}
 
 \paragraph{Aplicaciones}
-En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa \cite{TODO:REQUERIDA}. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
+En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
 
-Desde el punto de vista educacional, dadas las características de rápido desarrollo y a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educaciones y gobiernos de todo el mundo, teniendo como antecedente que la mayoría de los proyectos de satélites Cubesat han sido desarrollados por estudiantes en universidades con componentes comerciales. Contando con una plataforma estándar de vehículo espacial se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico capaces de tomar diferentes datos en el espacio abriendo las posibilidades de desarrollar investigación científica.
+Desde el punto de vista educacional, dadas las características de rápido desarrollo y a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educaciones y gobiernos de todo el mundo, teniendo como antecedente que la mayoría de los proyectos de satélites Cubesat han sido desarrollados por estudiantes en universidades utilizando componentes comerciales o desarrollos propios. El valor educacional de un proyecto satelital de estas características incluye: el desarrollo de nueva tecnología aeroespacial, que puede ser probada a pequeña escala en ambientes realistas; la formación de profesionales entrenados en el área mediante la experiencia práctica que brinda la ejecución de este tipo proyectos; la aplicación de metodologías en la formación académica que incluyan el trabajo en equipos multidisciplinarios.
 
-%TODO: COMPLETAR APLICACIONES
+Contando con una plataforma estándar de vehículo espacial se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico capaces de tomar diferentes datos en el espacio abriendo las posibilidades de desarrollar investigación científica. Entre las aplicaciones más destacadas se encuentra la observación remota de la tierra mediante el uso de sensores para tomar datos sobre la ionosfera y termosfera, o el uso de cámaras fotográficas que provean imágenes para un estudio posterior. Este tipo de misiones y sus datos pueden ser llegar incluso a poner a prueba sistemas de predicción o alerta temprana de desastres\cite{BECERRA_DIAZ}.
 
+Iniciativas privadas o de propósito general tales como redes de comunicaciones de apoyo en caso de catástrofe, redes de comunicaciones privadas, monitoreo remoto de plantaciones y proyectos de exploración minera son algunas de las posibles aplicaciones capaces de ser desarrolladas como un proyecto aeroespacial tipo Cubesat.
 
 % ============= ANTECEDENTES GENERALES ==============
 % \section{Antecedentes generales}
@@ -380,6 +381,14 @@ Desde el punto de vista educacional, dadas las características de rápido desarro
 
 % ============= ANTECEDENTES ESPECIFICOS =============
 \section{Proyecto SUCHAI}
-\paragraph{Investigaciones asociadas}
-\paragraph{Lagmuir Probe}
-\paragraph{Experimento de física}
+El proyecto SUCHAI (\textit{Satellite of University of Chile for Aerospace Investigation}) es el proyecto satelital desarrollado por el Departamento de Ingeniería Eléctrica de la Universidad de Chile con la participación de académicos, ingenieros y estudiantes. El proyecto consiste en el desarrollo, puesta en órbita y operación del primer satélite desarrollado netamente en el país.
+
+\figura{img/suchai_logo.png}{scale=0.3}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
+
+Se trata de un satélite tipo Cubesat de una unidad con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} a ser escuchado y decodificado por la estación terrena, ejecutar experimentos asociados a \textit{payloads} guardando estos datos y enviar como telemetría a la estación terrena la información de funcionamiento del satélite y los datos de los diferentes \textit{payloads}. Por otro lado, el desarrollo del proyecto permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local que será la base para futuras misiones relacionadas. Además permitirá integrar a alumnos de pregrado en el desarrollo de un proyecto multidisciplinario que requiere proponer soluciones no triviales a un problema abierto.
+
+El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media para ejecutar el \textit{software} que controla la operación del satélite en vuelo; el sistema de comunicaciones compuesto por un transmisor y receptor de radio UHF así como antenas a desplegar durante la operación; y un sistema de control de energía o EPS que incluya baterías y panales solares para proveer la energía eléctrica que permite operar al satélite así como cargar las baterías. Como carga útil se considera la integración de: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de la ionosfera tipo \textit{langmuir probe}; dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escasos de aire.
+
+% \subsection{Investigaciones asociadas}
+% \paragraph{Lagmuir Probe}
+% \paragraph{Experimento de física} 
