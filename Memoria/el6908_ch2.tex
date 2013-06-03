@@ -312,28 +312,35 @@ Un patrón de diseño por lo tanto, describe un problema de diseño particular y re
 
 Los patrones de diseño se encuentran documentados de manera bien homogénea a través de una plantilla que permite comprender rápidamente los siguientes aspectos fundamentales del diseño: cuál es el problema que se resuelve; cuál es la solución propuesta; y las consecuencias de su aplicación tales como ventajas y desventajas. Para ejemplificar a continuación se detallará uno de los ejemplos clásicos de patrones de diseño, denominado Modelo-Vista-Controlador.\cite{SYSTEM_PATTERNS}
 
-\paragraph{Modelo-Vista-Controlador.} Este patrón de diseño divide una aplicación interactiva en tres componentes: el modelo, que contiene la funcionalidad base y los datos; la vista, que despliega la información al usuario; y el controlador, que maneja la entrada del usuario para cambiar el estado de la aplicación. Así, la interfaz gráfica se refleja en el controlador y la vista, donde cada acción se propaga a través del controlador hacia el modelo, actualizando a la vez la vista.
+\paragraph{Modelo-Vista-Controlador.} Este patrón de diseño divide una aplicación interactiva en tres componentes: el modelo, que contiene la funcionalidad base y los datos; la vista, que despliega la información al usuario; y el controlador, que maneja la entrada del usuario para cambiar el estado de la aplicación. Así, la interfaz gráfica se refleja en el controlador y la vista, donde cada acción se propaga a través del controlador hacia el modelo, actualizando a la vez la vista.\cite{DESIGN_PATTERNS}\cite{SYSTEM_PATTERNS}
 
 \begin{itemize}
     \item \textbf{Contexto:} aplicaciones interactivas son un interfaz de usuario flexible.
     
     \item \textbf{Problema:} el diseño de una interfaz gráfica de usuario que esté desacoplada del programa principal. La interfaz gráfica por lo general debe ser flexible, permitiendo cambios en su distribución o la forma de llamar a las funcionalidades o varios métodos de entrada que llamando a la misma funcionalidad como botones, linea de comandos o menús. También se puede requerir portar la interfaz gráfica a diferentes ambientes o estándares manteniendo la funcionalidad de la aplicación. Otro caso típico corresponde a la visualización de la misma información de diferentes maneras o en diferentes ventana, como lo pueden ser vistas de gráficos o tablas para los mismos datos, por lo tanto se requiere desacoplar los datos de la vista para evitar la duplicación o corrupción de la información.
     
-    \item \textbf{Solución:} dividir la aplicación en tres áreas: el modelo, la vista y el controlador.
-    
-    \begin{itemize}
-        \item \textbf{Modelo:} encapsula la información y todas las funcionalidades de la aplicación, de manera independiente de su representación gráfica.
-        \item \textbf{Vista:} despliega la información al usuario, a partir de los datos del modelo. Permite múltiples formas de visualizar el modelo.
-        \item \textbf{Controlador:} cada vista tiene asociado un controlador que recibe la entrada del usuario, como presionar un botón o seleccionar una entrada de menú. El controlador solicita el servicio correspondiente al modelo, causando a la vez una actualización de la vista si es necesario.
-    \end{itemize}
+    \item \textbf{Solución:} dividir la aplicación en tres áreas: el modelo, la vista y el controlador. Donde el modelo controla la lógica y funcionalidades internas de la aplicación, la vista gestiona la representación de la aplicación hacia el usuario y el controlador maneja las entradas del usuario.
     
     El usuario sólo interactúa con el controlador, y los cambios realizados en el modelo debe ser propagados hacia la vista. Como cada vista comparte el modelo, los cambios se verán actualizados en cada una de ellas.
     
-    \item \textbf{Estructura:} %TODO: Agregar imagen MVC
+    \item \textbf{Estructura:} los componentes que completan la estructura del patrón MVC se detallan a continuación:
+    \begin{itemize}
+        \item \textbf{Modelo:} encapsula la información y todas las funcionalidades de la aplicación, de manera independiente de su representación gráfica. Provee los métodos para realizar los procesos específicos de la aplicación así como para acceder a los datos de esta. A la vez implementa el mecanismo de propagación de los cambios hacia las diferentes vista suscritas a este modelo.
+        
+        \item \textbf{Vista:} despliega la información al usuario, a partir de los datos del modelo. Permite múltiples formas de visualizar el modelo. Provee un método de actualización que es activado por el mecanismo de propagación de cambios del modelo suscrito.
+        
+        \item \textbf{Controlador:} cada vista tiene asociado un controlador que recibe la entrada del usuario, como presionar un botón o seleccionar una entrada de menú. El controlador solicita el servicio correspondiente al modelo, causando a la vez una actualización de la vista si es necesario.
+    \end{itemize}
+    
+    Para clarificar las relaciones entre los componentes del patrón se cuenta con el diagrama de la figura \ref{ch2:patterns:mvc:classes}. La esencia dinámica del patrón en ejecución se observa a través del diagrama de colaboración detallado en la figura \ref{ch2:patterns:mvc:collaboration}    
     
     \item \textbf{Consecuencias:} alguno de los beneficios que provee son: múltiples vistas para el mismo modelo; vistas sincronizadas dado que los cambios en el modelo se propagan a las vistas que lo comparten; vista y controlador intercambiable de manera independiente del modelo, permitiendo portar la aplicación a diferentes plataformas sin cambiar la funcionalidad. Por otro lado los inconvenientes que genera son: aumento de complejidad, al necesitar adaptar cada elemento de la vista al controlador y funcionalidades; excesivo número de actualizaciones al propagar cambios del modelo a todas las vistas; alto acoplamiento entre la vista y el controlador, aún como elementos separados su diseño está muy relacionado; acoplamiento entre el modelo y el conjunto vista-controlador, ya que cualquier cambios en la interfaz de los servicios que provee el modelo tiene un efecto directo en el funcionamiento de la vista y el controlado pues acceden directamente a estos servicios.
-
+    
 \end{itemize}
+
+\figura{img/mvc_class.png}{width=\textwidth}{Diagrama de clases del patrón de diseño MVC.}{ch2:mvc:command:classes}{!h}
+
+\figura{img/mvc_colab.png}{width=\textwidth}{Esquema de colaboración del patrón de diseño MVC.}{ch2::mvc:command:collaboration}{!h}
 
 Como se ve, el proceso de diseño de una aplicación, parte por la busca de patrones de diseño claramente documentados y que soluciones un tipo de problema similar al buscado. Comparar patrones de diseño cuando se tienen varios candidatos a solucionar el problema también se hace sencillo en cuanto la forma de presentar cada patrón permite obtener sus principales características y posible implementación.  Además una aplicación puede hacer uso de varios patrones de diseño en diferentes niveles de su arquitectura para cumplir la totalidad de las especificaciones.
 
@@ -345,14 +352,43 @@ Si bien el diseño de aplicaciones basadas en patrones está muy enfocada en la pr
 
 
 \subsubsection{Command Pattern}
-Dentro de los patrones clasificados como de comportamiento se encuentra el patrón de comandos o mejor conocido por su nombre en inglés \textit{command pattern} el cual de especial interés en este trabajo. Lo esencial de este patrón es separar el requerimiento de un servicio de su ejecución, encapsulándolo en la forma de un comando.
+Dentro de los patrones clasificados como de comportamiento se encuentra el patrón de procesador de comandos o mejor conocido por su nombre en inglés \textit{command pattern}\cite{DESIGN_PATTERNS} o \textit{command processor pattern}\cite{SYSTEM_PATTERNS} el cual es de especial interés en este trabajo. Lo esencial de este patrón es separar el requerimiento de un servicio de su ejecución, encapsulándolo en la forma de un comando.
 
 \begin{itemize}
     \item \textbf{Contexto:} Aplicaciones que requieren flexibilidad al añadir funcionalidades. Interfaces gráficas flexibles y extensibles. Aplicaciones orientadas a la ejecución de funciones por parte del usuario soportando características como llevar un registro de ejecución o deshacer acciones. Aplicaciones donde el instante de generación de un requerimiento es independiente del instante en que se ejecuta.
     
     \item \textbf{Problema:} Una aplicación que requiere dar soporte a una gran cantidad de funcionalidades, se puede ver beneficiada del aislar la forma genérica en que se realiza el llamado a esta función de su implementación misma. También cuando se requiere implementar funcionalidades como registro de eventos, deshacer, macros o suspender cierta ejecución de un proceso, se ve la necesidad de separar las funcionalidades del núcleo de la aplicación que las gestiona. Una aplicación que requiere ser altamente escalable sin afectar el código existente debe encontrar una manera homogénea de agregar estas funcionalidades nuevas.
+    
+    \item \textbf{Solución:} Encapsular los requerimientos en objetos llamados comandos, así cada llamada a una función específica crea un nuevo comando, también específico a esa llamada que implementa la funcionalidad. El patrón describe la estructura de gestión para la generación y ejecución de los comandos la cual es homogénea para cada comandos requerido. Las adaptabilidad y extensión de la aplicación se realiza mediante la implementación de nuevos comandos sobre el sistema de gestión base.
+    
+    \item \textbf{Estructura:} La arquitectura está compuesta por los siguientes módulos.
+    \begin{itemize}
+        \item \textbf{Comando:} Todos los comandos poseen una estructura básica, implementando un método para ejecutar el comando. Para cada función requerida en la aplicación se crea una derivación de la estructura base del comando que implementa la lógica requerida del comando.
+        \item \textbf{Controlador o cliente:} Representa la interfaz de la aplicación y para cada requerimiento crea el comando adecuado el que es transferido al procesador de los comandos.
+        \item \textbf{Procesador de comandos o \textit{invoker}:} Recibe los comandos, agenda e inicia su ejecución. Este módulo es independiente de cada comando, en cuanto sólo utiliza la interfaz genérica que cada comando debe respetar.
+        \item \textbf{Proveedor o receptor:} Provee la funcionalidad del comando en sí ya que la lógica de ejecución del comando incluye el llamado uno o varios del los servicios entregados por el proveedor.
+    \end{itemize}
+    El diagrama de la figura \ref{ch2:patterns:command:classes} detalla las relaciones entre los diferentes módulos o clases del patrón. La dinámica de la arquitectura se rescata en en la figura \ref{ch2::patterns:command:collaboration} que corresponde a un diagrama de colaboración entre los elementos de la estructura descrita.
+    
+    \item \textbf{Consecuencias:} La aplicación de este patrón de diseño implica los siguientes beneficios:
+    \begin{itemize}
+        \item Los comandos pueden ser requeridos de manera flexible, según se implemente el controlador. De hecho podrían existir más de un controlador o cliente generando el mismo comando desde diferentes modos.
+        \item La aplicación es fácil de modificar y extender a través de la implementación de nuevos comandos dado que el procesador de comandos sólo trabaja con la interfaz genérica del comandos. Es posible agregar comandos más complejos combinando los ya existentes en una especie de macro.
+        \item El procesador de comandos al centralizar la gestión de estos es el lugar adecuado para implementar servicios como:registro de comandos ejecutados; filtrar la ejecución de comandos; posponer, repetir o deshacer la ejecución de comandos; o gestionar un sistema de prioridades entre comandos.
+    \end{itemize}
+    
+    Entre las ventajas y limitaciones de este diseño conviene mencionar:
+    \begin{itemize}
+        \item La cantidad de comandos puede crecer considerablemente aumentando la complejidad de la aplicación.
+        \item La retroalimentación entre la ejecución del comando y el cliente que lo crea puede ser limitada.
+        \item Al desacoplar el momento de generar el comando con el momento de la ejecución en sí, pueden existir limitaciones en implementar aplicaciones basadas en eventos pues el comando obtendrá algunos parámetros de la aplicación sólo durante su ejecución.
+    \end{itemize}
+
 \end{itemize}
 
+\figura{img/command_processor_class.png}{width=\textwidth}{Diagrama de clases del patrón de diseño procesador de comandos.}{ch2:patterns:command:classes}{!h}
+
+\figura{img/command_processor_colab.png}{width=\textwidth}{Esquema de colaboración del patrón de diseño procesador de comandos.}{ch2::patterns:command:collaboration}{!h}
 
 % ============= SATELITES ==============
 
