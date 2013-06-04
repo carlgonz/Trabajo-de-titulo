@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.0
-lastDocument=Memoria/el6908_ch2.tex
+lastDocument=Memoria/el6908_ch4.tex
 masterDocument=Memoria/Memoria.tex
 name=Memoria
 pkg_extIsRegExp=false
@@ -62,7 +62,7 @@ Indentation Mode=normal
 Mode=LaTeX
 
 [document-settings,item:Memoria/el6908_ch4.tex]
-Bookmarks=17,14
+Bookmarks=
 Encoding=ISO-8859-15
 FoldedColumns=
 FoldedLines=
@@ -99,10 +99,10 @@ Mode=LaTeX
 
 [item:Memoria/Memoria.tex]
 archive=true
-column=7
+column=0
 encoding=ISO-8859-15
 highlight=LaTeX
-line=1
+line=109
 mode=LaTeX
 open=true
 order=0
@@ -139,20 +139,20 @@ order=4
 
 [item:Memoria/el6908_ch3.tex]
 archive=true
-column=73
+column=0
 encoding=ISO-8859-15
 highlight=LaTeX
-line=481
+line=370
 mode=LaTeX
 open=true
 order=2
 
 [item:Memoria/el6908_ch4.tex]
 archive=true
-column=413
+column=0
 encoding=ISO-8859-15
 highlight=LaTeX
-line=9
+line=120
 mode=LaTeX
 open=true
 order=3
@@ -388,8 +388,8 @@ open=false
 order=-1
 
 [view-settings,view=0,item:Memoria/Memoria.tex]
-CursorColumn=7
-CursorLine=1
+CursorColumn=0
+CursorLine=109
 JumpList=
 ViMarks=
 
@@ -412,16 +412,16 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch3.tex]
-CursorColumn=73
-CursorLine=481
+CursorColumn=0
+CursorLine=370
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch4.tex]
-CursorColumn=413
-CursorLine=9
+CursorColumn=0
+CursorLine=120
 JumpList=
-ViMarks=a,17,0,b,14,0
+ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch5.tex]
 CursorColumn=0

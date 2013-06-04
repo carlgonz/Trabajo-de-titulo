@@ -35,3 +35,96 @@ La implementación del proyecto comienza por la definición del entorno y herramie
 \figura{img/cubesat_db.jpg}{scale=0.5}{Tarjeta de desarrollo para Cubesat Kit de Pumpkins}{img:ch4:cubesat_db}{!h}
 
 \section{Organización del proyecto}
+
+\subsection{Directorios}
+Con el objetivo de mantener un orden lógico a lo largo del desarrollo del software se debe dar una estructura lógica a los diferentes archivos fuentes que lo componen. Así se organiza un árbol de directorio que permita encontrar de manera sencilla cada archivo fuente según su función en el sistema. La organización de los directorios sigue la arquitectura de capas a nivel global de la aplicación quedando de la siguiente manera
+\begin{verbatim}
+	  +-main/
+	  |
+	  +-Drivers/
+	  | |
+	  | +-include/
+	  |
+	  +-<RTOS>/
+	  |
+	  +-Payloads/
+	  | |
+	  | +-Cmd/
+	  | | |
+	  | | +-include/
+	  | | 
+	  | +-Drivers/
+	  |   |
+	  |   +-include/
+	  | 
+	  +-<Proyecto>.X/
+	  |
+	  +-System/
+	  | |
+	  | +-include/
+	  |
+	  |_main.c
+\end{verbatim}
+
+Los desarrollos deben seguir esta estructura al momento de agregar archivo con código fuente al sistema. En la tabla \ref{ch4:table:directory} se detalla la funcionalidad de cada directorio.
+
+\begin{table}[ht!] \caption{Organización de directorios del proyecto}
+\centering
+\begin{tabularx}{\textwidth}{lX}\hline
+\textbf{Directorio} & \textbf{Descripción}\\\hline
+\texttt{main} & Directorio principal, contiene el archivo main.c y archivos de configuración globales\\
+\texttt{include} & Dentro de cada directorio de fuentes, se agrega un directorio \textit{include} que contiene las cabeceras de cada archivo fuente en el nivel superior.\\
+\texttt{Drivers} & Contiene las fuentes para los drivers del sistema como el computador a bordo, el sistema de comunicaciones y el sistema de energía.\\
+\texttt{<RTOS>} & Carpeta con el nombre del sistema operativo. Contiene los archivos fuentes, cabeceras y librerías del sistema operativo según su organización particular.\\
+\texttt{Payloads} & Comandos y drivers relacionados con \textit{payloads}. Se encuentra en un directorio aparte pues acá se concentrarán la mayoría del software específico de la misión.\\
+\texttt{Payloads/Cmd} & Implementación de comandos del sistema relacionados con \textit{payloads}.\\
+\texttt{Payloads/Drivers} & Implementación de drivers relacionados con \textit{payloads}.\\
+\texttt{<Proyecto>.X} & Directorio con la configuración del proyecto generado por el IDE MPLABX.\\
+\texttt{System} & Archivos con las fuentes del sistema base, incluye implementación de comandos, repositorios y tareas.\\
+\hline
+\end{tabularx} \label{ch4:table:directory}
+\end{table}
+
+\subsection{IDE}
+Esta estructura de directorios creada es la base para configurar adecuadamente el proyecto en el IDE, en este caso MPLAB X. Para la correcta construcción de software en el IDE se deben ajustar las configuraciones del compilador según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion} (parámetros no mencionados mantienen su configuración por defecto):
+
+\begin{table}[ht!] \caption{Configuración del compilador XC16}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright}p{3cm} >{\raggedright}p{5cm} X}\hline
+\multicolumn{3}{c}{\textbf{XC16}}\\\hline
+\multicolumn{3}{c}{\textbf{xc16-gcc}}\\\hline
+
+\multicolumn{3}{c}{\textbf{Categoría: Memory Model}}\\\hline
+\textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
+Code model & Large & El tamaño de la aplicación supera el espacio de memoria cercano.\\
+Data model & Large & El tamaño de la aplicación supera el espacio de memoria cercano.\\
+Scalar model & Large & El tamaño de la aplicación supera el espacio de memoria cercano.\\
+Location of constant model & Code space & \\
+\hline
+
+\multicolumn{3}{c}{\textbf{Categoría: Optimizations}}\\\hline
+\textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
+Optimization level & 0 & Las optimizaciones pueden introducir cambios en la forma de ejecución del código, por ejemplo, evitar ciclos \texttt{for} o \textit{while} que realizan \textit{busy waitings}.\\
+\hline
+
+\multicolumn{3}{c}{\textbf{Categoria: Preprocesing and messages}}\\\hline
+\textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
+C include dirs & \texttt{..; ../Drivers/include; ../System/include; ../<RTOS>/<include>; ../Payloads/Cmd/include; ../Payloads/Drivers/include} & Configura los directorios donde el IDE busca las cabeceras para poder incluirlas solo por su nombre y activar el auto completado.\\
+Additional warnings & Seleccionada & Permite un nivel mayor de advertencias en tiempo de compilación\\
+\hline
+
+\end{tabularx} \label{ch4:table:xc16:configuracion}
+\end{table}
+
+Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se detallan en la figura \ref{ch4:xc16:config}.
+
+%···················· FIGURE ····················
+\begin{figure}[ht!] \centering
+\subfloat[]{\includegraphics[width=0.48\textwidth]{img/xc16_config_mem.png}}
+% \subfloat[]{\includegraphics[width=0.3\textwidth]{img/xc16_config_opt.psng}}
+\hspace{0.3cm}
+\subfloat[]{\includegraphics[width=0.48\textwidth]{img/xc16_config_prep.png}}
+\caption{Diálogo de configuración del compilador XC16 en MPLABX}\label{ch4:xc16:config}
+\end{figure}
+%················································
