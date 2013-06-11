@@ -16,6 +16,28 @@
 \usepackage{subfig}  %Subfloat
 \usepackage{acronym} %Acronimos
 \usepackage{tabularx}
+\usepackage{listings} %Codigo
+\usepackage{xcolor}
+
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=tb,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+  tabsize=4,
+  numbers=left,
+  numberstyle=\ttfamily\footnotesize
+}
+
+\lstset{style=customc}
+
 
 % ========== COMANDOS PERSONALIZADOS =======
 

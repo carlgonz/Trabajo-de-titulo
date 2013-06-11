@@ -102,7 +102,7 @@ archive=true
 column=0
 encoding=ISO-8859-15
 highlight=LaTeX
-line=109
+line=90
 mode=LaTeX
 open=true
 order=0
@@ -149,10 +149,10 @@ order=2
 
 [item:Memoria/el6908_ch4.tex]
 archive=true
-column=0
+column=11
 encoding=ISO-8859-15
 highlight=LaTeX
-line=120
+line=209
 mode=LaTeX
 open=true
 order=3
@@ -389,7 +389,7 @@ order=-1
 
 [view-settings,view=0,item:Memoria/Memoria.tex]
 CursorColumn=0
-CursorLine=109
+CursorLine=90
 JumpList=
 ViMarks=
 
@@ -418,8 +418,8 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch4.tex]
-CursorColumn=0
-CursorLine=120
+CursorColumn=11
+CursorLine=209
 JumpList=
 ViMarks=
 

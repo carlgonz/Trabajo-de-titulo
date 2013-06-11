@@ -86,7 +86,7 @@ Los desarrollos deben seguir esta estructura al momento de agregar archivo con c
 \end{table}
 
 \subsection{IDE}
-Esta estructura de directorios creada es la base para configurar adecuadamente el proyecto en el IDE, en este caso MPLAB X. Para la correcta construcción de software en el IDE se deben ajustar las configuraciones del compilador según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion} (parámetros no mencionados mantienen su configuración por defecto):
+Esta estructura de directorios creada es la base para configurar adecuadamente los archivos con las fuentes del proyecto en el IDE, en este caso MPLAB X. Para la correcta construcción de software en el IDE se deben ajustar las configuraciones del compilador según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion} (parámetros no mencionados mantienen su configuración por defecto):
 
 \begin{table}[ht!] \caption{Configuración del compilador XC16}
 \centering
@@ -108,7 +108,7 @@ Location of constant model & Code space & \\
 Optimization level & 0 & Las optimizaciones pueden introducir cambios en la forma de ejecución del código, por ejemplo, evitar ciclos \texttt{for} o \textit{while} que realizan \textit{busy waitings}.\\
 \hline
 
-\multicolumn{3}{c}{\textbf{Categoria: Preprocesing and messages}}\\\hline
+\multicolumn{3}{c}{\textbf{Categoria: Preprocessing and messages}}\\\hline
 \textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
 C include dirs & \texttt{..; ../Drivers/include; ../System/include; ../<RTOS>/<include>; ../Payloads/Cmd/include; ../Payloads/Drivers/include} & Configura los directorios donde el IDE busca las cabeceras para poder incluirlas solo por su nombre y activar el auto completado.\\
 Additional warnings & Seleccionada & Permite un nivel mayor de advertencias en tiempo de compilación\\
@@ -128,3 +128,116 @@ Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se d
 \caption{Diálogo de configuración del compilador XC16 en MPLABX}\label{ch4:xc16:config}
 \end{figure}
 %················································
+
+\section{Controladores de hardware}
+La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de hardware. En este caso un módulo significa una librería que consiste en una serie de funciones escritas en lenguaje C las cuales acceden a funcionalidades específica de cierto hardware respetando sus protocolos o API. La librería consta entonces de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
+
+La hoja de datos de cada dispositivo de hardware entrega la información necesaria para poder configurarlo y acceder a sus funciones. Se puede requerir de diferentes niveles de abstracción a la hora de implementar el controlador:
+\begin{enumerate}
+    \item Programar en lenguaje ensamblador (\textit{assembler}). Se maneja directamente el juego de instrucciones del procesador (también conocido como lenguaje máquina) para configurar sus registros, manejar periféricos o ejecutar un programa general. Requiere de un compilador de \textit{assembler} para generar el ejecutable binario.
+    \item Utilizar un compilador en C. El compilador provee un nivel mayor de abstracción al permitir programar en un lenguaje de alto nivel y portable como C. Además provee librerías básicas para las funciones específicas de cada dispositivo.
+    \item Utilizar una librería externa. Un controlador de hardware puede requerir los servicios de otro controlador para su funcionamiento. Es el caso típico de dispositivos que utilizan algún protocolo de comunicación (RS232, SPI, I2C) y su controlador consiste en implementar una API de llamadas sobre este protocolo.
+\end{enumerate}
+
+En este caso se hará un uso extensivo de las librerías escritas en C que provee el compilador XC16 para construir drivers más complejos a través de sus funciones base. Lo principal es implementar los drivers de cada periféricos disponible en el microcontrolador pues serán los recursos que utilizarán los dispositivos externos que completan el sistema del satélite.
+
+\subsection{Microcontrolador}
+
+\subsection{Periféricos}
+En la sección \ref{ch2:embedded:perif} se revisaron los periféricos disponibles en el PIC24F256GA110 en la tabla \ref{ch4:table:perif:list} se detalla la lista de drivers a implementar y la arquitectura que se utilizará en cada uno de ellos.
+
+\begin{table}[ht!] \caption{Drivers para periféricos del microcontrolador}
+\centering
+\begin{tabular}{ll}\hline
+\textbf{Periférico} & \textbf{Arquitectura} \\
+Timers & \\
+PWM & \\
+I2C & \\
+SPI & \\
+UART & \\
+Input Capture & \\
+RTCC & \\
+CRC & \\
+Comparadores & \\
+ADC & \\
+\\hline
+\end{tabular} \label{ch4:table:hardware_req}
+\end{table}
+
+\subsubsection{Implementación de un controlador síncrono}
+
+\subsubsection{Implementación de un controlador asíncrono}
+
+\section{Sistema operativo}
+En la capa de sistema operativo se ha optado por utilizar FreeRTOS. Este sistema operativo está diseñado específicamente para sistema embebidos y provee la capacidad de implementar tareas que son módulos de software que funciona de manera concurrente y puede compartir información a través de diferentes estructuras de sincronización. FreeRTOS soporta una gran variedad de microcontroladores, entre los cuales se encuentra la familia PIC24F, a través de \textit{ports} y aplicaciones demo que se obtienen al descargar el software. FreeRTOS consiste básicamente de 5 archivos fuentes en lenguaje C (sólo tres son necesarios para la utilidad básica), 11 archivos de cabecera y una capa portable dependiente del dispositivo sobre el cual se trabaja. Fuera de los demos y diferentes ports incluidos con la descarga el siguiente árbol de directorio se agrega a la carpeta del proyecto y en la configuración del proyecto en MPLABX:
+
+\begin{verbatim}
+FreeRTOS/Source/tasks.c
+FreeRTOS/Source/queue.c
+FreeRTOS/Source/list.c
+FreeRTOS/Source/portable/[compiler]/[architecture]/port.c
+FreeRTOS/Source/portable/[compiler]/[architecture]/portasm_[architecture].S
+FreeRTOS/Source/portable/MemMang/heap_2.c
+FreeRTOS/Source/include
+FreeRTOS/Source/portable/[compiler]/[architecture]
+\end{verbatim}
+
+Se requieren algunas configuraciones extra en el compilador para el correcto funcionamiento de FreeRTOS, como se detalla en la tabla \ref{ch4:table:xc16:configuracion:freertos}
+
+\begin{table}[ht!] \caption{Configuración del compilador XC16 para FreeRTOS}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright}p{3cm} >{\raggedright}p{5cm} X}\hline
+\multicolumn{3}{c}{\textbf{XC16}}\\\hline
+
+\multicolumn{3}{c}{\textbf{xc16-gcc}}\\\hline
+\multicolumn{3}{c}{\textbf{Categoría: Optimizations}}\\\hline
+\textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
+Omit frame pointer & Seleccionada & Ver documentación de FreeRTOS.\\
+\hline
+\multicolumn{3}{c}{\textbf{Categoría: Preprocessing and messages}}\\\hline
+\textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
+Define C macros & \texttt{MPLAB\_PIC24\_PORT} & Ver documentación de FreeRTOS.\\
+\hline
+
+\multicolumn{3}{c}{\textbf{xc16-as}}\\\hline
+\multicolumn{3}{c}{\textbf{Categoría: General Options}}\\\hline
+\textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
+ASM include dirs & \texttt{../FreeRTOS/Source/portable/MPLAB/PIC24\_dsPIC/} & Funciones \textit{assembler} específicas de la arquitectura.\\
+\hline
+
+\end{tabularx} \label{ch4:table:xc16:configuracion:freertos}
+\end{table}
+
+El primer paso para integrar el sistema operativo es crear el archivo de cabecera con su configuración llamado \texttt{FreeRTOSConfig.h}. El archivo se compone de una serie de 	\textit{defines} que cambian el comportamiento del sistema operativo y lo ajustan a las necesidades de la aplicación. Una plantilla con los posibles valores a configurar se encuentra en la página web de FreeRTOS: \url{http://www.freertos.org/a00110.html}. Un ejemplo de este archivo se detalla en el código \ref{ch4:code:FreeRTOSConfig.h}
+
+\begin{lstlisting}[float,label=ch4:code:FreeRTOSConfig,caption=FreeRTOSConfig.h]
+#ifndef FREERTOS_CONFIG_H
+#define FREERTOS_CONFIG_H
+
+#include <xc16.h>
+
+#define configUSE_PREEMPTION			1
+#define configUSE_IDLE_HOOK				1
+#define configUSE_TICK_HOOK				0
+#define configTICK_RATE_HZ				250
+#define configCPU_CLOCK_HZ				16000000
+#define configMAX_PRIORITIES			4
+#define configMINIMAL_STACK_SIZE		115
+#define configTOTAL_HEAP_SIZE			5120
+#define configMAX_TASK_NAME_LEN			8
+#define configUSE_TRACE_FACILITY		0
+#define configUSE_16_BIT_TICKS			1
+#define configIDLE_SHOULD_YIELD			1
+
+#define INCLUDE_vTaskPrioritySet		1
+#define INCLUDE_uxTaskPriorityGet		0
+#define INCLUDE_vTaskDelete				0
+#define INCLUDE_vTaskSuspend			1
+#define INCLUDE_vTaskDelayUntil			1
+#define INCLUDE_vTaskDelay				1
+
+#define configKERNEL_INTERRUPT_PRIORITY	0x01
+
+#endif /* FREERTOS_CONFIG_H */
+\end{lstlisting}
