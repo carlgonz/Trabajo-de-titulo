@@ -190,7 +190,7 @@ Se requieren algunas configuraciones extra en el compilador para el correcto fun
 \begin{tabularx}{\textwidth}{>{\raggedright}p{3cm} >{\raggedright}p{5cm} X}\hline
 \multicolumn{3}{c}{\textbf{XC16}}\\\hline
 
-\multicolumn{3}{c}{\textbf{xc16-gcc}}\\\hline
+\multicolumn{3}{c}{\textbf{xc16-gcc}}\\%\hline
 \multicolumn{3}{c}{\textbf{Categoría: Optimizations}}\\\hline
 \textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
 Omit frame pointer & Seleccionada & Ver documentación de FreeRTOS.\\
@@ -200,10 +200,10 @@ Omit frame pointer & Seleccionada & Ver documentación de FreeRTOS.\\
 Define C macros & \texttt{MPLAB\_PIC24\_PORT} & Ver documentación de FreeRTOS.\\
 \hline
 
-\multicolumn{3}{c}{\textbf{xc16-as}}\\\hline
+\multicolumn{3}{c}{\textbf{xc16-as}}\\%\hline
 \multicolumn{3}{c}{\textbf{Categoría: General Options}}\\\hline
 \textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
-ASM include dirs & \texttt{../FreeRTOS/Source/portable/MPLAB/PIC24\_dsPIC/} & Funciones \textit{assembler} específicas de la arquitectura.\\
+ASM include dirs & \texttt{../FreeRTOS/Source/portable/ MPLAB/PIC24\_dsPIC/} & Funciones \textit{assembler} específicas de la arquitectura.\\
 \hline
 
 \end{tabularx} \label{ch4:table:xc16:configuracion:freertos}
@@ -211,7 +211,7 @@ ASM include dirs & \texttt{../FreeRTOS/Source/portable/MPLAB/PIC24\_dsPIC/} & Fu
 
 El primer paso para integrar el sistema operativo es crear el archivo de cabecera con su configuración llamado \texttt{FreeRTOSConfig.h}. El archivo se compone de una serie de 	\textit{defines} que cambian el comportamiento del sistema operativo y lo ajustan a las necesidades de la aplicación. Una plantilla con los posibles valores a configurar se encuentra en la página web de FreeRTOS: \url{http://www.freertos.org/a00110.html}. Un ejemplo de este archivo se detalla en el código \ref{ch4:code:FreeRTOSConfig.h}
 
-\begin{lstlisting}[float,label=ch4:code:FreeRTOSConfig,caption=FreeRTOSConfig.h]
+\begin{lstlisting}[float,label=ch4:code:FreeRTOSConfig.h, caption=FreeRTOSConfig.h]
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
@@ -241,3 +241,133 @@ El primer paso para integrar el sistema operativo es crear el archivo de cabecer
 
 #endif /* FREERTOS_CONFIG_H */
 \end{lstlisting}
+
+En segundo lugar se deben crear las tareas que ejecutará el sistema. En FreeRTOS una tarea es una función con una firma específica y que por lo general entrará en un ciclo de permanente para mantener su ejecución en el tiempo. Toda tarea debe poseer la siguiente firma: \texttt{void taskName(void *)}, donde el nombre de la función varia de tarea en tarea, pero siempre debe retornar \textit{void} y recibir un puntero \textit{void} como parámetro. Un simple prototipo de tarea en FreeRTOS se detalla en el código \ref{ch4:code:taskTest}. La tarea se denomina \texttt{taskTest} y recibe a través de su parámetro una cadena de texto. La tarea entra en un ciclo e imprime de manera periódica el \textit{string} entregado como parámetro. Aunque la tarea está en un ciclo infinito, no se encuentra en una situación de \textit{busy waiting} dado que utiliza la función \texttt{vtaskDelay} que detiene la ejecución de la tarea durante un periodo de tiempo liberando los recursos del procesador; en este caso se dice que la tarea se encuentra dormida.
+
+\begin{lstlisting}[float,label=ch4:code:taskTest,caption=taskTest.c]
+#include taskTest.h
+
+void taskTest(void *param)
+{
+    const unsigned long Delayms = 500 / portTICK_RATE_MS;
+    char *msg = (char *)param;
+
+    while(1)
+    {
+        vTaskDelay(Delayms);
+        printf("[taskTest] %s\n", msg);
+    }
+}
+\end{lstlisting}
+
+Una vez programada la función que corresponde a la tarea, se puede configurar el sistema para que la ejecute. Esto se realiza en el archivo \texttt{main.c} donde se realizan las configuraciones del hardware, ser cargan las configuraciones del sistema operativo contenida en el archivo \texttt{FreeRTOSConfig.h}, se crean las tareas y se inicia el sistema operativo. Para crear tareas se utiliza la función \texttt{xTaskCreate} indicando la función a ejecutar, un nombre, prioridad, memoria asignada y parámetros; para detalles referirse a la documentación de FreeRTOS\cite{FREERTOS_API}. El sistema operativo se inicia con la función \texttt{vTaskStartScheduler()} y una vez alcanzado este punto, el control de los procesos a ejecutar queda en manos de FreeRTOS quien según su algoritmo de \texttt{scheduling} seleccionará la tarea que debe ejecutarse en cada instante. El llamado a la función \texttt{vTaskStartScheduler} no retorna a menos que se produzca un error en la ejecución del sistema operativo. El el código \ref{ch4:code:test:main.c} se ilustra la forma de iniciar FreeRTOS con dos tareas ejecutándose de manera simultanea, para mantener la generalidad no se incluyen configuraciones de hardware específicas.
+
+\begin{lstlisting}[float,label=ch4:code:test:main.c,caption=main.c]
+/* RTOS Includes */
+#include "FreeRTOSConfig.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* Task includes */
+#include "taskTest.h"
+
+int main(void)
+{
+    /* Crating all task */
+    xTaskCreate(taskTest, (signed char*)"taskTest", configMINIMAL_STACK_SIZE, (void *)"T1 Running...", 1, NULL);
+    xTaskCreate(taskTest, (signed char*)"taskTest", configMINIMAL_STACK_SIZE, (void *)"T2 Running...", 2, NULL);
+
+    /* Start the scheduler. Should never return */
+    printf(">>Starting FreeRTOS\n");
+    vTaskStartScheduler();
+    
+    /* Never get here */
+    return 0;
+}
+\end{lstlisting}
+
+El resultado de ejecutar el programa anterior se puede visualizar a través de la consola serial conectada al sistema objetivo:
+\begin{verbatim}
+>>Starting FreeRTOS scheduler [->]
+[taskTest] T2 Running...
+[taskTest] T1 Running...
+[taskTest] T2 Running...
+[taskTest] T1 Running...
+[taskTest] T2 Running...
+\end{verbatim}
+
+Se observa que la tarea de mayor prioridad es la primera en ejecutarse y por lo tanto imprime su mensaje en pantalla: \texttt{[taskTest] T2 Running...}. Esta tarea ahora pasa a estado suspendido y por lo tanto la siguiente tarea en orden de prioridad tiene acceso al procesador para ejecutarse, imprimir su mensaje: \texttt{[taskTest] T1 Running...} y pasar a estado suspendido. Cuando ninguna tarea está disponible para ejecutarse FreeRTOS ejecuta la tarea \texttt{Idle} iniciada por defecto por el sistema operativo. Luego de 500[ms] la tarea de mayor prioridad despierta y toma el control del procesador repitiendo el ciclo anterior.
+
+Con esto concluye la integración del sistema operativo en el software de vuelo y se demuestra el correcto funcionamiento de FreeRTOS. Ahora se cuenta con una nivel mayor de abstracción en la aplicación donde el sistema operativo tiene el control sobre los procesos que se ejecutan en el microcontrolador y la aplicación final se implementa en las diferentes tareas que se crean.
+
+%TODO: Hablar de la configuracion de memoria
+%TODO: Hablar de la configuracion de prioridades
+
+\section{Aplicación}
+En la capa de aplicación se debe implementar la arquitectura de software detallada en la figura \ref{img:ch3:dis:arch} que permite el cumplimiento de todos los requerimientos de operacionales del satélite. El proceso incluye interpretar el patrón de diseño que inspira la arquitectura base para ser implementado en un lenguaje \textit{procedural} como C. Conviene también implementar la arquitectura base del patrón de ejecutador de comandos para contar con un sistema base que sea general y bien probado sobre el cual implementar las funcionalidades específicas del proyecto. Las funciones específicas de un proyecto satelital estarán implementadas en la capa de \textit{listeners} y la lista de comandos por lo que finalmente se detalla la implementación de los distintos módulos que competan los requerimientos del proyecto SUCHAI en específico.
+
+\subsection{Implementación del patrón de diseño}
+Cómo se describe en la sección \ref{ch2:sec:214} se debe implementar un patrón de diseño, específicamente \textit{Command Pattern} en un lenguaje procedural como C. El problema radica en la programación basada en patrones de diseño es una técnica utilizada principalmente en lenguajes de programación orientados a objetos y los patrones se describen según diagramas de colaboración entre objetos incluyendo técnicas como herencia o polimorfismo. No obstante el diseño de una arquitectura de software debería ser independiente del lenguaje de programación a utilizar, así como también, el diseño de la arquitectura basándose en patrones\cite{SYSTEM_PATTERNS}. Para sortear esta situación se procede a definir cómo se traduce cada elemento del patrón de diseño deseado a la plataforma objetivo.
+
+\begin{itemize}
+    \item \textbf{Controladores o clientes:} Corresponderán a tareas del sistema operativo. Pueden ser tareas que se ejecuten de manera periódica o basadas en eventos. Los clientes estarán ejecutándose constantemente y según la inteligencia que tengan programada pueden responder a algún evento periódico o un estímulo externo para generar comandos al sistema. Cada tarea posee su propio \texttt{stack} de memoria y se pueden comunicar con otras o utilizar recursos compartidos del sistema a través de estructuras de sincronización.
+    
+    \item \textbf{Procesador de comandos o despachador:} Corresponde a una tarea del sistema operativo cuyo funcionamiento está basado en evento, en específico, el arribo de un comando.
+    
+    \item \textbf{Ejecutador:} El ejecutador también es una tarea del sistema operativo que se encarga de realizar la llamada del comando, es decir, ejecutar la función. Su funcionamiento es basado en eventos según la llegada de un comando.
+    
+    \item \textbf{Transferencia de comandos:} La transferencia de comandos se realiza a través de una cola de FreeRTOS, que es una estructura de sincronización que permite el intercambios de mensajes en un esquema productor-consumidor.
+    
+	\item \textbf{Comandos:} Los comandos están representados por un nuevo tipo definido en C. Este tipo hace referencia a una función con una firma específica. Siempre que una función cumpla la firma específica en el tipo definido podrá ser considerada un comando y ser ejecutada como tal. Para encapsular parámetros importante de un comando, que en el caso original serían variables de estado de un objeto, se crea una estructura en C.
+    
+    \item \textbf{Repositorios:} Los repositorios y proveedores de servicios se implementaran como librerías que acceden a funciones a las capas inferiores del sistema como drivers a submódulos o dispositivos de entrada y salida.
+\end{itemize}
+
+\subsection{Comandos}
+Los comandos se han implementado como funciones que deben respetar una firma específica que se convierte en un un nuevo tipo de dato. En este caso la función debe retornar un entero y recibir un parámetro, como se detalla en el código \ref{ch4:code:cmdFunction}, lo que define dos aspectos fundamentales del software:
+\begin{itemize}
+    \item Todo comando debe retornar un valor que puede tomar un significado dentro de la aplicación, en este caso, se define que el comando ha terminado su ejecución de manera insatisfactoria si retorna un valor cero o bien un valor no cero para indicar un éxito en la operación; con esa convención se hace natural utilizar el llamado a las funciones dentro de una sentencia condicional que utilice directamente el valor retornado como condición. 
+    
+    \item Por otro lado los comandos reciben un sólo parámetro, en principio de cualquier tipo, a través de un puntero de tipo \texttt{void}. Esto tiene una serie de consecuencias: por un lado se hace flexible la llamada a la función ya que diferentes comandos podrían recibir diferentes tipos de datos siempre que se dereferencien adecuadamente; también hace eficiente la llamada a la función pues no se requiere realizar una copia del parámetro en la llamada ya que pasan por referencia; la desventaja es natural al uso de punteros, pues este debe seguir siendo válido durante la ejecución del comando para evitar dereferenciar un puntero nulo o corromper algún sector de memoria.
+\end{itemize}
+
+\begin{lstlisting}[float,label=ch4:code:cmdFunction,caption=Prototipo de un comando]
+/**
+ *  Defines the prototype that every command must conform
+ */
+typedef int (*cmdFunction)( void * );
+\end{lstlisting}
+
+Para encapsular la información asociada a los comandos se crea una nueva estructura de datos definida como en el código \ref{ch4:code:ExeCmd} que representa a un comando que es entregado al módulo \textit{executer}. La estructura contiene dos campos: el puntero a la función que implementa el comando según la definición del código \ref{ch4:code:cmdFunction}; y el parámetro del comando.
+
+\begin{lstlisting}[float,label=ch4:code:ExeCmd,caption=Estructura de comandos para \textit{executer}]
+/**
+ * Structure that represents a command passed to executer. Contains a 
+ * pointer of type cmdFunction with the function to execute and one 
+ * parameter for that function
+ */
+typedef struct exec_command{
+    int param;                  ///< Command parameter
+    cmdFunction fnct;           ///< Command function
+}ExeCmd;
+\end{lstlisting}
+
+Con el objetivo de implementar una estrategia simple y flexible que permita tanto generar comandos así como determinar la función que se asocia a cada comandos se ha definidos una nueva estructura de datos que representa a los comandos que son generados por los \textit{listeners} cuya definición se detalla en el código \ref{ch4:code:DispCmd}. Si se utiliza la estructura definida en el código \ref{ch4:code:ExeCmd} significa que cada \textit{listener} debe conocer todos los comandos disponibles en el sistema y cada vez que se requiere generar un comando se debe agregar a mano la función que corresponde en la estructura. Esto genera inconvenientes ya que al separar la definición de cada comando archivos diferentes, se debe realizar una serie de \textit{includes} y por otra parte se hace poco automatizado la generación de comandos en serie.
+
+\begin{lstlisting}[float,label=ch4:code:DispCmd,caption=Estructura de comandos para \textit{dispatcher}]
+/**
+ * Structure that represent a command passed to dispatcher. Contains 
+ * only a code that represent the function to call, a paremeter and 
+ * other command's metadata
+ */
+typedef struct ctrl_command{
+    int cmdId;		///< Command id, represent the desired command
+    int param;		///< Command parameter
+    int idOrig;     ///< Metadata: Id of sender subsystem
+    int sysReq;     ///< Metadata: Level of energy the command requires
+}DispCmd;
+\end{lstlisting}
+
+La estrategia que se toma es la de asignar a cada comando un código numérico, %TODO --- Continuar con la forma de caracterizar un comando
+
+Finalmente todas estas definiciones son incluidas en un archivo de cabecera denominado \texttt{cmdIncludes.h} homogeneizando el tratamiento de los comandos a lo largo de la aplicación.
