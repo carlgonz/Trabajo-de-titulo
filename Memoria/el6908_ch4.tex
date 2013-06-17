@@ -129,6 +129,9 @@ Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se d
 \end{figure}
 %················································
 
+\subsection{Documentación}
+%TODO: Doxygen
+
 \section{Controladores de hardware}
 La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de hardware. En este caso un módulo significa una librería que consiste en una serie de funciones escritas en lenguaje C las cuales acceden a funcionalidades específica de cierto hardware respetando sus protocolos o API. La librería consta entonces de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
 
@@ -352,7 +355,15 @@ typedef struct exec_command{
 }ExeCmd;
 \end{lstlisting}
 
-Con el objetivo de implementar una estrategia simple y flexible que permita tanto generar comandos así como determinar la función que se asocia a cada comandos se ha definidos una nueva estructura de datos que representa a los comandos que son generados por los \textit{listeners} cuya definición se detalla en el código \ref{ch4:code:DispCmd}. Si se utiliza la estructura definida en el código \ref{ch4:code:ExeCmd} significa que cada \textit{listener} debe conocer todos los comandos disponibles en el sistema y cada vez que se requiere generar un comando se debe agregar a mano la función que corresponde en la estructura. Esto genera inconvenientes ya que al separar la definición de cada comando archivos diferentes, se debe realizar una serie de \textit{includes} y por otra parte se hace poco automatizado la generación de comandos en serie.
+Con el objetivo de implementar una estrategia simple y flexible que permita tanto generar comandos así como determinar la función que se asocia a cada comandos se ha definidos una nueva estructura de datos que representa a los comandos que son generados por los \textit{listeners} cuya definición se detalla en el código \ref{ch4:code:DispCmd}. Si se utiliza la estructura definida en el código \ref{ch4:code:ExeCmd} significa que cada \textit{listener} debe conocer todos los comandos disponibles en el sistema y cada vez que se requiere generar un comando se debe agregar a mano la función que corresponde en la estructura. Esto genera inconvenientes ya que al separar la definición de cada comando archivos diferentes se debe realizar una serie de \textit{includes}, también hace poco automatizado la generación de comandos en serie y no es una forma práctica de generar comandos de manera remota.
+
+Por esta razón los comandos serán representados a través de un código numérico único, delegando al repositorio de comandos la responsabilidad de mapear entre los códigos y la función asociada. La estructura de datos que representa a los comandos que son enviados desde los \textit{listeners} al \textit{dispatcher} contiene además ciertos meta datos que permiten al \textit{dispatcher} tomar decisiones sobre la ejecución de un comando basado en esta información extra. Dos campos de información son especialmente relevantes:
+
+\begin{itemize}
+    \item \textbf{Origen del comando:} este campo contiene un código numérico que identifica el módulo que ha generado el comando, esto permite implementar el filtrado de comandos desde cierto módulo cuando, por ejemplo, no esté funcionando correctamente.
+    
+    \item \textbf{Requerimiento de energía:} este campo indica el nivel de energía que requiere el comando para ejecutarse, así se pueden filtrar comandos que requieran mayor energía de la disponible en el sistema.
+\end{itemize}
 
 \begin{lstlisting}[float,label=ch4:code:DispCmd,caption=Estructura de comandos para \textit{dispatcher}]
 /**
@@ -368,6 +379,86 @@ typedef struct ctrl_command{
 }DispCmd;
 \end{lstlisting}
 
-La estrategia que se toma es la de asignar a cada comando un código numérico, %TODO --- Continuar con la forma de caracterizar un comando
+Todas estas definiciones son incluidas en un archivo de cabecera denominado \texttt{cmdIncludes.h} que homogeneiza el tratamiento de los comandos a lo largo de la aplicación.
 
-Finalmente todas estas definiciones son incluidas en un archivo de cabecera denominado \texttt{cmdIncludes.h} homogeneizando el tratamiento de los comandos a lo largo de la aplicación.
+La implementación de un comando en específico requiere la definición de una función que cumpla con la firma definida en el código \ref{ch4:code:cmdFunction}, un ejemplo es el código \ref{ch4:code:get_rtos_memory} donde se implementa el comando \texttt{get\_rtos\_memory}; notar que este comando forma parte del archivo \texttt{cmdOBC.c}, por lo tanto cada función y definición incluye el prefijo \texttt{obc\_} como parte del estándar de código utilizado en el proyecto. Este comando que será utilizado como ejemplo es, sin embargo, una importante funcionalidad dentro del software de vuelo que nos permitirá obtener información sobre el uso de memoria del sistema operativo. El objetivo es utilizar la función \texttt{xPortGetFreeHeapSize} de FreeRTOS que entrega la cantidad de memoria en \textit{bytes} disponible en el \textit{heap}\cite{FREERTOS_API} y desplegarla en consola. La convención indica que retornar un valor cero desde el comando significa error lo cual demuestra su conveniencia en este caso pues el comando puede retornar directamente la cantidad de memoria disponible.
+
+\begin{lstlisting}[float,label=ch4:code:get_rtos_memory,caption=Ejemplo de comando]
+/**
+ * Performs debug taks over current RTOS. Get rtos memory usage in bytes
+ *
+ * @param param Not used
+ * @return Availible heap memory in bytes
+ */
+int obc_get_rtos_memory(void *param)
+{
+    size_t mem_heap = xPortGetFreeHeapSize();
+    printf("Free RTOS memory: %d", mem_heap);
+
+    return mem_heap;
+}
+\end{lstlisting}
+
+Además de la implementación de la función se debe generar un método de registro del comando para que esté disponible en el sistema y sea reconocido por el repositorio de comandos. Este proceso es fundamental para permitir la modificabilidad del sistema de vuelo extendiéndolo a través de nuevos comandos, por lo cual se exploraron una serie de alternativas en pos de lograr el método más directo, transparente y de menor impacto en el código del proyecto:
+
+\begin{enumerate}
+    \item Un arreglo único de comandos centralizado en el repositorio de comandos. Se llena manualmente un arreglo de punteros a funciones tipo \textit{cmdFunction} y para registrar un nuevo comando se agrega dentro del arreglo.
+    \begin{itemize}
+        \item \textbf{Ventajas:} Se puede ahorrar memoria RAM creando un arreglo de tipo \textit{const} que se almacena en memoria de programa.
+        \item \textbf{Desventajas:} Complejo seguir cambios en el orden en que se registran los comandos y por lo tanto su código asociado. Ofrece pocas posibilidades de agrupar comandos según funciones. Alto impacto al agregar un nuevo comando pues implica la modificación de múltiples archivos fuente, incluyendo el repositorio de comandos.
+    \end{itemize}
+    
+    \item Varios arreglos con comandos centralizados en el repositorio de comandos. Se agrupan comandos con funcionalidades relacionadas en varios arreglos, así cuando se agrega un nuevo comando sólo se modifica el arreglo relacionado a una determinada serie de comandos.
+    \begin{itemize}
+        \item \textbf{Ventajas:} Mejor agrupación de los comandos, localizando cambios. Los códigos numéricos se pueden diferenciar por grupo.
+        \item \textbf{Desventajas:} Agregar un comando requiere modificar varios archivos, incluyendo el archivo donde se implementa y el repositorio de comandos.
+    \end{itemize}
+        
+    \item Descentralizar cada arreglo de comandos en el archivo correspondiente. Cada archivo que implementa un grupo de comandos cuenta con un arreglo con las funciones. El repositorio de comandos utiliza este arreglo como una variable externa.
+    \begin{itemize}
+        \item \textbf{Ventajas:} Mejor agrupación de comandos. Bajo impacto en el código al agregar un comando, pues sólo se modifica el archivo dónde se encuentra el comando sin intervenir el repositorio de datos.
+        \item \textbf{Desventajas:} Se dificulta el seguimiento de cambios en los códigos de cada comando. Agregar un nuevo grupo de comandos, en un nuevo archivo, requiere modificaciones de código en el repositorio de comandos.
+    \end{itemize}
+    
+    \item Descentralizar comandos y utilizar \texttt{enums} para asignar códigos. Similar a la alternativa anterior pero los códigos de cada comando y la forma de llenar los arreglos de comandos se basan en una estructura de enumeración de C que abstrae el uso de códigos numéricos por sentencias textuales.
+    \begin{itemize}
+        \item \textbf{Ventjas:} Agregar un comando sólo requiere cambios locales al archivo que agrupa un determinado tipo de comandos. Se facilita el seguimiento de cambios en los comandos disponibles pues los la definición textual de la enumeración no cambia.
+        
+        \item \textbf{Desventajas:} Aún se requiere modificar el repositorio de comando cuando se agrega un archivo con un nuevo grupo de funciones. Al completar los arreglos de funciones a través de las enumeraciones no se puede crear un arreglo a mano en memoria de datos, se requiere una función que inicialice los arreglos cada vez que se inicia el sistema.
+    \end{itemize}
+\end{enumerate}
+
+Todas las estrategias mencionadas fueron implementadas en algún momento, sin embargo, la cuarta alternativa ha demostrado ser la opción más flexible y conveniente. De este modo el proceso de registro del comando creado sólo requiere modificaciones en los archivos relacionados a su implementación, en este caso \texttt{cmdOBC.c} y \texttt{cmdOBC.h}. 
+
+Cada archivo con un grupo de comandos debe tener una estructura de enumeración (\texttt{enum} en C) que representan los códigos de cada comando. El primer valor de la enumeración debe ser diferente para cada grupo de comandos para no generar ambigüedades y para agrupar los comandos también por códigos. El último valor de la enumeración es un valor \textit{dummy} que sólo es utilizado para controlar el tamaño del arreglo de comandos. Luego, por cada función que implemente un comando se agrega un valor en la enumeración, como en el código \ref{ch4:code:OBC_CmdIndx}.
+
+\begin{lstlisting}[float,label=ch4:code:OBC_CmdIndx,caption=Lista de comandos disponibles]
+/**
+ * List of availible commands
+ */
+typedef enum{
+    obc_id_reset = 0x1000,  ///< @cmd_first
+    obc_id_get_rtos_memory, ///< @cmd
+        
+    ppc_id_last_one    // Dummy element
+}OBC_CmdIndx;
+\end{lstlisting}
+
+En este caso se registran dos comandos, \texttt{obc\_reset} y \texttt{obc\_get\_rtos\_memory}, la convención de sintaxis utilizada indica que se debe utilizar el prefijo del grupo de comandos \texttt{obc\_} y un prefijo que indique que se trata de un código de comando \texttt{id\_}. El código \ref{ch4:code:OBC_CmdIndx} también muestra como se utiliza Doxygen para mantener en la documentación del proyecto una lista actualizada con el valor de cada enumeración que permita de manera directa asociar el código de un comando cuando estos se generen de manera remota.
+
+También en el archivo \texttt{cmdOBC.c} se debe crear el arreglo que contiene la lista de funciones, en este caso denominado \texttt{obc\_Function} cuyo tamaño se determina a través del último elemento de la enumeración. Esta lista debe ser inicializada a través de una función que se ejecutará al inicio del sistema, en este caso se denomina \texttt{obc\_onResetCmdOBC}. El código \ref{ch4:code:obc_onResetCmdOBC} detalla este proceso.
+
+\begin{lstlisting}[float,label=ch4:code:obc_onResetCmdOBC,caption=Registro de comandos]
+cmdFunction obc_Function[OBC_NCMD];
+
+/**
+ * This function registers the list of command in the system, 
+ * initializing the functions array. This function must be called
+ * at every system start up.
+ */
+void obc_onResetCmdOBC(void)
+{
+    obc_Function[(unsigned char)obc_id_reset] = obc_reset;    
+    obc_Function[(unsigned char)obc_id_get_rtos_memory] = obc_get_rtos_memory;
+}
+\end{lstlisting}
