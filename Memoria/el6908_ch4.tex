@@ -462,3 +462,85 @@ void obc_onResetCmdOBC(void)
     obc_Function[(unsigned char)obc_id_get_rtos_memory] = obc_get_rtos_memory;
 }
 \end{lstlisting}
+
+En la sección \ref{ch3:repositorio_comandos} se describe la implementación del repositorio de comandos y las funciones disponibles para acceder a los comandos registrados en el sistema.
+
+
+
+\subsection{Repositorio de comandos}
+
+El repositorio de comandos corresponde a una librería con funciones que brindan acceso a los comandos registrados en el sistema. Sus dos responsabilidades principales son:
+
+\begin{itemize}
+    \item Inicializar el repositorio de comandos, es decir, inicializar los arreglos con los comandos disponibles.
+    \item Mapear cada código de comando con su función asociada.
+\end{itemize}
+
+Inicializar el repositorio de comandos significa llamar a la función de inicialización presente en cada archivo donde se implementan las funciones, esto se realiza en la función \texttt{repo\_onResetCmdRepo} disponible en el código \ref{ch4:code:cmdRepository.c}.
+
+Los códigos de los comandos se representan como un entero sin signo de 16 bit en formato hexadecimal, los 8 bits más significativos identifican el grupo al que pertenece el comando dejando los 8 bit restantes para la posición del comando dentro de su arreglo, limitando la cantidad de comandos por grupo a un total de 256.
+\begin{verbatim}
+                          |>> N° de comando
+Comando ->         0 x A A B B
+            N° de grupo <<|
+\end{verbatim}
+
+Por esta razón la función \texttt{repo\_getCmd}, encargada de retornar la función asociada a un código de comando, divide este número para identificar el arreglo desde el cual obtener el comando y la posición dentro del arreglo que ocupa el puntero a la función buscada. Esto se implementa en el código \ref{ch4:code:cmdRepository.c}
+
+\begin{lstlisting}[float,label=ch4:code:cmdRepository.c,caption=cmdRepository.c]
+/* Add external cmd arrays */
+extern cmdFunction obc_Function;
+
+/**
+ * Returns a pointer with the function asociated to each cmdID. 
+ * @param cmdID Command id
+ * @return Pointer to function of type cmdFunction
+ */
+cmdFunction repo_getCmd(int cmdID)
+{
+    int cmdOwn, cmdNum;
+    cmdFunction result;
+
+    cmdNum = (unsigned char)cmdID;
+    cmdOwn = (unsigned char)(cmdID>>8);
+
+    switch (cmdOwn)
+    {
+        case CMD_OBC:
+            if(cmdNum >= OBC_NCMD)
+                result=cmdNULL;
+            else
+                result = obc_Function[cmdNum];
+            break;
+        
+        default:
+            result = cmdNULL;
+            break;
+    }
+
+    return result;
+}
+
+/**
+ * Initializes all cmd arrays
+ * @return 1, allways successful
+ */
+int repo_onResetCmdRepo(void)
+{
+    obc_onResetCmdOBC();
+    return 1;
+}
+
+/**
+ * Null command, just print to stdout
+ * @param param Not used
+ * @return 1, allways successful
+ */
+int cmdNULL(void *param)
+{
+    int arg=*( (int *)param );
+    printf("cmdNULL was used with param %d\n", arg);
+    return 1;
+}
+\end{lstlisting}
+
