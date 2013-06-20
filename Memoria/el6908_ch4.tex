@@ -485,7 +485,7 @@ Comando ->         0 x A A B B
             N° de grupo <<|
 \end{verbatim}
 
-Por esta razón la función \texttt{repo\_getCmd}, encargada de retornar la función asociada a un código de comando, divide este número para identificar el arreglo desde el cual obtener el comando y la posición dentro del arreglo que ocupa el puntero a la función buscada. Esto se implementa en el código \ref{ch4:code:cmdRepository.c}
+Por esta razón la función \texttt{repo\_getCmd}, encargada de retornar la función asociada a un código de comando, divide este número para identificar el arreglo desde el cual obtener el comando y la posición dentro del arreglo que ocupa el puntero a la función buscada. Esto se implementa en el código \ref{ch4:code:cmdRepository.c}.
 
 \begin{lstlisting}[float,label=ch4:code:cmdRepository.c,caption=cmdRepository.c]
 /* Add external cmd arrays */
@@ -543,4 +543,97 @@ int cmdNULL(void *param)
     return 1;
 }
 \end{lstlisting}
+
+Por diseño, una vez inicializado el repositorio tinene acceso de sólo lectura, de modo que no hace necesario la implementación de sincronización en su acceso. La única acción que puede generar una condición de \textit{data race} es la lectura de un elemento del arreglo del arreglo de comandos, sin embargo los arreglos son almacenados en memoria interna por lo que esta operación es atómica por lo tanto no genera problemas de acceso concurrente.
+
+\subsection{Repositorios de estados}
+El repositorio de estados almacena aquellas variables que contienen información sobre el estado de operación del sistema satelital. Las variables de estado son consultadas por los \textit{listeners} para tomar decisiones sobre los comandos que se generarán además, cumple la función de cerrar el lazo de control en el sistema, puesto los \textit{listeners} sólo generan el comando sin tener información sobre la ejecución o su resultado. El \textit{dispatcher} utiliza esta información para comparar los requerimientos de cada comando con los recursos disponibles en el sistema y decidir sobre su ejecución. Los comandos tienen acceso de escritura y lectura sobre el repositorio de estados, pues dentro de lo que se espera de los comandos es que ajusten variables de funcionamiento o cambien el modo de operación del satélite o sus subsistemas.
+
+Las operaciones básicas que provee el repositorio son: leer una variable de estado, lo cual se realiza en la función \texttt{dat\_setCubesatVar}; escribir el valor de una variable de estado, lo cual se realiza en la función \texttt{dat\_getCubesatVar}; e inicializar el repositorio de estados ante un reinicio del sistema, a través de la función \texttt{dat\_onResetCubesatVar}. Estas funciones se encuentra implementadas en el código \ref{ch4:code:dataRepository.c}.
+
+Este repositorio es leído y escrito de manera concurrente por una serie de tareas por lo cual se puede generar una condición de \textit{data race}. Esto se hace mas evidente cuando la implementación del repositorio en una memoria externa puede resultar operaciones de lectura o escritura no atómicas, donde además se requiere utilizar recursos compartidos del sistema como periféricos de entrada y salida. Por esta razón se debe implementar una estructura de sincronización que provea la exclusión mutua entre las diferentes tareas que acceden a este repositorio. Esta situación se observa en el código \ref{ch4:code:dataRepository.c} cuando se usan las funciones \texttt{xSemaphoreTake} y \texttt{xSemaphoreGive} de FreeRTOS\cite{FREERTOS_API}.
+
+\begin{lstlisting}[float,label=ch4:code:dataRepository.c,caption=dataRepository.c]
+#include "dataRepository.h"
+
+extern xSemaphoreHandle dataRepositorySem;  // Mutex for status repository
+int DAT_CUBESAT_VAR_BUFF[dat_cubesatVar_last_one]; // Internal buffer
+
+/**
+ * Sets a status variable's value
+ * @param indxVar Variable to set @sa DAT_CubesatVar
+ * @param value Value to set
+ */
+void dat_setCubesatVar(DAT_CubesatVar indxVar, int value)
+{
+    xSemaphoreTake(dataRepositorySem, portMAX_DELAY);
+    DAT_CUBESAT_VAR_BUFF[indxVar] = value;
+    xSemaphoreGive(dataRepositorySem);
+}
+
+/**
+ * Returns a status variable's value
+ * @param indxVar Variable to set @sa DAT_CubesatVar
+ * @return Variable value
+ */
+int dat_getCubesatVar(DAT_CubesatVar indxVar)
+{
+    int value = 0;
+    xSemaphoreTake(dataRepositorySem, portMAX_DELAY);
+    value = DAT_CUBESAT_VAR_BUFF[indxVar];
+    xSemaphoreGive(dataRepositorySem);
+    return value;
+}
+
+/**
+ * Initializes status repository
+ */
+void dat_onResetCubesatVar(void)
+{
+	int i;
+	for(i=0; i<dat_cubesatVar_last_one; i++)
+	{
+		dat_setCubesatVar(i,0xFFFF);
+	}
+}
+\end{lstlisting}
+
+
+Durante el desarrollo del proyecto se estudiaron varias alternativas de implementación del repositorio de estados en lo referente al lugar de almacenamiento, modo de acceso y sistemas de tolerancia a fallos. Entre los métodos explorados se encuentra:
+
+\begin{enumerate}
+    \item Almacenamiento interno en RAM. Un arreglo de enteros en memoria RAM donde la posición de cada variable se maneja a través de una estructura de enumeración.
+    \begin{itemize}
+        \item \textbf{V:} Rápido acceso a los datos, puede no requerir sincronización si la lectura y escritura se implementan como operaciones atómicas. Siempre puede ser utilizado como método de respaldo.
+        \item \textbf{D:} Memoria volátil, los datos no se mantienen entre reinicios del sistema. No ofrece mecanismos de tolerancia a fallos.
+    \end{itemize}
+    
+    \item Almacenamiento en memoria EEPROM externa. Se utiliza una memoria EEPROM a través de un bus I2C para guardar los datos de manera permanente, este tipo de memorias puede usarse como memorias de acceso aleatorio no volátiles.
+    \begin{itemize}
+        \item \textbf{V:} Memoria no volátil, los datos persisten entre reinicios del sistema. Acceso aleatorio a los datos.
+        \item \textbf{D:} Escritura y lectura no atómica, requiere sincronización. No ofrece mecanismos de tolerancia a fallos. Acceso a datos es más lento.
+    \end{itemize}
+    
+    \item Almacenamiento redundante en dos memorias EEPROM. Se utiliza una memoria EEPROM de respaldo en caso de falla, escribiendo siempre una copia de los datos en ambas memorias. Cuando se detectan problemas en la operación de una memoria, el sistema activa la lectura desde la memoria de respaldo.
+    \begin{itemize}
+        \item \textbf{V:} Almacenamiento no volátil, acceso aleatorio a los datos. Provee un mecanismo de protección de fallos.
+        \item \textbf{D:} Requiere sincronización de la lectura y escritura. Requiere método de detección de fallos. Acceso a datos es más lento.
+    \end{itemize}
+    
+    \item Almacenamiento redundante en dos memorias EEPROM más memoria interna. La escritura y lectura de variables se realiza sobre una copia en memoria interna de los datos. De manera periódica las variables se respaldan en dos memorias EEPROM con sumas de verificación. Al inicio del sistema se cargan los datos desde la memoria que contenga la suma de verificación correcta.
+    \begin{itemize}
+        \item \textbf{V:} Almacenamiento no volátil de los datos. Acceso aleatorio a los datos. Rápida escritura y lectura. Puede no requerir sincronización si se implementa con operaciones atómicas. Menor deterioro de las memorias EEPROM. Provee tolerancia a fallos y detección de fallos.
+        \item \textbf{D:} Dependiendo del periodo de respaldo, las copias pueden no contar con toda la información actualizada de las variables. El cálculo de sumas de verificación puede ser complejo.
+    \end{itemize}
+\end{enumerate}
+
+En general cualquier tipo de memoria no volátil se puede utilizar para estos fines, aunque si se utilizan lo métodos 2 o 3, es conveniente utilizar una memoria de acceso aleatorio en lugar de dispositivos que leen o escriben por bloques ya que el uso de este repositorio es bastante intensivo dentro del diseño del sistema. 
+
+El primer método es el más simple en cuanto no requiere de controladores externos para su funcionamiento y la sincronización no es crítica. Por esto y para mantener la generalidad en el código del ejemplo \ref{ch4:code:dataRepository.c} se implementa este diseño en el repositorio de estados. Sin embargo el no contar con un almacenamiento persistente de los datos es una limitación crítica ya que este módulo permite que el sistema de vuelo sea tolerante a reinicio inesperados volviendo a funcionar según sus últimos estados almacenados. Este método es factible de utilizar para pruebas o bien como un sistema de respaldo en caso de que una falla fuerce al sistema a trabajar con funcionalidades mínimas.
+
+El diseño implementado en el sistema de vuelo utilizado en el proyecto SUCHAI es el tercero de la lista, y cuenta con dos memorias EEPROM de 512 bytes comunicadas a través de un bus I2C exclusivo. Esto provee la suficiente funcionalidad para que el sistema mantenga consistencia en su funcionamiento ante reinicios y además entrega redundancia como medida de tolerancia a fallos\cite{TOOPAZO}.
+
+%\subsection{Repositorio de datos}
+%TODO: Repositorio de datos
+
 
