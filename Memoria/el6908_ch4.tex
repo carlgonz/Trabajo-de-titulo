@@ -307,7 +307,7 @@ Con esto concluye la integración del sistema operativo en el software de vuelo y
 %TODO: Hablar de la configuracion de prioridades
 
 \section{Aplicación}
-En la capa de aplicación se debe implementar la arquitectura de software detallada en la figura \ref{img:ch3:dis:arch} que permite el cumplimiento de todos los requerimientos de operacionales del satélite. El proceso incluye interpretar el patrón de diseño que inspira la arquitectura base para ser implementado en un lenguaje \textit{procedural} como C. Conviene también implementar la arquitectura base del patrón de ejecutador de comandos para contar con un sistema base que sea general y bien probado sobre el cual implementar las funcionalidades específicas del proyecto. Las funciones específicas de un proyecto satelital estarán implementadas en la capa de \textit{listeners} y la lista de comandos por lo que finalmente se detalla la implementación de los distintos módulos que competan los requerimientos del proyecto SUCHAI en específico.
+En la capa de aplicación se debe implementar la arquitectura de software detallada en la figura \ref{img:ch3:dis:arch} que permite el cumplimiento de todos los requerimientos de operacionales del satélite. El proceso incluye interpretar el patrón de diseño que inspira la arquitectura base para ser implementado en un lenguaje \textit{procedural} como C. Conviene también implementar la arquitectura base del patrón de ejecutor de comandos para contar con un sistema base que sea general y bien probado sobre el cual implementar las funcionalidades específicas del proyecto. Las funciones específicas de un proyecto satelital estarán implementadas en la capa de \textit{listeners} y la lista de comandos por lo que finalmente se detalla la implementación de los distintos módulos que competan los requerimientos del proyecto SUCHAI en específico.
 
 \subsection{Implementación del patrón de diseño}
 Cómo se describe en la sección \ref{ch2:sec:214} se debe implementar un patrón de diseño, específicamente \textit{Command Pattern} en un lenguaje procedural como C. El problema radica en la programación basada en patrones de diseño es una técnica utilizada principalmente en lenguajes de programación orientados a objetos y los patrones se describen según diagramas de colaboración entre objetos incluyendo técnicas como herencia o polimorfismo. No obstante el diseño de una arquitectura de software debería ser independiente del lenguaje de programación a utilizar, así como también, el diseño de la arquitectura basándose en patrones\cite{SYSTEM_PATTERNS}. Para sortear esta situación se procede a definir cómo se traduce cada elemento del patrón de diseño deseado a la plataforma objetivo.
@@ -317,7 +317,7 @@ Cómo se describe en la sección \ref{ch2:sec:214} se debe implementar un patrón d
     
     \item \textbf{Procesador de comandos o despachador:} Corresponde a una tarea del sistema operativo cuyo funcionamiento está basado en evento, en específico, el arribo de un comando.
     
-    \item \textbf{Ejecutador:} El ejecutador también es una tarea del sistema operativo que se encarga de realizar la llamada del comando, es decir, ejecutar la función. Su funcionamiento es basado en eventos según la llegada de un comando.
+    \item \textbf{Ejecutador:} El ejecutor también es una tarea del sistema operativo que se encarga de realizar la llamada del comando, es decir, ejecutar la función. Su funcionamiento es basado en eventos según la llegada de un comando.
     
     \item \textbf{Transferencia de comandos:} La transferencia de comandos se realiza a través de una cola de FreeRTOS, que es una estructura de sincronización que permite el intercambios de mensajes en un esquema productor-consumidor.
     
@@ -637,7 +637,7 @@ El diseño implementado en el sistema de vuelo utilizado en el proyecto SUCHAI es
 %TODO: Repositorio de datos
 
 \subsection{Dispatcher}
-El \textit{dispatcher} o procesador de comandos es el módulo encargado de tomar un comando, procesar sus meta datos y entregar este comando el ejecutador. En este módulo se concentra toda la inteligencia asociada al control de la ejecución de un comando y es el punto adecuado para establecer un sistema de registro de los acciones que realiza el sistema.
+El \textit{dispatcher} o procesador de comandos es el módulo encargado de tomar un comando, procesar sus meta datos y entregar este comando el ejecutor. En este módulo se concentra toda la inteligencia asociada al control de la ejecución de un comando y es el punto adecuado para establecer un sistema de registro de los acciones que realiza el sistema.
 
 Una parte fundamental de este módulo es la cola de comandos. Los comandos generados por cada \textit{listener} llegan a esta cola en espera de ser procesados. Esta cola es un recurso compartido y presenta el esquema típico del productor-consumidor con múltiples productores y un único consumidor, por lo que el acceso concurrente debe estar sincronizado (ver figura \ref{ch4:img:productor-consumidor}). La solución a este tipo de esquemas es bien conocido y se logra mediante la utilización de semáforos o mutexes. 
 
@@ -657,7 +657,7 @@ El flujo de trabajo cuando se utilizan colas en FreeRTOS se ilustra en la figura
 
 \figura{img/freertos-queue.png}{width=0.8\textwidth}{FreeRTOS Queue}{ch4:img:freertos-queue}{!h}
 
-La implementación de este módulo corresponde al diagrama de flujo de la figura \ref{ch4:img:dispatcher-flow}. Las tres funcionalidades básicas del procesador de comandos son: recibir un comandos y obtener sus meta datos; determinar si su ejecución es posible; construir el comando que se entregará al ejecutador. En el código \ref{ch4:code:taskDispatcher.c} se implementan este diagrama de flujo. Se tiene entonces una tarea de FreeRTOS basada en eventos, pues despierta solamente cuándo existe algún comando disponible en la cola y desarma la estructura de datos obtenida. La función \texttt{check\_if\_executable} implementa la lógica que determina si el comando es puede ejecutar o no, en base a los meta datos de comandos y el estado actual del sistema. Finalmente se consulta al repositorio de comandos por la función asociada al código entrega y se construye la estructura de datos que representa un comando para el ejecutador que contiene el puntero a la función y su parámetro. Como sólo existe un proceso que ejecuta los comandos el \textit{dispatcher} debe esperar a que termine su ejecución antes recuperar uno nuevo. Esta comunicación también se logra a través de una cola, de un sólo elemento, donde el ejecutador envía el resultado que retornó la función que acaba de ejecutar.
+La implementación de este módulo corresponde al diagrama de flujo de la figura \ref{ch4:img:dispatcher-flow}. Las tres funcionalidades básicas del procesador de comandos son: recibir un comandos y obtener sus meta datos; determinar si su ejecución es posible; construir el comando que se entregará al ejecutor. En el código \ref{ch4:code:taskDispatcher.c} se implementan este diagrama de flujo. Se tiene entonces una tarea de FreeRTOS basada en eventos, pues despierta solamente cuándo existe algún comando disponible en la cola y desarma la estructura de datos obtenida. La función \texttt{check\_if\_executable} implementa la lógica que determina si el comando es puede ejecutar o no, en base a los meta datos de comandos y el estado actual del sistema. Finalmente se consulta al repositorio de comandos por la función asociada al código entrega y se construye la estructura de datos que representa un comando para el ejecutor que contiene el puntero a la función y su parámetro. Como sólo existe un proceso que ejecuta los comandos el \textit{dispatcher} debe esperar a que termine su ejecución antes recuperar uno nuevo. Esta comunicación también se logra a través de una cola, de un sólo elemento, donde el ejecutor envía el resultado que retornó la función que acaba de ejecutar.
 
 \figura{img/dispatcher-flow.png}{scale=0.3}{Diagrama de flujo para \textit{dispatcher}}{ch4:img:dispatcher-flow}{!h}
 
@@ -670,7 +670,7 @@ extern xQueueHandle executerStatQueue; /* Executer result queue */
 
 void taskDispatcher(void *param)
 {
-	printf("[Dispatcher] Started\n");
+	printf(">>[Dispatcher] Started\n");
     portBASE_TYPE status; /* Status of cmd reading operation */
 
     DispCmd newCmd; /* The new cmd readed */
@@ -711,3 +711,58 @@ void taskDispatcher(void *param)
 \end{lstlisting}
 
 \subsection{Executer}
+Este módulo es el último eslabón en la cadena de acciones que involucran la ejecución de un comando y sus responsabilidades incluyen: recibir en una estructura la función que se requiere ejecutar junto a su parámetro; ejecutar la función y obtener su resultado; notificar el término y resultado de la operación al \textit{dispatcher}. Esta tarea es activada mediante eventos, en específico la llegada de un comando. El \textit{Executer} se debe comunicar con el \textit{Dispatcher} de dos maneras:
+
+\begin{itemize}
+    \item El \textit{dispatcher} prepara un comando para el ejecutor y debe notificar la disponibilidad de este nuevo comando.
+    \item El ejecutor notifica el término de la operación y su resultado al \textit{dispatcher}.
+\end{itemize}
+
+Para la comunicación entre tareas, involucrando el intercambio de mensajes se utiliza nuevamente la estructura \texttt{Queue} de FreeRTOS. En este caso se tienen dos mensajes que entregar para sincronizar dos estados del proceso total, por lo tanto se implementan dos colas de largo igual a un elemento. Al ser las colas de largo uno, estas actúan como \textit{mutexes} bloqueando un proceso hasta que el otro haya completado sus operaciones.
+
+El flujo de operación del \textit{executer} o ejecutor se detalla en la figura \ref{ch4:img:executer-flow} y es bastante simple en cuánto cumple sus tres obligaciones de manera secuencial. Esta simplicidad, sin embargo, no revela la verdadera utilidad de este módulo: proveer un ambiente de ejecución exclusivo al comando. Por diseño sólo un módulo ejecutor existe en el sistema, por lo tanto, una vez aquí el comando toma el control del procesador, de todos los recursos de hardware y software para realizar su tarea. Además aprovecha la generalidad definida por la interfaz de los comandos, para permitir a este módulo ejecutar cualquier función que implemente la interfaz requerida.
+
+\figura{img/executer-flow.png}{scale=0.3}{Diagrama de flujo para \textit{executer}}{ch4:img:executer-flow}{!h}
+
+El código \ref{ch4:code:taskExecuter.c} detalla la implementación de este módulo. Al momento de crear esta tarea se debe tener en cuenta las siguientes consideraciones:
+\begin{itemize}
+    \item Entregar la mayor cantidad de memoria de \textit{stack} posible. Esta tarea realiza todas las funciones importantes para el sistema y cada función que se ejecuta en esta tarea utilizará la memoria de \textit{stack} que se le asigna. A diferencia del resto de las tareas, donde su uso de memoria es parejo en el tiempo, el \textit{executer} llama a diferentes funciones y algunas de ellas pueden requerir más memoria que otras. Como el objetivo es proveer el entorno de ejecución para un comando, se debe contar con la memoria suficiente de modo que ningún comando cause un \textit{stack overflow}.
+    
+    \item Asignar la prioridad más alta posible. De esta manera se consigue que el comando en ejecución no sea interrumpido por ningún otro proceso con lo cual se aseguran dos puntos: primero el comando se ejecuta en el menor tiempo posible; y segundo, se elimina la necesidad de brindar una sincronización excesiva de los recursos compartidos de hardware asegurando el acceso exclusivo cada vez que se ejecuta un comando.
+\end{itemize}
+
+
+\begin{lstlisting}[float,label=ch4:code:taskExecuter.c,caption=taskExecuter.c]
+#include "taskExecuter.h"
+
+extern xQueueHandle executerCmdQueue; /* Comands queue*/
+extern xQueueHandle executerStatQueue; /* Comands queue*/
+
+void taskExecuter(void *param)
+{
+    printf(">>[Executer] Started\n");
+    ExeCmd RunCmd;
+    int cmdStat, queueStat, cmdParam;
+        
+    while(1)
+    {
+        /* Read the CMD that Dispatcher sent - BLOCKING */
+        queueStat = xQueueReceive(executerCmdQueue,&RunCmd,portMAX_DELAY);
+        if(queueStat == pdPASS)
+        {
+            printf("[Executer] Running a command...\n");
+            ClrWdt();
+            
+            /* Execute the command */
+            cmdParam = RunCmd.param;
+            cmdStat = RunCmd.fnct((void *)&param);
+            
+            ClrWdt();
+            printf("[Executer] Command result: %d\n", cmdStat);
+            
+            /* Send the result to Dispatcher - BLOCKING */
+            xQueueSend(executerStatQueue, &cmdStat, portMAX_DELAY);
+        }
+    }
+}
+\end{lstlisting}
