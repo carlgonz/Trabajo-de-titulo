@@ -659,7 +659,7 @@ El flujo de trabajo cuando se utilizan colas en FreeRTOS se ilustra en la figura
 
 La implementación de este módulo corresponde al diagrama de flujo de la figura \ref{ch4:img:dispatcher-flow}. Las tres funcionalidades básicas del procesador de comandos son: recibir un comandos y obtener sus meta datos; determinar si su ejecución es posible; construir el comando que se entregará al ejecutador. En el código \ref{ch4:code:taskDispatcher.c} se implementan este diagrama de flujo. Se tiene entonces una tarea de FreeRTOS basada en eventos, pues despierta solamente cuándo existe algún comando disponible en la cola y desarma la estructura de datos obtenida. La función \texttt{check\_if\_executable} implementa la lógica que determina si el comando es puede ejecutar o no, en base a los meta datos de comandos y el estado actual del sistema. Finalmente se consulta al repositorio de comandos por la función asociada al código entrega y se construye la estructura de datos que representa un comando para el ejecutador que contiene el puntero a la función y su parámetro. Como sólo existe un proceso que ejecuta los comandos el \textit{dispatcher} debe esperar a que termine su ejecución antes recuperar uno nuevo. Esta comunicación también se logra a través de una cola, de un sólo elemento, donde el ejecutador envía el resultado que retornó la función que acaba de ejecutar.
 
-\figura{img/dispatcher-flow.png}{width=0.8\textwidth}{Diagrama de flujo para \textit{dispatcher}}{ch4:img:dispatcher-flow}{!h}
+\figura{img/dispatcher-flow.png}{scale=0.3}{Diagrama de flujo para \textit{dispatcher}}{ch4:img:dispatcher-flow}{!h}
 
 \begin{lstlisting}[float,label=ch4:code:taskDispatcher.c,caption=taskDispatcher.c]
 #include "taskDispatcher.h"
@@ -675,7 +675,7 @@ void taskDispatcher(void *param)
 
     DispCmd newCmd; /* The new cmd readed */
     ExeCmd exeCmd; /* Strucutre to executer */
-    int cmdId, idOrig, sysReq, param, cmdResult; /* Cmd metadata */
+    int cmdId, idOrig, sysReq, cmdParam, cmdResult; /* Cmd metadata */
 
     while(1)
     {
@@ -688,12 +688,12 @@ void taskDispatcher(void *param)
             cmdId = newCmd.cmdId;
             idOrig = newCmd.idOrig;
             sysReq = newCmd.sysReq;
-            param = newCmd.param;
+            cmdParam = newCmd.param;
 
             /* Check if command is eecutable */
             if(check_if_executable(&newCmd))
             {
-				printf("[Dispatcher] Cmd: %X, Param: %d, Orig: %X", cmdId, param, idOrig);
+				printf("[Dispatcher] Cmd: %X, Param: %d, Orig: %X", cmdId, cmdParam, idOrig);
 				
 				/* Fill the executer command */
 				exeCmd.fnct = repo_getCmd(newCmd.cmdId);
@@ -709,3 +709,5 @@ void taskDispatcher(void *param)
     }
 }
 \end{lstlisting}
+
+\subsection{Executer}
