@@ -636,4 +636,76 @@ El diseño implementado en el sistema de vuelo utilizado en el proyecto SUCHAI es
 %\subsection{Repositorio de datos}
 %TODO: Repositorio de datos
 
+\subsection{Dispatcher}
+El \textit{dispatcher} o procesador de comandos es el módulo encargado de tomar un comando, procesar sus meta datos y entregar este comando el ejecutador. En este módulo se concentra toda la inteligencia asociada al control de la ejecución de un comando y es el punto adecuado para establecer un sistema de registro de los acciones que realiza el sistema.
 
+Una parte fundamental de este módulo es la cola de comandos. Los comandos generados por cada \textit{listener} llegan a esta cola en espera de ser procesados. Esta cola es un recurso compartido y presenta el esquema típico del productor-consumidor con múltiples productores y un único consumidor, por lo que el acceso concurrente debe estar sincronizado (ver figura \ref{ch4:img:productor-consumidor}). La solución a este tipo de esquemas es bien conocido y se logra mediante la utilización de semáforos o mutexes. 
+
+\figura{img/producer-consumer.png}{width=0.8\textwidth}{Problema del productor-consumidor}{ch4:img:productor-consumidor}{!h}
+
+Sin embargo FreeRTOS provee una estructura de datos adecuada para esta tarea denominadas \textit{queues} que poseen las siguientes características\cite{FREERTOS_PIC24}:
+\begin{itemize}
+    \item Las colas son creadas con un tamaño de elementos fijo.
+    \item El tamaño de cada elemento también se fija en su creación.
+    \item Escribir y leer un elemento en la cola implica una copia byte a byte de los datos.
+    \item Permiten operaciones de lectura y escritura a múltiples tareas.
+    \item La lectura de una cola es bloqueante si la cola está vacía. La tarea que espera por un elemento en la cola despierta de manera automática cuando hay elementos disponibles.
+    \item La escritura en una cola es bloqueante si la cola está llena. La tarea que espera por un espacio en la cola despierta de manera automática cuando hay espacios disponibles.
+\end{itemize}
+
+El flujo de trabajo cuando se utilizan colas en FreeRTOS se ilustra en la figura \ref{ch4:img:freertos-queue}.
+
+\figura{img/freertos-queue.png}{width=0.8\textwidth}{FreeRTOS Queue}{ch4:img:freertos-queue}{!h}
+
+La implementación de este módulo corresponde al diagrama de flujo de la figura \ref{ch4:img:dispatcher-flow}. Las tres funcionalidades básicas del procesador de comandos son: recibir un comandos y obtener sus meta datos; determinar si su ejecución es posible; construir el comando que se entregará al ejecutador. En el código \ref{ch4:code:taskDispatcher.c} se implementan este diagrama de flujo. Se tiene entonces una tarea de FreeRTOS basada en eventos, pues despierta solamente cuándo existe algún comando disponible en la cola y desarma la estructura de datos obtenida. La función \texttt{check\_if\_executable} implementa la lógica que determina si el comando es puede ejecutar o no, en base a los meta datos de comandos y el estado actual del sistema. Finalmente se consulta al repositorio de comandos por la función asociada al código entrega y se construye la estructura de datos que representa un comando para el ejecutador que contiene el puntero a la función y su parámetro. Como sólo existe un proceso que ejecuta los comandos el \textit{dispatcher} debe esperar a que termine su ejecución antes recuperar uno nuevo. Esta comunicación también se logra a través de una cola, de un sólo elemento, donde el ejecutador envía el resultado que retornó la función que acaba de ejecutar.
+
+\figura{img/dispatcher-flow.png}{width=0.8\textwidth}{Diagrama de flujo para \textit{dispatcher}}{ch4:img:dispatcher-flow}{!h}
+
+\begin{lstlisting}[float,label=ch4:code:taskDispatcher.c,caption=taskDispatcher.c]
+#include "taskDispatcher.h"
+
+extern xQueueHandle cmdQueue; /* Commands queue */
+extern xQueueHandle executerCmdQueue; /* Executer commands queue */
+extern xQueueHandle executerStatQueue; /* Executer result queue */
+
+void taskDispatcher(void *param)
+{
+	printf("[Dispatcher] Started\n");
+    portBASE_TYPE status; /* Status of cmd reading operation */
+
+    DispCmd newCmd; /* The new cmd readed */
+    ExeCmd exeCmd; /* Strucutre to executer */
+    int cmdId, idOrig, sysReq, param, cmdResult; /* Cmd metadata */
+
+    while(1)
+    {
+        /* Read newCmd from Queue - Blocking */
+        status = xQueueReceive(cmdQueue, &newCmd, portMAX_DELAY);
+
+        if(status == pdPASS)
+        {
+			/* Gets command metadata*/
+            cmdId = newCmd.cmdId;
+            idOrig = newCmd.idOrig;
+            sysReq = newCmd.sysReq;
+            param = newCmd.param;
+
+            /* Check if command is eecutable */
+            if(check_if_executable(&newCmd))
+            {
+				printf("[Dispatcher] Cmd: %X, Param: %d, Orig: %X", cmdId, param, idOrig);
+				
+				/* Fill the executer command */
+				exeCmd.fnct = repo_getCmd(newCmd.cmdId);
+				exeCmd.param = param;
+
+                /* Send the command to executer Queue - BLOCKING */
+                xQueueSend(executerCmdQueue,&exeCmd,portMAX_DELAY);
+
+                /* Get the result from Executer Stat Queue - BLOCKING */
+                xQueueReceive(executerStatQueue,&cmdResult,portMAX_DELAY);
+            }
+        }
+    }
+}
+\end{lstlisting}
