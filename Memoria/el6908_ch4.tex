@@ -771,13 +771,13 @@ void taskExecuter(void *param)
 
 Los \textit{listeners} son los módulos encargados de implementar la lógica de generación de comandos dentro del sistema de vuelo. Existen una serie de \textit{listeners} bajo la lógica de que a cada uno le corresponde controlar un determinado subsistema del satélite. Estos módulos se implementan como tareas de FreeRTOS que se activan de manera periódica, ejecutando operaciones de control que tienen como salida comandos que son agregados a la cola del \textit{dispatcher}. La lógica de funcionamiento estas tareas se detalla en el diagrama de la figura \ref{ch4:img:freertos:periodic-task}. FreeRTOS ofrece dos funciones que implementan la periodicidad en las ejecución de las tareas, mediante la técnica de suspender su ejecución por una cantidad determinada de \textit{ticks}: \texttt{vTaskDelay} y \texttt{vTaskDelayUntil}. Cada una de estas funciones cambia el estado de la tarea a suspendida, un estado dónde la tarea no utiliza ningún recurso del sistema, luego del tiempo específica la tarea retoma su ejecución. La diferencia entre ambas funciones es que la primera siempre suspende la tarea durante un tiempo fijo, mientras que la segunda mantiene fijo el tiempo que transcurre entre ambas llamadas\cite{FREERTOS_API}. \texttt{vTaskDelayUntil} es más adecuada para tareas de tipo \textit{hard real-time} y es la utilizada en los \textit{listeners} para proveer una resolución de tiempo más precisa.
 
-\figura{img/listeners-flow.png}{scale=0.4}{Diagrama de flujo para \textit{listeners}}{ch4:img:freertos:periodic-task}{!h}
+\figura{img/listeners-flow.png}{scale=0.45}{Diagrama de flujo para \textit{listeners}}{ch4:img:freertos:periodic-task}{!h}
 
 Los \textit{listeners} y su implementación pueden ser bastantes específicos a cada sistema. La regla general es que se crea uno por cada subsistema que se debe controlar, pero la complejidad de cada implementación se esconde bajo la lógica programa como ``operaciones de control'' del diagrama \ref{ch4:img:freertos:periodic-task}. A continuación se desarrolla el ejemplo de la implementación de un \textit{listener}.
 
 Una de las funcionalidades principales que se puede esperar del sistema es la ejecución de acciones de manera periódica, acciones que incluyen tareas de control interno del propio subsistema al que corresponde el computador a bordo. Este módulo es denominado \textit{housekeeping} y su lógica de control es: ejecutar comandos de control interno a periodos fijos de tiempo. Según las necesidades del sistema, se puede implementar varios periodos fijos, en este caso ejecutarán comandos cada 1, 10, y 30 segundos. Para guiar la implementación de este módulo, su lógica se detalla en la figura \ref{ch4:img:housekeeping-flow}
 
-\figura{img/housekeeping-flow.png}{scale=0.3}{Diagrama de flujo para \textit{housekeeping}}{ch4:img:housekeeping-flow}{!h}
+\figura{img/housekeeping-flow.png}{scale=0.4}{Diagrama de flujo para \textit{housekeeping}}{ch4:img:housekeeping-flow}{!h}
 
 Los comandos que se ejecutan en cada intervalo de tiempo, dependerán de la aplicación, en este caso se ejecutarán una serie de comandos cuya función es actualizar las variables de estado del sistema. La implementación de esta tarea se detalla en el código \ref{ch4:code:taskHouskeeping.c}.
 
@@ -907,4 +907,49 @@ Free RTOS memory: 2282
 
 De la salida se observa la inicialización de todas las tareas del sistema. \textit{Houskeeping} se ejecuta de manera periódica enviado comandos al \textit{Dispatcher}, lo que provoca la activación de este módulo que registra el nuevo comando recibido, su parámetro y su origen. El efecto en cadena implica la activación del \textit{Executer} quien registra el inicio de la ejecución del comando. Si el comando considera salida de datos por la consola serial, se ve reflejado en este punto, sino de todas maneras el \textit{Executer} muestra el resultado de la operación.
 
+\section{Específico al proyecto SUCHAI}
+Las secciones anteriores implementan la base del sistema de vuelo con mínimas funcionalidades, básicamente completando la arquitectura de software propuesta. Sobre esta base se completa el resto de los requerimientos operacionales del satélite lo que implica extender el sistema mediante dos métodos: agregar \textit{listeners} que controlan subsistemas específicos del satélite; y agregando comandos para cada función específica.
 
+\subsection{Consola serial}
+La consola serial es una herramienta fundamental para el proceso de depuración y pruebas del sistema en desarrollo. Se implementa el protocolo de transferencia de datos seriales RS232 a través de los periféricos disponibles en la plataforma de hardware:
+\begin{itemize}
+    \item Módulos UART en el microcontrolador.
+    \item Puerto serial DB9 con conversor de voltaje en la placa de desarrollo.
+    \item Puerto USB con conversor USB-Serial (FT232R) en placa de desarrolo.
+\end{itemize}
+
+La salida de datos hacia el puerto serial es bastante directa haciendo uso del controlador implementado para los módulos UART, además de la adaptación de funciones comunes como \texttt{printf}. Como la salida de \textit{debug} está bastante extendida a lo largo del programa, las tareas que se ejecutan de manera concurrente puede requerir el acceso simultaneo a este recurso compartido, por esto la principal adaptación consiste en convertir a \textit{printf} en una función \textit{thead safe} mediante la utilización de herramientas de sincronización para proveer exclusión muta sobre el recurso.
+
+La entrada de datos requiere mayor detalle en la implementación en cuanto debe permitir el reconocimiento de las cadenas de caracteres que se ingresan como órdenes al sistema. Para esto se implementa un \textit{listener} con dedicación exclusiva tomar los caracteres de la consola serial, formar las cadenas de texto, separar parámetros e interpretar la orden como comandos del sistema de vuelo que serán encolados para su ejecución. El detalle de la implementación de esta tarea se ilustra a través del diagrama de flujo de la figura \ref{ch4:img:console-flow}
+
+\figura{img/console-flow.png}{scale=0.4}{Diagrama de flujo para \textit{taskConsole}}{ch4:img:console-flow}{!h}
+
+\subsection{Plan de vuelo}
+El plan de vuelo es la solución a parte importante de los requerimientos operacionales del satélite y consiste en la capacidad de realizar tareas programadas para cierto instante de tiempo o ubicación en la órbita.
+
+La solución consiste en implementar un \textit{listener} que monitorice la hora y fecha del sistema para obtener desde el plan de vuelo el comando adecuado a ser encolado para su ejecución. El plan de vuelo en sí, consiste e una lista ordenada temporalmente con códigos de comandos y sus parámetros. La lista se implementa en una memoria permanente externa, como: un arreglo espaciado con cierta resolución de tiempo; un arreglo que incluya además la hora correspondiente al comando; o un archivo con una lista de comando, parámetro y fecha y hora de ejecución. El flujo de operación de la tarea corresponde al diagrama de la figura \ref{ch4:img:fplan-flow}.
+
+El plan de vuelo implica también la implementación de comandos que realicen las siguientes operaciones:
+\begin{itemize}
+    \item Leer una determinada entrada del plan de vuelo
+    \item Modificar una determinada entrada del plan de vuelo
+    \item Borrar completamente el plan de vuelo
+\end{itemize}
+
+\figura{img/fplan-flow.png}{scale=0.4}{Diagrama de flujo para \textit{taskFlightPlan}}{ch4:img:fplan-flow}{!h}
+
+\subsection{Comunicaciones}
+Uno de los módulos fundamentales del sistema satelital corresponde a las comunicaciones. El sistema debe ser capaz de recibir y procesar telecomandos enviados desde la estación terrena; enviar la telemetría generada hacia la estación terrena; activar la transmisión de \textit{beacon} configurables de manera periódica; y realizar todas la configuraciones de hardware para su correcto funcionamiento.
+
+Por diseño se tiene nuevamente dos formas de completar estos requerimientos: agregar comandos y programar un \textit{listener}. Las funciones que se deben implementar a través de nuevos comandos en el sistema incluyen:
+\begin{itemize}
+    \item Configurar hardware de comunicaciones.
+    \item Leer configuraciones de hardware de comunicaciones.
+    \item Leer telecomandos recibidos por el subsistema de comunicaciones.
+    \item Escribir telemetría para ser transmitida por el subsistema de comunicaciones.
+    \item Configurar un \textit{beacon} y transmitirlo.
+\end{itemize}
+
+Al igual que el caso de la consola serial, se requiere la implementación de un \textit{listener} para controlar las operaciones de lectura y procesamiento de las ordenes enviadas de manera remota al satélite. El estado de funcionamiento del sistema de comunicaciones está disponible como variables de estado a través del repositorio de comandos, por lo tanto, las operaciones del \textit{listener} de comunicaciones incluyen monitorizar estas variables de estado para realizar las operaciones correspondientes. Estas incluyen monitorizar la llegada de nuevos \textit{frames} de telecomandos para comandar su lectura; procesar los telecomandos leídos generando los comandos del sistema solicitados; y generar a intervalos fijos el \textit{beacon} del satélite con la información adecuada. La implementación de este \textit{listener} sigue responde al diagrama de flujo de la figura \ref{ch4:img:communications-flow}
+
+\figura{img/communications-flow.png}{scale=0.4}{Diagrama de flujo para \textit{taskCommunications}}{ch4:img:communications-flow}{!h}
