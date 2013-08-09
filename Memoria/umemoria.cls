@@ -33,7 +33,7 @@
 %% Packages necesarios
 \RequirePackage[top=2cm, left=3cm, bottom=2cm, right=2cm, paper=letterpaper]{geometry}	%%Margenes
 \RequirePackage{amsmath, amssymb, amsthm, graphicx}										%%Varios
-\RequirePackage[spanish, es-nolists, es-lcroman]{babel}									%%Lenguaje
+\RequirePackage[spanish, es-nolists, es-lcroman es-tabla]{babel}									%%Lenguaje
 \RequirePackage[pdfpagelabels]{hyperref}												%%Links y numeracion del PDF
 
 %% Lenguaje
@@ -131,7 +131,7 @@
 			\MakeUppercase\@title
 			
 		\vspace{1cm}
-			TESIS PARA OPTAR AL TÍTULO DE \MakeUppercase\@carrera
+			MEMORIA PARA OPTAR AL TÍTULO DE \MakeUppercase\@carrera
 			
 		\vspace{1cm}
 			\MakeUppercase\@author
