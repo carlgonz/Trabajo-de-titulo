@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.0
-lastDocument=Memoria/umemoria.cls
+lastDocument=Memoria/el6908_ch2.tex
 masterDocument=Memoria/Memoria.tex
 name=Memoria
 pkg_extIsRegExp=false
@@ -99,10 +99,10 @@ Mode=LaTeX
 
 [item:Memoria/Memoria.tex]
 archive=true
-column=0
+column=7
 encoding=ISO-8859-15
 highlight=LaTeX
-line=20
+line=109
 mode=LaTeX
 open=true
 order=0
@@ -129,10 +129,10 @@ order=5
 
 [item:Memoria/el6908_ch2.tex]
 archive=true
-column=50
+column=994
 encoding=ISO-8859-15
 highlight=LaTeX
-line=307
+line=60
 mode=LaTeX
 open=true
 order=1
@@ -388,8 +388,8 @@ open=false
 order=-1
 
 [view-settings,view=0,item:Memoria/Memoria.tex]
-CursorColumn=0
-CursorLine=20
+CursorColumn=7
+CursorLine=109
 JumpList=
 ViMarks=
 
@@ -406,8 +406,8 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch2.tex]
-CursorColumn=50
-CursorLine=307
+CursorColumn=994
+CursorLine=60
 JumpList=
 ViMarks=
 

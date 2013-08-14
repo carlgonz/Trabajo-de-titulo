@@ -2,7 +2,7 @@
 
 \section{Resumen}
 
-En este capítulo se describe el proceso de diseño del software de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos operacionales de la misión; requerimientos no operacionales relacionados con la calidad del software; la plataforma de hardware sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final. El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de ésta y se centra en específico en el diseño de una arquitectura a nivel de aplicación basada en un patrón de diseño. Finalmente se realiza un análisis del diseño para plantear una arquitectura final que permita implementar todas las funcionalidades detalladas en los requerimientos no operacionales.
+En este capítulo se describe el proceso de diseño del \textit{software} de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos operacionales de la misión; requerimientos no operacionales relacionados con la calidad del \textit{software}; la plataforma de \textit{hardware} sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final. El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de ésta y se centra en específico en el diseño de una arquitectura a nivel de aplicación basada en un patrón de diseño. Finalmente se realiza un análisis del diseño para plantear una arquitectura final que permita implementar todas las funcionalidades detalladas en los requerimientos no operacionales.
 
 \section{Requerimientos}
 \subsection{Requerimientos operacionales}
@@ -20,7 +20,7 @@ El sistema debe almacenar de manera permanente estas configuraciones iniciales, 
 El satélite, luego de transcurrido el tiempo de silencio radial obligatorio, debe desplegar las antenas de comunicaciones con la estación terrena. Esto se realiza mediante la activación de algún sistema eléctrico, que cuenta con cierto sistema de retroalimentación para comprobar que las antenas fueron efectivamente desplegadas. Esta operación puede requerir sucesivos intentos, hasta que las antenas sean desplegadas.
 
 \paragraph{Procesamiento de telecomandos.}
-El sistema de comunicaciones debe ser capaz de recibir telecomandos desde la estación terrena y el software de control deberá recogerlos y ejecutar las acciones requeridas. Esto incluye la definición de un formato de telecomandos; la capacidad del sistema de analizar los comandos y sus argumentos dentro de un paquete de comunicaciones; y la posterior ejecución del comando recibido.
+El sistema de comunicaciones debe ser capaz de recibir telecomandos desde la estación terrena y el \textit{software} de control deberá recogerlos y ejecutar las acciones requeridas. Esto incluye la definición de un formato de telecomandos; la capacidad del sistema de analizar los comandos y sus argumentos dentro de un paquete de comunicaciones; y la posterior ejecución del comando recibido.
 
 \paragraph{Protocolo de enlace.}
 El satélite debe ser capaz de recibir y enviar datos a la estación terrena, para esto se requiere en primer lugar, que el satélite se pueda rastrear para lo cual se debe emitir una señal de baliza o \textit{beacon}; segundo, el satélite debe escuchar la estación terrena para determinar si se recibirán ordenes o se descargará información; y tercero, establecer un protocolo de enlace que permita realizar las operaciones de descarga y subida de datos.
@@ -36,19 +36,19 @@ Durante la misión se generarán datos que provienen de diferentes subsistemas o \
 El satélite debe ser capaz de recibir y ejecutar un plan de vuelo consistente en una serie de acciones a ejecutar en momentos determinados de tiempo. El plan de vuelo puede ser precargado en el satélite antes de ser lanzado así como ser actualizado mediante telecomandos. Esto provee flexibilidad en las tareas que se ejecutarán durante la misión, permitiendo controlar el uso de los diferentes recursos del satélite.
 
 \paragraph{Obtener el estado del sistema.}
-De manera autónoma el software de control debe recolectar información básica sobre el estado del sistema en general. Esta información será usada para determinar la salud del sistema y tomar las acciones necesarias en vuelo o bien será descargada como telemetría para ser posteriormente analizada. Ejemplos de variables asociadas al estado del sistema son el nivel de carga de las baterías, la hora del sistema, el estado del sistema de comunicaciones, el estado del sistema de control, entre otras.
+De manera autónoma el \textit{software} de control debe recolectar información básica sobre el estado del sistema en general. Esta información será usada para determinar la salud del sistema y tomar las acciones necesarias en vuelo o bien será descargada como telemetría para ser posteriormente analizada. Ejemplos de variables asociadas al estado del sistema son el nivel de carga de las baterías, la hora del sistema, el estado del sistema de comunicaciones, el estado del sistema de control, entre otras.
 
 \paragraph{Inicialización del sistema.}
-El software control debe poseer un algoritmo de inicio del sistema en general, que considera la inicialización del software con los parámetros adecuados a un estado adecuado, la inicialización de otros módulos o subsistemas así como las obligaciones de silencio radial durante el lanzamiento, despliegue de antenas, etc.
+El \textit{software} control debe poseer un algoritmo de inicio del sistema en general, que considera la inicialización del \textit{software} con los parámetros adecuados a un estado adecuado, la inicialización de otros módulos o subsistemas así como las obligaciones de silencio radial durante el lanzamiento, despliegue de antenas, etc.
 
-El software de control debe tener la capacidad de reiniciarse de manera segura y considerando variables fundamentales del estado anterior al reinicio.
+El \textit{software} de control debe tener la capacidad de reiniciarse de manera segura y considerando variables fundamentales del estado anterior al reinicio.
 
 \subsubsection{Área de energía}
 \paragraph{Estimación de la carga de la batería.}
-El software de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable del sistema para ser utilizado por el sistema de control de energía utilizada por el satélite.
+El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable del sistema para ser utilizado por el sistema de control de energía utilizada por el satélite.
 
 \paragraph{Presupuesto de energía.}
-Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El software de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera del presupuesto energético disponible así como una manera de planificar el consumo energético de la misión.
+Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera del presupuesto energético disponible así como una manera de planificar el consumo energético de la misión.
 
 \subsubsection{Órbita}
 \paragraph{Actualizar parámetros de órbita.}
@@ -59,30 +59,30 @@ Se debe contar con una estrategia de estimación y actualización de los parámetro
 El sistema de control debe tener la capacidad de controlar diferentes subsistemas asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo del satélite pueden variar de misión en misión e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el sistema de control debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
 
 \subsubsection{Tolerancia a fallos}
-El sistema debe tener cierto grado de tolerancia a fallos de hardware y software que permitan mantener la misión operativa. Debido las adversas condiciones del medio espacial y la incapacidad de acceder directamente al dispositivo este debe ser capaz de:
+El sistema debe tener cierto grado de tolerancia a fallos de \textit{hardware} y \textit{software} que permitan mantener la misión operativa. Debido las adversas condiciones del medio espacial y la incapacidad de acceder directamente al dispositivo este debe ser capaz de:
 \begin{itemize}
 	\item Restablecer su funcionamiento normal luego de un reinicio, evitando la pérdida de información
 	\item Restablecer el funcionamiento del sistema ante fallas causadas por radiación.
-	\item Recuperarse ante fallas de software
+	\item Recuperarse ante fallas de \textit{software}
 	\item Establecer estados de funcionamiento según nivel de fallas.
 	\item Detectar y solucionar problemas al desplegar antenas.
 	\item Capacidad de \textit{debug} durante el desarrollo y previo lanzamiento
 \end{itemize}
 
 \subsection{Requerimientos no funcionales}
-Por requerimientos no funcionales se entienden aquellos atributos asociados a la calidad del software o criterios que permiten determinar cómo debería ser el software que se está diseñando. A diferencia del los requerimientos funcionales que explican lo que el software debería hacer, los requerimientos no funcionales explican las cualidades y restricciones que guiarán el proceso de diseño.
+Por requerimientos no funcionales se entienden aquellos atributos asociados a la calidad del \textit{software} o criterios que permiten determinar cómo debería ser el \textit{software} que se está diseñando. A diferencia del los requerimientos funcionales que explican lo que el \textit{software} debería hacer, los requerimientos no funcionales explican las cualidades y restricciones que guiarán el proceso de diseño.
 
-El eje principal para el diseño del software de control del satélite responde a contar con un software que sea altamente mantenible debido a dos factores básicos: primero, el desarrollo del software será incremental, estará a cargo de más de una persona, por lo tanto debe ser flexible en la adición de funcionalidades desacoplando módulos para que las intervenciones en el código sean lo más acotadas posible; segundo, el sistema debe ser la base para futuras misiones aeroespaciales, por lo tanto debe ser fácilmente adaptable a nuevos requerimientos funcionales que incluyen la adición de nuevos \textit{payloads} y sus módulos de control. En el futuro la arquitectura del sistema debe proveer la capacidad de análisis del sistema a los nuevos desarrolladores con el objetivo de determinar claramente qué módulos se deben intervenir para agregar nuevas funcionalidades o corregir posibles errores. Especial mención requiere la necesidad de expandir el sistema, pues se considera como filosofía de trabajo en el proyecto 
-SUCHAI el contar siempre con un sistema funcional ante la eventual posibilidad de lanzar el satélite. Así, se partirá implementado un sistema que realice las operaciones básicas o requerimientos mínimos para así agregar complejidad y funciones al software de manera incremental. Lo anterior conduce a poner especial énfasis en el diseño de una arquitectura que genere un software modular, reusable, analizable y modificable, elementos agrupados en la característica 'mantenible' de la norma ISO/IEC 25010\cite{ISO25010}.
+El eje principal para el diseño del \textit{software} de control del satélite responde a contar con un \textit{software} que sea altamente mantenible debido a dos factores básicos: primero, el desarrollo del \textit{software} será incremental, estará a cargo de más de una persona, por lo tanto debe ser flexible en la adición de funcionalidades desacoplando módulos para que las intervenciones en el código sean lo más acotadas posible; segundo, el sistema debe ser la base para futuras misiones aeroespaciales, por lo tanto debe ser fácilmente adaptable a nuevos requerimientos funcionales que incluyen la adición de nuevos \textit{payloads} y sus módulos de control. En el futuro la arquitectura del sistema debe proveer la capacidad de análisis del sistema a los nuevos desarrolladores con el objetivo de determinar claramente qué módulos se deben intervenir para agregar nuevas funcionalidades o corregir posibles errores. Especial mención requiere la necesidad de expandir el sistema, pues se considera como filosofía de trabajo en el proyecto 
+SUCHAI el contar siempre con un sistema funcional ante la eventual posibilidad de lanzar el satélite. Así, se partirá implementado un sistema que realice las operaciones básicas o requerimientos mínimos para así agregar complejidad y funciones al \textit{software} de manera incremental. Lo anterior conduce a poner especial énfasis en el diseño de una arquitectura que genere un \textit{software} modular, reusable, analizable y modificable, elementos agrupados en la característica 'mantenible' de la norma ISO/IEC 25010\cite{ISO25010}.
 
-La fiabilidad del sistema es un elemento importante en cualquier misión espacial debido al ambiente extremo en el cual se desarrolla la misión, lo que incluye grandes cambios de temperatura y los efectos de la radiación solar sobre los componentes electrónicos\cite{REQUERIDA}. Esto significa que el sistema debe tener una nivel de tolerancia a fallas y ser capaz de recuperarse ante una interrupción o fallo. En lo que a software respecta, la característica de tolerancia a fallos será considera en su nivel básico, debido a que por lo general esto significa diseñar sistemas altamente redundantes con una serie de estados de funcionamiento que elevan la complejidad del diseño siguiendo una línea contraria a otros requerimientos no operacionales.
+La fiabilidad del sistema es un elemento importante en cualquier misión espacial debido al ambiente extremo en el cual se desarrolla la misión, lo que incluye grandes cambios de temperatura y los efectos de la radiación solar sobre los componentes electrónicos\cite{REQUERIDA}. Esto significa que el sistema debe tener una nivel de tolerancia a fallas y ser capaz de recuperarse ante una interrupción o fallo. En lo que a \textit{software} respecta, la característica de tolerancia a fallos será considera en su nivel básico, debido a que por lo general esto significa diseñar sistemas altamente redundantes con una serie de estados de funcionamiento que elevan la complejidad del diseño siguiendo una línea contraria a otros requerimientos no operacionales.
 
 %CITAR MEMORIAS QUE HABLEN DE TOLERANCIA A FALLAS
 
 La idoneidad funcional es un requisito importante, desde el siguiente punto de vista: si bien en la etapa de diseño no se busca obtener una solución detallada de la implementación de cada uno de los requerimientos operacionales, la arquitectura seleccionada de tener una respuesta a cada función necesaria de implementar para ser considerada como válida. Posiblemente en las primeras iteraciones se busque cumplir con los requisitos mínimos de la misión, pero la arquitectura debe ser la idónea para delinear claramente la forma de agregar todas las funcionalidades requeridas y que las tareas requeridas sean llevadas a cabo de manera correcta.
 
 Existen algunos características de calidad que no serán relevantes en este diseño ya que al ser la primera aproximación en la materia para el equipo se requiere mantener cierto nivel de simplicidad en la solución, luego probarla y así ganar la experiencia necesaria en el desarrollo de tecnología aeroespacial. Por ejemplo el desempeño, referido a términos computacionales, no es una restricción importante por la siguientes razones: se cuenta con una plataforma de baja capacidad de cómputo y limitados recursos energéticos; el sistema requiere realizar una cantidad limitada de tareas; tareas de alta demanda computacional pueden ser realizadas en tierra; y no se consideran tareas que requieran una gran precisión de tiempo. La seguridad tampoco es una componente fundamental, si bien, se podría requerir evitar un uso mal intencionado de la plataforma por parte de otros operadores satelitales -salvo por errores- esto es poco probable; por el contrario se busca obtener la mayor cooperación posible de otros operadores 
-como por ejemplo la comunidad de radioaficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que por la naturaleza de las plataformas a que se apunta se cuenta con muy bajo nivel de estandarización en los niveles más cercanos al hardware.
+como por ejemplo la comunidad de radioaficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que por la naturaleza de las plataformas a que se apunta se cuenta con muy bajo nivel de estandarización en los niveles más cercanos al \textit{hardware}.
 
 Por último la tabla \ref{tbl:ch2:req_no_func} resume los requerimientos no funcionales del proyecto asignándole cierta prioridad o importancia a considerar en el diseño.
 
@@ -96,7 +96,7 @@ Para que el sistema desarrollado en el proyecto SUCHAI pueda considerarse como u
 Dada la naturaleza iterativa de la metodología de trabajo, es importante considerar los requerimientos mínimos a la hora de la implementación de la arquitectura pues dará al sistema la simplicidad necesaria asegurando funcionalidad. La completitud de los requerimientos operacionales se obtendrán como mejoras incrementales sobre los requerimientos mínimos ya mencionados.
 
 \section{Plataforma}
-La plataforma para la cual se diseña el software corresponde a un kit Cubesat de una unidad adquirido a la compañía Pumpkins Inc. El kit está compuesto por una chasis de 1U con caras perforadas, un computador abordo con placa madre tipo 
+La plataforma para la cual se diseña el \textit{software} corresponde a un kit Cubesat de una unidad adquirido a la compañía Pumpkins Inc. El kit está compuesto por una chasis de 1U con caras perforadas, un computador abordo con placa madre tipo 
 %TODO COMPLETAR
 
 %Figura - CubesatKit 1U
@@ -129,12 +129,12 @@ El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una mem
 	\item RTCC, WDT
 \end{itemize}
 
-Como se observa las capacidades de cómputo de las plataformas son muy limitadas, así como la cantidad de memoria de programa y de datos disponible. Esto supone fuertes restricciones tanto en el diseño e implementación del software en tanto no se puede recurrir a alternativas como un sistema operativo Linux o utilizar lenguajes de programación interpretado tipo Java o Python. Las implicancias de las restricciones impuestas por la plataforma de hardware derivan en los siguientes puntos:
+Como se observa las capacidades de cómputo de las plataformas son muy limitadas, así como la cantidad de memoria de programa y de datos disponible. Esto supone fuertes restricciones tanto en el diseño e implementación del \textit{software} en tanto no se puede recurrir a alternativas como un sistema operativo Linux o utilizar lenguajes de programación interpretado tipo Java o Python. Las implicancias de las restricciones impuestas por la plataforma de \textit{hardware} derivan en los siguientes puntos:
 
 \begin{itemize}
 	\item Se deberá utilizar las herramientas de desarrollo que provee el fabricante del microcontrolador, es decir, lenguaje C para el compilador XC16 de Microchip.
 	\item Se debe efectuar un trabajo de bajo nivel implementado drivers para los periféricos del microcontrolador y para cada dispositivo que se agrega al sistema.
-	\item Sólo existen algunos sistemas operativos básicos para este tipo de dispositivos, y en general permiten organizar el software en módulos, procesos o tareas que se ejecuten de manera concurrente.
+	\item Sólo existen algunos sistemas operativos básicos para este tipo de dispositivos, y en general permiten organizar el \textit{software} en módulos, procesos o tareas que se ejecuten de manera concurrente.
 	\item Existe una cantidad muy limitada de código previo, reutilizable, para implementar el diseño de la aplicación, descartando de plano la posibilidad de utilizar bases de datos tipo SQL, protocolos TCP, UDP o librerías POSIX.
 \end{itemize}
 
@@ -145,12 +145,12 @@ Con todo el diseño de la aplicación final será a medida y no deriva de un trabaj
 
 \section{Arquitectura de software}
 \subsection{Arquitectura Global}
-En este nivel se propone una arquitectura de capas. Las diferentes capas agrupan funcionalidades similares y cada una interactúa sólo con la directamente superior e inferior, en una dinámica donde la capa inferior es una prestadora de servicios para la capa superior\cite{SOFTWARE_ING}. Esta arquitectura es una buena forma de proveer sistemas portables entre diferentes plataformas de hardware porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de software en sistemas embebidos donde se pueden distinguir al menos tres niveles: capa de bajo nivel relacionada con los controladores de hardware, también llamada a menudo como capa de abstracción de hardware o HAL por sus siglas en inglés; la cada intermedia que corresponden al nivel del sistema operativo o gestor de tareas del sistema; y una capa superior que corresponde a la 
+En este nivel se propone una arquitectura de capas. Las diferentes capas agrupan funcionalidades similares y cada una interactúa sólo con la directamente superior e inferior, en una dinámica donde la capa inferior es una prestadora de servicios para la capa superior\cite{SOFTWARE_ING}. Esta arquitectura es una buena forma de proveer sistemas portables entre diferentes plataformas de \textit{hardware} porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de \textit{software} en sistemas embebidos donde se pueden distinguir al menos tres niveles: capa de bajo nivel relacionada con los controladores de \textit{hardware}, también llamada a menudo como capa de abstracción de \textit{hardware} o HAL por sus siglas en inglés; la cada intermedia que corresponden al nivel del sistema operativo o gestor de tareas del sistema; y una capa superior que corresponde a la 
 aplicación final del sistema.
 
 \figura{img/arch_global.pdf}{scale=0.9}{Arquitectura de tres capas para un sistema embebido.}{img:ch3:arch_global}{!h}
 
-La capa de más bajo nivel corresponde a los controladores de hardware, que pueden ser varios módulos específicos a cada pieza de hardware o subsistema presente y permite a las capas superior acceder al hardware sin conocer en detalle sus particularidades. Por ejemplo esta capa presta los servicios de acceder a periféricos de comunicaciones o subsistemas de hardware externo como puden ser los diferentes \textit{payloads}. Por lo general existen varias alternativas de hardware disponibles para un mismo objetivo o bien se requiere que el sistema se adapte a la presencia de diferentes \textit{payloads}, la integración de variado hardware en este nivel permite mantener el resto del sistema intacto siempre y cuando se respeten las interfaces entre capas.
+La capa de más bajo nivel corresponde a los controladores de \textit{hardware}, que pueden ser varios módulos específicos a cada pieza de \textit{hardware} o subsistema presente y permite a las capas superior acceder al \textit{hardware} sin conocer en detalle sus particularidades. Por ejemplo esta capa presta los servicios de acceder a periféricos de comunicaciones o subsistemas de \textit{hardware} externo como puden ser los diferentes \textit{payloads}. Por lo general existen varias alternativas de \textit{hardware} disponibles para un mismo objetivo o bien se requiere que el sistema se adapte a la presencia de diferentes \textit{payloads}, la integración de variado \textit{hardware} en este nivel permite mantener el resto del sistema intacto siempre y cuando se respeten las interfaces entre capas.
 
 La capa intermedia corresponde al sistema operativo, que provee soporte para la gestión de tareas en el sistema embebido permitiendo la ejecución concurrente de procesos. A este nivel de diseño la decisión de qué sistema operativo utilizar no es relevante, pues toda la lógica de gestión de tareas está concentrada en esta capa que utilizará las funcionalidades dadas por la capa de más bajo nivel y provee sus funcionalidades a la capa superior o de aplicación.
 
@@ -159,16 +159,16 @@ La capa superior es específica a la aplicación e implementa la funcionalidad fin
 Una de las principales desventajas de esta arquitectura, sobre todo en sistema embebidos, es puede existir la necesidad de una comunicación entre capas no adyacentes\cite{SOFTWARE_ING} rompiendo la arquitectura. Esto se debe tratar de evitar, o al menos realizarlo de manera controlada.
 
 \subsection{Controladores de hardware}
-En todo sistema computacional se requiere de una capa de bajo nivel que realice la interfaz entre el hardware y el software, para entregar las funcionalidades de configurar, controlar y deshabilitar adecuadamente las diferentes piezas de hardware. Se llaman controladores de hardware o \textit{drivers} a aquellas librerías de software que permiten inicializar y manejar el acceso a este hardware por parte de las capas superiores de sistema operativo y aplicación\cite{EMBEDDED_ARCHITECTURE}.
+En todo sistema computacional se requiere de una capa de bajo nivel que realice la interfaz entre el \textit{hardware} y el \textit{software}, para entregar las funcionalidades de configurar, controlar y deshabilitar adecuadamente las diferentes piezas de \textit{hardware}. Se llaman controladores de \textit{hardware} o \textit{drivers} a aquellas librerías de \textit{software} que permiten inicializar y manejar el acceso a este \textit{hardware} por parte de las capas superiores de sistema operativo y aplicación\cite{EMBEDDED_ARCHITECTURE}.
 
-Se requiere al menos un controlador para cada hardware existente en el sistema embebido, y se diseñan bajo la idea de agrupar hardware de similares características o funcionalidades bajo una interfaz común que permita abstraer las particularidades de la implementación en cada pieza de hardware. Hacia las capas superiores se maneja el ``que hace'' el dispositivo entregando por lo general funciones básicas que persisten entre diferentes arquitecturas de hardware como: la inicialización, encendido o habilitación del dispositivo; su configuración; la lectura de datos desde el dispositivo; la escritura de datos hacia el dispositivo; y finalmente deshabilitar o apagar este dispositivo. Además cada hardware puede poseer funcionalidades específicas que también deben ser accesibles a través del driver.
+Se requiere al menos un controlador para cada \textit{hardware} existente en el sistema embebido, y se diseñan bajo la idea de agrupar \textit{hardware} de similares características o funcionalidades bajo una interfaz común que permita abstraer las particularidades de la implementación en cada pieza de \textit{hardware}. Hacia las capas superiores se maneja el ``que hace'' el dispositivo entregando por lo general funciones básicas que persisten entre diferentes arquitecturas de \textit{hardware} como: la inicialización, encendido o habilitación del dispositivo; su configuración; la lectura de datos desde el dispositivo; la escritura de datos hacia el dispositivo; y finalmente deshabilitar o apagar este dispositivo. Además cada \textit{hardware} puede poseer funcionalidades específicas que también deben ser accesibles a través del driver.
 
-Hacia la capa de hardware el controlador maneja el ``como'', lo que incluye por lo general el manejo de las interfaces de entrada y salida de datos; manejo de las interrupciones; o manejo de la memoria del dispositivo. Si bien la implementación de cada controlador es específica al dispositivo, se pueden diferenciar al menos tres tipos de arquitecturas comunes en la implementación de estas piezas de software: controladores de entrada y salida síncronos; controladores de entrada y salida asíncronos; y colas de entrada de datos seriales.
+Hacia la capa de \textit{hardware} el controlador maneja el ``como'', lo que incluye por lo general el manejo de las interfaces de entrada y salida de datos; manejo de las interrupciones; o manejo de la memoria del dispositivo. Si bien la implementación de cada controlador es específica al dispositivo, se pueden diferenciar al menos tres tipos de arquitecturas comunes en la implementación de estas piezas de \textit{software}: controladores de entrada y salida síncronos; controladores de entrada y salida asíncronos; y colas de entrada de datos seriales.
 
 \subsubsection{Controladores de entrada y salida síncronos}
 Se considera el uso de una arquitectura de controladores síncronos cuando las tareas que lo invocan necesariamente deben esperar la respuesta del controlador. Si se provee la adecuada sincronización, entonces el resto del sistema puede seguir funcionando mientras la tarea en cuestión se encuentra esperando. Cuando el controlador termina el proceso de entrada o salida de datos, la tarea retoma su funcionamiento.
 
-La arquitectura correspondiente se detalla en la figura \ref{img:ch3:driver:sincrono} donde se observa que el driver se provee como un módulo, o función, que es llamado por alguna capa superior en la arquitectura. Una vez que el controlador tiene acceso al dispositivo a través de alguna estructura de sincronización realiza las operaciones de entrada y salida. Estas operaciones se pueden o no realizar a través de rutinas de atención de interrupciones o bien mediante un \textit{polling} al estado del dispositivo. Si se usa la rutina de atención de interrupciones, esta pieza de software también se considera parte del controlador.
+La arquitectura correspondiente se detalla en la figura \ref{img:ch3:driver:sincrono} donde se observa que el driver se provee como un módulo, o función, que es llamado por alguna capa superior en la arquitectura. Una vez que el controlador tiene acceso al dispositivo a través de alguna estructura de sincronización realiza las operaciones de entrada y salida. Estas operaciones se pueden o no realizar a través de rutinas de atención de interrupciones o bien mediante un \textit{polling} al estado del dispositivo. Si se usa la rutina de atención de interrupciones, esta pieza de \textit{software} también se considera parte del controlador.
 
 \figura{img/driver_sincrono.pdf}{scale=1.3}{Arquitectura para controladores síncronos}{img:ch3:driver:sincrono}{!h}
 
@@ -204,7 +204,7 @@ Las operaciones que realiza el controlador son las siguientes:
 Mientras que en la rutina de atención de interrupciones se realiza lo siguiente:
 \begin{itemize}
 	\item Atender la interrupción y restablecer el estado del dispositivo.
-	\item Obtener la información desde (o enviar hacia) el dispositivo de hardware.
+	\item Obtener la información desde (o enviar hacia) el dispositivo de \textit{hardware}.
 	\item Empaquetar la información en un mensaje.
 	\item Agregar el mensaje a la cola.
 \end{itemize}
@@ -233,7 +233,7 @@ Corresponde a la rutina de atención de interrupciones las siguientes operaciones
 \end{itemize}
 
 \subsection{Sistema operativo}
-El sistema operativo es la capa de abstracción entre la capa de aplicación y el hardware en la arquitectura de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo\cite{EMBEDDED_ARCHITECTURE}. Los servicios básicos que provee el sistema operativo a través de su kernel son:
+El sistema operativo es la capa de abstracción entre la capa de aplicación y el \textit{hardware} en la arquitectura de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo\cite{EMBEDDED_ARCHITECTURE}. Los servicios básicos que provee el sistema operativo a través de su kernel son:
 
 \begin{itemize}
 	\item \textbf{Gestión de tareas:} También denominada gestión de procesos. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se debe entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación y posee sus propios recursos y limitaciones de tiempo. Varias tareas pueden existir a la vez en el sistema y el sistema operativo se encarga de proveer de tiempo de procesamiento a cada una de las tareas disponibles. Existen diferentes alternativas apara gestionar la ejecución de las tareas en el sistema, de las cuales sobresalen dos: \textit{preemptive} y cooperativo. La implementación de la aplicación y las tareas dependen mucho del modo de gestión de tareas que utiliza el sistema operativo por lo cual se describe cada uno a continuación:
@@ -243,7 +243,7 @@ El sistema operativo es la capa de abstracción entre la capa de aplicación y el 
 		\item \textbf{Modo cooperativo:} En el modo cooperativo el sistema operativo nunca inicia un cambio de contexto sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva tarea. El sistema operativo es quien decide la siguiente tarea a ejecutar ya sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas y cooperar con la ejecución del resto de las tareas iniciado el proceso de cambio de contexto.
 	\end{itemize}
 	
-	\item \textbf{Comunicación y sincronización entre tareas:} Si bien cada tarea posee su propio contexto de ejecución y pueden existir varias tareas funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre tareas para compartir estados y mensajes que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de hardware o requerirán de memoria compartida en esquemas tipo productor-consumidor donde el sistema operativo es quien provee las estructuras de sincronización adecuadas. El sistema operativo de encarga de proveer los mecanismos de comunicación y sincronización para asegurar que la información compartida no se corrompa y no existan interferencias entre tareas al acceder a recursos compartidos.
+	\item \textbf{Comunicación y sincronización entre tareas:} Si bien cada tarea posee su propio contexto de ejecución y pueden existir varias tareas funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre tareas para compartir estados y mensajes que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de \textit{hardware} o requerirán de memoria compartida en esquemas tipo productor-consumidor donde el sistema operativo es quien provee las estructuras de sincronización adecuadas. El sistema operativo de encarga de proveer los mecanismos de comunicación y sincronización para asegurar que la información compartida no se corrompa y no existan interferencias entre tareas al acceder a recursos compartidos.
 	
 	\item \textbf{Temporización:} Dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs} para controlar la periodicidad o límites de tiempo de ejecución de cada tarea.
 	
@@ -253,7 +253,7 @@ El sistema operativo es la capa de abstracción entre la capa de aplicación y el 
 	
 \end{itemize}
 
-En cuanto a la arquitectura de software presente en un sistema operativo, se pueden encontrar al menos tres opciones bien conocidas: kernel monolítico, arquitectura en capas y micro kernel\cite{EMBEDDED_ARCHITECTURE}.
+En cuanto a la arquitectura de \textit{software} presente en un sistema operativo, se pueden encontrar al menos tres opciones bien conocidas: kernel monolítico, arquitectura en capas y micro kernel\cite{EMBEDDED_ARCHITECTURE}.
 
 \paragraph{Kernel monolítico.} En este tipo de kernel los servicios del sistema operativos se encuentran integrados a lo largo de la arquitectura que provee las cinco funcionalidades mencionadas anteriormente. Dada la dificultad de escalar y depurar este tipo de kernel, existe una variante en la cual los servicios del sistema operativo se integran como módulos. Una arquitectura básica de este tipo de sistemas se refleja en la figura \ref{img:ch3:kernel} a. Algunos sistemas operativos que usan esta arquitectura son: Linux, Jbed RTOS y MicroC/OS-II.
 
@@ -272,7 +272,7 @@ En cuanto a la arquitectura de software presente en un sistema operativo, se pue
 %················································
 
 
-En el diseño del software de vuelo el diseño de un sistema operativo está fuera del alcance del proyecto en cuanto existen una serie de alternativas ya disponibles para uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante para la plataforma de hardware utilizada.
+En el diseño del \textit{software} de vuelo el diseño de un sistema operativo está fuera del alcance del proyecto en cuanto existen una serie de alternativas ya disponibles para uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante para la plataforma de \textit{hardware} utilizada.
 
 \begin{table}[ht!] \caption{Comparación de sistemas operativos para sistemas embebidos}
 \footnotesize
@@ -298,7 +298,7 @@ embOS & Micro kernel & Preemptive con prioridades & No tiene & Semáforos, mensaj
 
 \subsection{Aplicación}
 
-Para el diseño de la aplicación se estudió la adaptación de un patrón de diseño utilizado en la programación orientada a objetos, llamado \textit{command pattern}. Este patrón de diseño soluciona la necesidad de realizar peticiones a diferentes objetos sin necesidad de saber cómo se ejecutaran estas acciones, de este modo la petición es encapsulada en como un comando que entrega al objeto adecuado para ser ejecutado. Este patrón entrega algunas ventajas como: separar los módulos que generan los comandos de aquellos que los ejecutan; la posibilidad de gestionar colas de comandos, registros u deshacer acciones; y ofrecer un flujo uniforme para ejecutar las acciones permitiendo extender el software al agregar comandos nuevos.
+Para el diseño de la aplicación se estudió la adaptación de un patrón de diseño utilizado en la programación orientada a objetos, llamado \textit{command pattern}. Este patrón de diseño soluciona la necesidad de realizar peticiones a diferentes objetos sin necesidad de saber cómo se ejecutaran estas acciones, de este modo la petición es encapsulada en como un comando que entrega al objeto adecuado para ser ejecutado. Este patrón entrega algunas ventajas como: separar los módulos que generan los comandos de aquellos que los ejecutan; la posibilidad de gestionar colas de comandos, registros u deshacer acciones; y ofrecer un flujo uniforme para ejecutar las acciones permitiendo extender el \textit{software} al agregar comandos nuevos.
 
 %TODO: MAS DETALLES DEL PATRON ESTUDIADO
 
@@ -310,7 +310,7 @@ Como las restricciones que se han impuesto al diseño de la aplicación indican qu
 
 Los módulos fundamentales de la arquitectura son lo siguientes:
 
-\paragraph{Listeners.} Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes dentro de \textit{command pattern}. Estos módulos son los únicos encargados de generar los comandos en el sistema. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene del hecho de que la justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de software para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. Estos módulos permiten extender las 
+\paragraph{Listeners.} Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes dentro de \textit{command pattern}. Estos módulos son los únicos encargados de generar los comandos en el sistema. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene del hecho de que la justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de \textit{software} para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. Estos módulos permiten extender las 
 funcionalidades del satélite en cuanto se requiera un aplicación que dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se puede considerar como un \textit{listener} los siguientes procesos:
 
 \begin{itemize}
@@ -322,7 +322,7 @@ funcionalidades del satélite en cuanto se requiera un aplicación que dado cierto
 
 Se hace hincapié en que la existencia de cada \textit{listener} requiere de una subsistema o variable al cual prestar atención, ya sea un temporizador, la posición actual o el arribo de un telecomando por mencionar algunos ejemplos. Una vez definido esto, el programador debe determinar bajo qué condiciones se toma la decisión de generar un determinado comando que realice las acciones requeridas.
 
-Los \textit{listeners} no realizan acciones que involucren directamente el acceso a otros subsistemas, evitando así el uso simultaneo de recursos de hardware -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. Por lo tanto sólo se permite el acceso al repositorio de estados, repositorio de datos y repositorio de comandos. Tampoco en este nivel se ejecutan directamente los comandos, sino que son generados y encolados para su posterior funcionamiento. Esto plantea la limitante de que quien envía el comando no puede saber si fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr la retroalimentación necesaria a través de la lectura por parte del \textit{listener} del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado.
+Los \textit{listeners} no realizan acciones que involucren directamente el acceso a otros subsistemas, evitando así el uso simultaneo de recursos de \textit{hardware} -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. Por lo tanto sólo se permite el acceso al repositorio de estados, repositorio de datos y repositorio de comandos. Tampoco en este nivel se ejecutan directamente los comandos, sino que son generados y encolados para su posterior funcionamiento. Esto plantea la limitante de que quien envía el comando no puede saber si fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr la retroalimentación necesaria a través de la lectura por parte del \textit{listener} del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado.
 
 \paragraph{Dispatcher.} El siguiente nivel en la arquitectura es el módulo \textit{Dispatcher}. Dentro del patrón de diseño original tiene su símil con el objeto denominado \textit{Invoker} en cuanto es el encargado de pedir la ejecución de un comando generado por un \textit{listener}. Todos los comandos que son generados por los múltiples \textit{listeners} llegan a al módulo \textit{dispatcher} y son encolados, en este nivel se realiza un control sobre los comandos que llegan y se pueden establecer políticas de rechazo a la ejecución de comandos. Si el comando es aceptado el \textit{dispatcher} encargará su ejecución al siguiente nivel de la arquitectura. Entre las responsabilidades que pueden ser asignadas se encuentran:
 
@@ -354,15 +354,15 @@ Los módulos en ejecución requieren del acceso a los datos básicos del sistema, q
 
 
 
-La arquitectura de software de la aplicación para la operación del satélite queda descrita por el diagrama de la figura \ref{img:ch3:arch} que describe el flujo de información entre los diferentes módulos que componen el software, así como sus dependencias, principales operaciones y su correspondencia con el patrón de diseño que inspira la arquitectura propuesta.
+La arquitectura de \textit{software} de la aplicación para la operación del satélite queda descrita por el diagrama de la figura \ref{img:ch3:arch} que describe el flujo de información entre los diferentes módulos que componen el \textit{software}, así como sus dependencias, principales operaciones y su correspondencia con el patrón de diseño que inspira la arquitectura propuesta.
 
-\figura{img/arch_general.pdf}{width=\textwidth}{Arquitectura de software para el control del satélite}{img:ch3:arch}{!h}
+\figura{img/arch_general.pdf}{width=\textwidth}{Arquitectura de \textit{software} para el control del satélite}{img:ch3:arch}{!h}
 
 %TODO: Flujo de ejecución de la aplicación.
 
 \section{Diseño}
 
-Dado los requerimientos operacionales y no operacionales, así como la arquitectura de software en todos sus niveles, se pasa validar el diseño propuesto para poder asegurar que el software requerido y sus funcionalidades son posibles de implementar con esta solución. Para esto se vuelve a revisar los requerimientos operacionales y se propone una solución conceptual a través de la arquitectura de software propuesta. Los resultados de este proceso para cada área se detallan en las tablas \ref{tab:chp3:analisis:comunicaciones}, \ref{tab:chp3:analisis:controlcentral}, \ref{tab:chp3:analisis:energia} y \ref{tab:chp3:analisis:toleranciafallos}.
+Dado los requerimientos operacionales y no operacionales, así como la arquitectura de \textit{software} en todos sus niveles, se pasa validar el diseño propuesto para poder asegurar que el \textit{software} requerido y sus funcionalidades son posibles de implementar con esta solución. Para esto se vuelve a revisar los requerimientos operacionales y se propone una solución conceptual a través de la arquitectura de \textit{software} propuesta. Los resultados de este proceso para cada área se detallan en las tablas \ref{tab:chp3:analisis:comunicaciones}, \ref{tab:chp3:analisis:controlcentral}, \ref{tab:chp3:analisis:energia} y \ref{tab:chp3:analisis:toleranciafallos}.
 
 %·········· TABLA ··············
 \begin{table}[ht!] \caption{Análisis de la arquitectura, según requerimientos operacionales, para él área de comunicaciones}
@@ -395,11 +395,11 @@ Plan de vuelo & Listener (FlightPlan) & El plan de vuelo consta de un itinerario
 
 Recoger información del estado del sistema & Listener (HouseKeeping) & De forma periódica se ejecutan comandos que revisan parámetros del sistema y actualizan variables en el repositorio de estados\\
 
-Tolerancia a fallos de software & Dispatcher & Se lleva un registro de los comandos ejecutados y sus códigos de retorno. Se puede evitar le ejecución de comandos (o grupos de comandos) que están generando problemas en el sistema. (Lista negra). Se puede filtrar comandos desde ciertos listeners.\\
+Tolerancia a fallos de \textit{software} & Dispatcher & Se lleva un registro de los comandos ejecutados y sus códigos de retorno. Se puede evitar le ejecución de comandos (o grupos de comandos) que están generando problemas en el sistema. (Lista negra). Se puede filtrar comandos desde ciertos \textit{listener}s.\\
 
 Capacidad de debug & Listener (DebugConsole) & Se cuenta con una consola serial capaz de interpretar órdenes como comandos internos del sistema. Comandos se pueden ejecutar en modo debug para tener una salida con información relevante sobre la ejecución.\\
 
-Inicialización del sistema & Listener (Deployment) & Inicialmente sólo existe un listener, que genera los comandos para toda la secuencia de inicio, que implica configurar parámetros, repositorios, subsistemas, silencio radial, despligue de antenas y la activación del resto de los listeners.\\\hline
+Inicialización del sistema & Listener (Deployment) & Inicialmente sólo existe un \textit{listener}, que genera los comandos para toda la secuencia de inicio, que implica configurar parámetros, repositorios, subsistemas, silencio radial, despligue de antenas y la activación del resto de los \textit{listener}s.\\\hline
 \end{tabularx}\label{tab:chp3:analisis:controlcentral}
 \end{table}
 %·····················
@@ -435,14 +435,14 @@ Problemas con despliegue de antenas & Listener (Deployment) & Se chequean sensor
 
 Watchdog & Sistema Operativo & Se cuenta con un watchdog en el microcontrolador, que se reseta periódicamente. Reinicia el sistema si la aplicación no responde.\\
 
-Fallos de hardware externo & NA & Se pueden generar comandos para que la EPS apague los buses de energía de los payloads y hardware externo\\
+Fallos de \textit{hardware} externo & NA & Se pueden generar comandos para que la EPS apague los buses de energía de los payloads y \textit{hardware} externo\\
 
 Watchdog Externo & Listener (HouseKeeping) & Generar comandos periódicamente que reseteen el watchdog externo, reiniciando el sistema ante fallas generales en el microcontrolador.\\\hline
 \end{tabularx}\label{tab:chp3:analisis:toleranciafallos}
 \end{table}
 %·······························
 
-El resultado de este ejercicio revela los módulos que son necesarios en el diseño de la arquitectura de software a nivel de aplicación, específicamente los \textit{listeners} que se deben implementar son:
+El resultado de este ejercicio revela los módulos que son necesarios en el diseño de la arquitectura de \textit{software} a nivel de aplicación, específicamente los \textit{listeners} que se deben implementar son:
 
 \begin{itemize}
 	\item \textbf{Communications:} Este \textit{listener} se encarga de controlar los eventos relacionados con el subsistema de comunicaciones, específicamente presta atención a la llegada de telecomandos que implican la ejecución de comandos en el sistema.
@@ -473,9 +473,9 @@ La arquitectura se completa con los repositorios de datos, que según lo analizad
 	\item \textbf{Repositorio de comandos:} Este repositorio provee el acceso a todos los comandos disponibles en el sistema. Es usado tanto para construir el comando que se desea generar por parte de los \textit{listeners}, así como para determinar la función asociada al código que es recibido por el \textit{executer}.
 \end{itemize}
 
-Con esto, el resultado del diseño de la arquitectura de software queda detallado en la figura \ref{img:ch3:dis:arch} que muestra los módulos participantes y el flujo de información en esta arquitectura:
+Con esto, el resultado del diseño de la arquitectura de \textit{software} queda detallado en la figura \ref{img:ch3:dis:arch} que muestra los módulos participantes y el flujo de información en esta arquitectura:
 
-\figura{img/arch_suchai.pdf}{width=\textwidth}{Arquitectura de software para el control del satélite}{img:ch3:dis:arch}{!h}
+\figura{img/arch_suchai.pdf}{width=\textwidth}{Arquitectura de \textit{software} para el control del satélite}{img:ch3:dis:arch}{!h}
 
 Las capas inferiores en la arquitectura global no se ven afectados por los requerimientos operaciones, en cuanto su diseño e implementación es menos flexible y siempre necesaria para sostener la arquitectura de nivel de aplicación. En la capa de \textit{drivers} lo importante contar con la librerías de acceso a todos los dispositivos requeridos. La capa de sistema operativo actúa como caja negra en cuanto se utiliza una solución de terceros lo cual es ventajoso en cuanto la interfaz hacia el \textit{middelware} y hacia la capa de aplicación esté bien definida.
 

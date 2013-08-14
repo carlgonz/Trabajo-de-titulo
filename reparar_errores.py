@@ -35,7 +35,8 @@ def make_italic_dict(replace_list):
     return i_dic
 
 def do_italic(infile, outfile, r_dic):
-    tmpfile = '~'+infile[0:infile.rfind('.')]+'.tmp'
+    _infile = os.path.split(infile)
+    tmpfile = os.path.join(_infile[0],'~'+_infile[1][0:_infile[1].rfind('.')]+'.tmp')
     
     if outfile == '' or outfile == infile: outfile = tmpfile
     
