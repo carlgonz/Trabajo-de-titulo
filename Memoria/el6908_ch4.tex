@@ -7,7 +7,7 @@ El proceso de implementación consta de tres etapas principales, que se alinean c
 \section{Ambiente de desarrollo}
 La implementación del proyecto comienza por la definición del entorno y herramientas de desarrollo disponibles, pues son elementos esenciales que definen las posibilidades, limitaciones y marco de trabajo durante todo el proceso. El ambiente de desarrollo incluye los siguientes elementos: computadores, sistema operativo, control de versiones, el ambiente de desarrollo integrado o IDE, compilador, programador del microcontrolador y tarjeta de desarrollo.
 
-\paragraph{Computadores.} En general para el desarrollo de \textit{software} no se tienen requerimientos de \textit{hardware} elevados, considerando que bastaría con ejecutar un procesador de texto, una aplicación de linea de comandos para ejecutar el compilar y la disponibilidad de al menos un puerto USB para utilizar el programador del microcontrolador. La aplicación más demandante en recursos es el IDE (ver \ref{ch4:para:ide}) cuyos requerimientos recomendados de \textit{hardware} se encuentran en la tabla \ref{ch4:table:\textit{hardware}_req}.
+\paragraph{Computadores.} En general para el desarrollo de \textit{software} no se tienen requerimientos de \textit{hardware} elevados, considerando que bastaría con ejecutar un procesador de texto, una aplicación de linea de comandos para ejecutar el compilar y la disponibilidad de al menos un puerto USB para utilizar el programador del microcontrolador. La aplicación más demandante en recursos es el IDE (ver \ref{ch4:para:ide}) cuyos requerimientos recomendados de \textit{hardware} se encuentran en la tabla \ref{ch4:table:hardware_req}.
 
 \begin{table}[ht!] \caption{Requerimientos de \textit{hardware} recomendados para desarrollo}
 \centering
@@ -15,7 +15,7 @@ La implementación del proyecto comienza por la definición del entorno y herramie
 \textbf{Procesador} & Intel Pentium 4 @ 2.6 GHz o equivalente\\
 \textbf{Memoria RAM} & 2 GB\\
 \textbf{Espacio en disco} & 1 GB\\\hline
-\end{tabular} \label{ch4:table:\textit{hardware}_req}
+\end{tabular} \label{ch4:table:hardware_req}
 \end{table}
 
 \paragraph{Sistema Operativo.} En principio no existen restricciones sobre el sistema operativo a utilizar dado que las principales herramientas como el IDE y el compilador son multiplataforma. Sin embargo el presente trabajo se ha desarrollado sobre plataformas GNU/Linux por su flexibilidad, libertad de distribución, disponibilidad de herramientas y estabilidad. Las principales distribuciones de Linux utilizadas fueron Kubuntu 12.04 LTS amd64 y LinuxMint 14 amd64.
@@ -164,7 +164,7 @@ CRC & \\
 Comparadores & \\
 ADC & \\
 \\hline
-\end{tabular} \label{ch4:table:\textit{hardware}_req}
+\end{tabular} \label{ch4:table:hardware_req}
 \end{table}
 
 \subsubsection{Implementación de un controlador síncrono}
@@ -771,7 +771,7 @@ void taskExecuter(void *param)
 
 Los \textit{listeners} son los módulos encargados de implementar la lógica de generación de comandos dentro del sistema de vuelo. Existen una serie de \textit{listeners} bajo la lógica de que a cada uno le corresponde controlar un determinado subsistema del satélite. Estos módulos se implementan como tareas de FreeRTOS que se activan de manera periódica, ejecutando operaciones de control que tienen como salida comandos que son agregados a la cola del \textit{dispatcher}. La lógica de funcionamiento estas tareas se detalla en el diagrama de la figura \ref{ch4:img:freertos:periodic-task}. FreeRTOS ofrece dos funciones que implementan la periodicidad en las ejecución de las tareas, mediante la técnica de suspender su ejecución por una cantidad determinada de \textit{ticks}: \texttt{vTaskDelay} y \texttt{vTaskDelayUntil}. Cada una de estas funciones cambia el estado de la tarea a suspendida, un estado dónde la tarea no utiliza ningún recurso del sistema, luego del tiempo específica la tarea retoma su ejecución. La diferencia entre ambas funciones es que la primera siempre suspende la tarea durante un tiempo fijo, mientras que la segunda mantiene fijo el tiempo que transcurre entre ambas llamadas\cite{FREERTOS_API}. \texttt{vTaskDelayUntil} es más adecuada para tareas de tipo \textit{hard real-time} y es la utilizada en los \textit{listeners} para proveer una resolución de tiempo más precisa.
 
-\figura{img/\textit{listener}s-flow.png}{scale=0.45}{Diagrama de flujo para \textit{listeners}}{ch4:img:freertos:periodic-task}{!h}
+\figura{img/listeners-flow.png}{scale=0.45}{Diagrama de flujo para \textit{listeners}}{ch4:img:freertos:periodic-task}{!h}
 
 Los \textit{listeners} y su implementación pueden ser bastantes específicos a cada sistema. La regla general es que se crea uno por cada subsistema que se debe controlar, pero la complejidad de cada implementación se esconde bajo la lógica programa como ``operaciones de control'' del diagrama \ref{ch4:img:freertos:periodic-task}. A continuación se desarrolla el ejemplo de la implementación de un \textit{listener}.
 

@@ -8,6 +8,300 @@ En este capítulo se detallan y discuten los resultados obtenidos luego de la imp
 \subsection{Pruebas a Dispatcher}
 \subsection{Pruebas a Executer}
 
-\section{Pruebas de arquitectura}
+\section{Pruebas de integración}
+Con las pruebas de integración se busca determinar el cumplimiento de los requerimientos operacionales del proyecto, especialmente aquellas capacidades que dependen directamente de la implementación del software de vuelo. Para esto se han integrado los tres sub-sistemas básicos del satélite: computador a bordo, energía y comunicaciones.
 
-\section{Pruebas de integración básica}
+\subsection{Configuración}
+
+Las herramientas utilizadas para el desarrollo de la prueba consisten en:
+\begin{itemize}
+    \item Entorno de prueba
+    \begin{itemize}
+        \item Caja limpia para albergar el satélite.
+        \item Computador para registro de datos.
+        \item Programador Microchip ICD3.
+        \item Cable USB para comunicación serial.
+        \item Equipo de radio portátil Alinco XXX.
+        \item Cámara de video para registro de la prueba.
+        \item Multímetro.
+    \end{itemize}
+
+    \item Estación terrena
+    \begin{itemize}
+        \item Antena 50$\Omega$ de baja ganancia.
+        \item Equipo de radio ICOM 910.
+        \item Computador para capturar y procesar audio.
+    \end{itemize}
+    
+    \item Satélite
+    \begin{itemize}
+        \item Computador a bordo con placa madre CubesatKit rev. D y módulo de procesador CubesatKit D1 con PIC24F256GA110.
+        \item EPS CS-1UEPS2-NB ClydeSpace
+        \item Transceptor AllSpace ASCOM-01 rev. 3
+        \item Paneles solares.
+    \end{itemize}
+\end{itemize}
+
+El montaje de la prueba se muestra en la figura \ref{ch4:int:montaje} y consiste en mantener el satélite dentro de la cámara limpia conectado a través de un cable USB al computador que registrará los resultados de la prueba y enviar comandos al software de vuelo. Este cable también provee de alimentación al sistema de energía para la carga de las baterías, se utilizará un multímetro para monitorear su voltaje además de los registros generados por el software de vuelo. La radio portátil se utiliza para una rápida verificación del funcionamiento del sistema de comunicaciones y permite detectar si se produce alguna transmisión durante el periodo de inactividad obligatorio. La estación terrena está configurada para escuchar el sistema de comunicaciones del satélite con el software para decodificar su baliza y telemetría. El satélite a través del software de vuelo funciona de manera autónoma y la interfaz de \textit{debug} sólo se utilizará para registrar información útil para la prueba.
+
+%TODO: Figura con el montaje de la prueba
+
+Del desarrollo de la prueba implica los siguientes pasos.
+\begin{itemize}
+    \item Configurar el software de vuelo y programar el computador a bordo.
+    \item Monitorear el cumplimiento del periodo de inactividad.
+    \item Monitorear el correcto despliegue de antenas.
+    \item Monitorear la correcta inicialización del software de vuelo.
+    \item Registrar los comandos ejecutados en el software de vuelo.
+    \item Registrar periódicamente el valor de las variables de estado.
+    \item Registrar periódicamente los registros de la EPS.
+    \item Recibir el \textit{beacon} emitido en la estación terrena.
+    \item Enviar una señal de radio para activar el envío de telemetría.
+    \item Recibir la telemetría enviada en la estación terrena.
+    \item Ejecutar test de reinicio.
+    \item Ejecutar test de falla de software.
+    \item Ejecutar test de energía baja.
+\end{itemize}
+
+Los resultados de la prueba se obtendrán en la forma de:
+\begin{itemize}
+    \item Archivo de texto con el registro de la consola serial.
+    \item Texto y audio del beacon recibido en la estación terrena.
+    \item Datos de la telemetría decodificada en la estación terrena.
+    \item Imágenes del proceso de despliegue de antena.
+\end{itemize}
+
+\subsection{Resultados}
+
+Los resultados serán analizados para cada requerimiento operacional correspondiente al software de vuelo producto del correspondiente análisis de las salidas generadas en la prueba de funcionamiento del satélite integrado.
+
+\subsubsection{Área de comunicaciones}
+\paragraph{Configuración inicial del \textit{transcevier}.}
+La configuración inicial del transcevier se lleva a cabo durante el proceso de inicio del software de vuelo, esto se observa en el registro de la consola:
+
+%TODO: Registro de la consola acá
+
+La correcta configuración del transcevier se comprueba leyendo los registros internos de configuración del equipo una vez que el satélite está funcionando en régimen normal. La tabla \ref{ch5:table:result:trx} muestra el valor por defecto de los registros del transcevier, el valor configurado y su valor leído.
+
+%TODO: Tabla con los registros del TRX
+
+El software puede configurar diferentes parámetros del sistema de comunicaciones, un ejemplo de ello es la potencia de transmisión. Mediante la ejecución del comando \texttt{trx\_set\_bc\_pwr} se generaron \textit{beacons} a diferentes niveles de potencia. El resultado se detalla en la figura \ref{ch5:result:bcn_pwr}
+
+%TODO: Imagen del beacon a diferentes potencias
+
+El silencio radial se lleva a cabo configurando el transcevier en modo silencioso al inicio del sistema y como medida adicional se evita la generación de cualquier transmisión inhibiendo la ejecución de cualquier comando durante el periodo de inactividad. Durante la prueba se mantiene cerca la radio portátil para detectar cualquier transmisión así como para generar intentos de comunicación con el satélite que no deben tener respuesta. El resultado se detalla en registro de la consola que revela que en efecto ningún comando de transmisión de datos se efectúa durante el periodo de inactividad radial:
+
+%TODO: Registro periodo de inactividad.
+
+
+\paragraph{Despliegue de antenas.}
+El despliegue de antenas está a cargo de la secuencia de inicio del software de vuelo que activa y controla el sistema de despliegue. El proceso queda registrado en la consola donde al primer intento de despliegue se detecta que el \textit{switch} indicador del despliegue se ha liberado continuando con el inicio del sistema.
+
+%TODO: Registro del momento del despliegue
+
+En la figura \ref{ch5:result:antenna} se observan las antenas antes, durante y después del proceso de despliegue.
+
+%TODO: Fotos del despliegue
+
+\paragraph{Procesamiento de telecomandos.}
+Utilizando el software de control de la estación terrena para el \textit{transcevier} del satélite se generaron secuencias de comandos que el software de vuelo debe decodificar y ejecutar. La secuencia de comandos generados es: imprimir la hora del sistema, imprimir las variables de estado y enviar las variables de estado como telemetría. Esto se traduce en el siguiente telecomando:
+
+%TODO: Telecomando de prueba
+
+Se observa en la figura \ref{ch5:result:telecomandos} el software control con la secuencia de comandos en proceso de envío.
+
+%TODO: Imagen con el telecomando
+
+El resultado de esta prueba es insatisfactorio debido a que el satélite no es capaz de recibir los telecomandos enviados debido a una falla del equipo de comunicaciones a bordo. Los detalles de esta falla se detallan en la sección \ref{ch5:fallas:telecomandos}
+
+\paragraph{Protocolo de enlace.}
+El software de vuelo se encarga de generar beacons de maneara periódica que permiten identificar al satélite y contienen información valiosa sobre su funcionamiento. Cada cuatro minutos y de manera inetercalada se generan dos tipos de beacon: uno simple que contiene sólo un identificador; y un segundo más largo que agrega el valor de algunas variables de estado de interés. Esto se observa en los registros de la consola:
+
+%TODO: Registros de beacon
+
+A los cuatro minutos de funcionamiento se genera el primer beacon cuyo contenido es: \texttt{SUCHAIATINGDOTUCHILEDOTCL-0}. Eso es el identificador seguido de un guión y un número que indica que este beacon no tiene más información. El siguiente beacon corresponde al texto: \texttt{SUCHAIATINGDOTUCHILEDOTCL-11001411C4882188-780--1} e incluye variables de estado en su contenido.
+
+%TODO: BEACON con varialbes.
+
+Para comprobar el correcto funcionamiento del la lógica que genera la información de cada beacon se realiza la tabla \ref{ch5:table:result:beacon} de comparación entre el contenido generado y el valor de las variables de estado en ese momento para una secuencia de beacons.
+
+Con esto se concluye que la lógica que permite rastrear al satélite y recuperar información esencial de su funcionamiento actúa según lo esperado. En la estación terrena se reciben estas señales y son procesadas por el software de la estación que permite obtener el texto producido por el código morse lo cual se muestra en la figura \ref{ch5:result:beacon}.
+
+%TODO: Figura con beacons en la estación terrena.
+
+Los textos obtenidos para la secuencia de la tabla \ref{ch5:table:result:beacon} fueron:
+%TODO: Agregar los beacon recibidos
+
+Lo cual claramente significa una falla en el sistema debido a que no se recibe el texto esperado. El análisis de esta falla se explica en detalle en la sección \ref{ch5:fallas:beacon} y se debe a un error del equipo de comunicaciones al configurar el nuevo texto del beacon; se descarta errores en la estación terrena debido a que la secuencia decodificada tiene sentido lo que se observa en el contador que automáticamente el transcevier agrega a al final de la secuencia y el cero siempre presente al inicio.
+
+El protocolo de enlace, una vez identificado el satélite implica enviar una señal al satélite para iniciar la descarga de datos o ejecutar telecomandos. Debido a las fallas en el equipo de comunicaciones que no permite la recepción de telecomandos el satélite funciona un modo de respaldo en el cual ante la presencia de un nivel fuerte de señal en la banda asignada durante al menos 10 segundos este inicia la descarga de datos recolectados.
+
+El sistema reacciona ante la emisión de la señal portadora en la frecuencia asignada por parte del equipo de radio portátil y comienza una cuenta con los segundos que la señal está presente, prueba de ello es el registro generado:
+
+%TODO: Registro de recepción de señal RSSI
+
+Cuando se superan los 10 segundos y se detecta la ausencia de señal se produce la inmediata descarga de la telemetría almacenada en el satélite. En la consola se observa este proceso:
+
+%TODO: Envio de telemetría
+
+Asimismo en la estación terrena se recibe la señal proveniente del satélite y el software decodifica los datos desplegando el resultado en pantalla como se muestra en la figura \ref{ch5:result:telemetría}.
+
+El satélite debe ser capaz de recibir y enviar datos a la estación terrena, para esto se requiere en primer lugar, que el satélite se pueda rastrear para lo cual se debe emitir una señal de baliza o \textit{beacon}; segundo, el satélite debe escuchar la estación terrena para determinar si se recibirán ordenes o se descargará información; y tercero, establecer un protocolo de enlace que permita realizar las operaciones de descarga y subida de datos.
+
+\paragraph{Envío de telemetría.}
+El envío de telemetría es activado desde la estación terrena por alguno de los siguientes métodos dependiendo del modo de funcionamiento del software de vuelo:
+
+\begin{itemize}
+    \item \textbf{Modo normal:} la telemetría se descarga bajo demanda como resultado de la ejecución de un telecomando. Se pueden ejecutar telecomandos para descargar telemetría de manera selectiva
+    
+    \item \textbf{Modo de respaldo:} si no se reciben telecomandos durante un periodo de tiempo determinado (por ejemplo 24 horas) se asume una falla en el sistema de comunicaciones y se puede transmitir provocar una transmisión de telemetría sólo al recibir la señal de la portadora durante una cantidad de tiempo determinada (por ejemplo 10 segundos). No se puede seleccionar el tipo de telemetría a descargar sino que se envían todos los datos recolectados hasta el momento.
+\end{itemize}
+
+Durante la prueba sólo estuvo disponible el modo de respaldo por lo que se transmite la portadora durante el tiempo especificado en la configuración del software, en este caso de 10 segundos. El satélite detecta la señal y el software realiza el conteo mientras está presente como se observa en el registro:
+
+%TODO: Registro con el conteo de la señal
+
+Esto provoca el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado registradas cada 10 minutos. En la estación terrena se reciben estos datos decodificados por el software del TNC y los resultados se detallan en la tabla \ref{ch4:table:result:tm}
+
+%TODO: Tabla con la telemetría recibida.
+
+
+Se observa que a pesar de las fallas en el sistema de comunicaciones el software de vuelo puede ejecutar la descarga de telemetría operando en modo de respaldo.
+
+\subsubsection{Control central}
+\paragraph{Organizar telemetría.}
+Durante la misión se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para mantener estos datos y un sistema de organización de los diferentes datos guardados con el objetivo de ser requeridos de manera selectiva para ser enviados como telemetría a la estación terrena.
+
+\paragraph{Plan de vuelo.}
+El plan de vuelo está a cargo del \textit{listener} \texttt{taskFlightPlan} que de manera periódica consulta la lista de comandos manejada por el repositorio de datos y determina el siguiente comando que se debe ejecutar.
+
+El plan de vuelo consiste en una lista de comandos a ejecutar y su parámetro durante 24 horas con espacio de 10 minutos entre cada uno aunque este parámetro es configurable. El módulo \texttt{taskFlightPlan} realiza un mapeo entre la hora actual del sistema y el indice que corresponde a leer desde el plan de vuelo. Se configura al inicio del sistema según sea necesario y para efectos de esta prueba se genera el itinerario de la tabla \ref{ch5:table:result:flightplan}:
+
+\begin{table}[ht!] \caption{Plan de vuelo}
+\centering
+\begin{tabular}{llll}\hline
+\textbf{Hora} & \textbf{Comando} & \textbf{Código} & \textbf{Parámetro}\\\hline
+00:00 & rtc\_print & 0x7007 & 0\\
+00:10 & pay\_FSM\_default & 0x6001 & dat\_pay\_tmEstado\\
+00:20 & rtc\_print & 0x7007 & 0\\
+00:30 & pay\_FSM\_default & 0x6001 & dat\_pay\_tmEstado\\
+... & ... & ... & ...\\\hline
+\end{tabular} \label{ch5:table:flightplan}
+\end{table}
+
+El correcto funcionamiento de este módulo se comprueba a través de los registros de la consola, que cuentan con una estampa de tiempo para determinar la frecuencia y momento de ejecución de los comandos producidos por el plan de vuelo. En la tabla \ref{ch5:table:result:flightplan} se detalla una secuencia de comandos generados por este método y se diferencian en \texttt{taskDispatcher} por el código de origen que poseen.
+
+%TODO: Tabla con los comandos ejecutados por flightplan
+
+Se observa que ..... %TODO: Resultados
+
+En la figura \ref{ch5:figure:result:flightplan} se ha graficado toda la serie de comandos ejecutados durante la serie y que provienen de este módulo.
+
+%TODO: Grafico con los comandos ejecutados de flightplan
+
+De este modo se comprueba el correcto funcionamiento de este módulo que ofrece una manera flexible y configurable para programar la ejecución de comandos en momentos específicos de la órbita.
+
+\paragraph{Obtener el estado del sistema.}
+Las variables de estado son actualizadas periódicamente en el módulo \texttt{taskHousekeeping} cada 20 segundos a través del comandos \texttt{drp\_updateAll\_dat\_CubesatVar}. Asimismo su valor se despliega a través de la consola serial cada 1 minuto y se obtiene un registro con el valor de todas las variables:
+
+\begin{verbatim}
+ ===================================
+ Contenido de CubestatVar:
+ ===================================
+ ppc_opMode= 1
+ ppc_lastResetSource= 4
+ ppc_hoursAlive= 0
+ ppc_hoursWithoutReset= 0
+ ppc_resetCounter= 1
+ ppc_enwdt= 1
+ ppc_osc= 3
+ ppc_MB_nOE_USB_nINT_stat= 0
+ ppc_MB_nOE_MHX_stat= 1
+ ppc_MB_nON_MHX_stat= 0
+ ppc_MB_nON_SD_stat= 0
+ -----------------------------------
+ dep_ant_deployed= 1
+ dep_ant_tries= 3
+ dep_year= 13
+ dep_month= 8
+ dep_week_day= 6
+ dep_day_number= 23
+ dep_hours= 20
+ dep_minutes= 34
+ dep_seconds= 13
+ -----------------------------------
+ rtc_year= 13
+ rtc_month= 8
+ rtc_week_day= 6
+ rtc_day_number= 23
+ rtc_hours= 20
+ rtc_minutes= 35
+ rtc_seconds= 19
+ -----------------------------------
+ eps_bat0_voltage= 172
+ eps_bat0_current= 902
+ eps_bus5V_current= 1023
+ eps_bus3V_current= 1023
+ eps_bus_battery_current= 1023
+ eps_bat0_temp= 559
+ eps_panel_pwr= 0
+ eps_status= -16384
+ eps_soc= 8
+ eps_socss= 8
+ eps_state_flag= 2
+ eps_charging= 1
+ -----------------------------------
+ trx_frec_tx= -14510
+ trx_frec_rx= -16448
+ trx_opmode= 16
+ trx_temp_hpa= 2164
+ trx_temp_mcu= 1150
+ trx_rssi= -53 dBm
+ trx_beacon_pwr= 1
+ trx_telemetry_pwr= 1
+ trx_status_tc= 0
+ trx_count_tm= 0
+ trx_count_tc= 0
+ trx_lastcmd_day= -1
+ -----------------------------------
+ trx_newTcFrame= 0
+ trx_newCmdBuff= 0
+ fpl_index= -1
+ msd_status= 1
+ -----------------------------------
+\end{verbatim}
+
+Para comprobar la correcta actualización de las variables de estado durante el funcionamiento del satélite se ha toda una serie de ellas y se grafica su valor en el tiempo lo cual se muestra en la figura \ref{ch5:table:result:status_var}
+
+%TODO: Figura con grafico de las variables
+%TODO: Lista de variables
+%TODO: Resultado obtenidos
+
+Es muy importante que ciertas variables se mantengan entre cada reinicio del sistema para poder ejecutar el software de vuelo en el estado anterior al reinicio. Esto se comprueba en las pruebas de reinicio verificando el valor de las siguientes variables: ppc\_hoursAlive, ppc_hoursWithoutReset, ppc_resetCounter y dep_ant_deployed. La información se resume en el gráfico de la figura \ref{ch4:figure:result:status_var_reset}
+
+%TODO: Grafico con esas variables de estado.
+
+\paragraph{Inicialización del sistema.}
+
+%TODO: ACA VAMOS -----
+
+El \textit{software} control debe poseer un algoritmo de inicio del sistema en general, que considera la inicialización del \textit{software} con los parámetros adecuados a un estado adecuado, la inicialización de otros módulos o subsistemas así como las obligaciones de silencio radial durante el lanzamiento, despliegue de antenas, etc.
+
+El \textit{software} de control debe tener la capacidad de reiniciarse de manera segura y considerando variables fundamentales del estado anterior al reinicio.
+
+\subsubsection{Área de energía}
+\paragraph{Estimación de la carga de la batería.}
+El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable del sistema para ser utilizado por el sistema de control de energía utilizada por el satélite.
+
+\paragraph{Presupuesto de energía.}
+Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera del presupuesto energético disponible así como una manera de planificar el consumo energético de la misión.
+
+\subsubsection{Órbita}
+\paragraph{Actualizar parámetros de órbita.}
+Se debe contar con una estrategia de estimación y actualización de los parámetros de órbita del satélite con el objetivo de contar con la información necesaria para la ejecución de acciones dependientes de la posición real de satélite. Ejemplos de este tipo de acciones son la ejecución de un experimento en algún \textit{payload} o en enlace con una estación terrena para descargar datos de telemetría.
+
+\subsubsection{\textit{Payloads}}
+\paragraph{Ejecución de comandos de \textit{payloads}}.
+El sistema de control debe tener la capacidad de controlar diferentes subsistemas asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo del satélite pueden variar de misión en misión e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el sistema de control debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
+
+
