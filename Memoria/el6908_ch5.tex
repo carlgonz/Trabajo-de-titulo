@@ -281,15 +281,100 @@ Es muy importante que ciertas variables se mantengan entre cada reinicio del sis
 
 %TODO: Grafico con esas variables de estado.
 
-\paragraph{Inicialización del sistema.}
+\paragraph{Inicio del sistema.}
+El inicio del sistema cuenta de dos etapas. En la primera se inician funciones de bajo nivel como configuraciones de periféricos del procesador, puertos de entrada-salida, instanciar variables del sistema operativo e iniciarlo. De la correcta ejecución de esta etapa depende la posibilidad de contar con la salida serial para la consola por lo que se comprueba su funcionamiento a través su registro:
 
-%TODO: ACA VAMOS -----
+\begin{verbatim}
+--------- SUCHAI BOOT SEQUENCE ---------
 
-El \textit{software} control debe poseer un algoritmo de inicio del sistema en general, que considera la inicialización del \textit{software} con los parámetros adecuados a un estado adecuado, la inicialización de otros módulos o subsistemas así como las obligaciones de silencio radial durante el lanzamiento, despliegue de antenas, etc.
+Initializing sattelite bus
+    * Microcontroller IO pins
+    * CubesatKit MB
+    * PC104 Bus
 
-El \textit{software} de control debe tener la capacidad de reiniciarse de manera segura y considerando variables fundamentales del estado anterior al reinicio.
+Initilizing Microcontroller
+    * Reset status
+    * Setting oscillator
+    * mPWRMGNT_Regulator_ActiveInSleep
+    * Enabling WDT
+
+Starting FreeRTOS [->]
+>>[Executer] Started
+>>[Dispatcher] Started
+>>[Deployment] Started
+\end{verbatim}
+
+Desde este momento se inicia la segunda etapa de inicio implementada en \texttt{taskDeployment}, en este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo funcionando se procede a la inicio de todas la funciones de la capa de aplicación del software de vuelo incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En esto momento se ejecuta el periodo de inactividad si corresponde así como el despliegue de antenas. La salida por consola es incremental a cada función que realiza este módulo y demuestra la correcta ejecución de la secuencia de inicio:
+
+\begin{verbatim}
+[Deployment] INITIALIZING SUCHAI FLIGHT SOFTWARE
+
+[dep_init_Peripherals] Initializig external pheripherals...
+    * External RTC
+    * EEPROM Memories
+    * SD Memory  [delay]
+    * SD Memory [init OK]
+    * SD Memory [onReset]  dat_onReset_memSD()..
+    Static structures..
+    DAT_Payload()..
+    DAT_GnrlPurpBuff()..
+
+[dep_init_Repos] Initializing data repositories...
+    * FlighPlan
+    * Telecommands buffer
+    * Payloads status rep.
+    * Status rep.
+        - LastResetSouce: SOFTWARE_Reset
+            - NOT the First time on! resetCounter++
+            - resetCounter = 6
+    * Commands rep.
+
+[dep_init_GnrlStruct] Initializing other structures...
+    * init EPS structs
+
+[dep_silent_time] Mandatory inactivity time...
+    Satellite launched. Antenna deployed
+    FINISHING SILENT TIME
+
+[dep_deploy_antenna] Deploying TRX Antenna... 
+    * Antenna is already deployed
+    * Setting TRX
+Setting beacon: SUCHAIATINGDOTUCHILEDOTCL-
+>> TRX Setting BEACON:
+      Setting Offset...
+      Setting Content... 
+      Setting Beacon Length... 26
+
+[dep_launch_tasks] Starting all tasks...
+    * Creating taskConsole
+    * Creating taskHousekeeping
+    * Creating taskCommunications
+    * Creating taskFlightPlan
+[Deployment] ENDS
+[Deployment] Deleting task
+\end{verbatim}
+
+La salida anterior demuestra también la capacidad del software para recordar el estado anterior a su reinicio, ya que es capaz de determinar si es la primera vez que se inicia para proceder al periodo de inactividad y despliegue de antenas si corresponde.
+
+Al final de esta secuencia se inician el resto de los \textit{listenrs} y comienzan su ejecución en segundo plano. El éxito de la operación de inicio se logra al visualizar el \textit{prompt} de la consola serial que está lista para recibir comandos y registrar los sucesos del software de vuelo:
+
+\begin{verbatim}
+>>[Console] Started
+______________________________________________________________________________
+                     ___ _   _  ___ _  _   _   ___ 
+                    / __| | | |/ __| || | /_\ |_ _|
+                    \__ \ |_| | (__| __ |/ _ \ | | 
+                    |___/\___/ \___|_||_/_/ \_\___|
+______________________________________________________________________________
+
+>>[Comunications] Started
+>>[FlightPlan] Started
+>>[Houskeeping] Started
+
+\end{verbatim}
 
 \subsubsection{Área de energía}
+%TODO:  ----------- ACA VAMOS --------
 \paragraph{Estimación de la carga de la batería.}
 El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable del sistema para ser utilizado por el sistema de control de energía utilizada por el satélite.
 
