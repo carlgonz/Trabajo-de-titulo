@@ -376,17 +376,32 @@ ______________________________________________________________________________
 \subsubsection{Área de energía}
 %TODO:  ----------- ACA VAMOS --------
 \paragraph{Estimación de la carga de la batería.}
-El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable del sistema para ser utilizado por el sistema de control de energía utilizada por el satélite.
+La estimación de carga de baterías está a cargo del controlador de la EPS y su estimación se actualiza de manera periódica como parte de las tareas del \textit{listener} de \textit{taskHousekeeping} cada 20 segundos. El parámetro denominado SOC (\textit{State Of Charge}) es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la EPS. Esta variable es utilizada por el sistema para determinar si un comando se puede ejecutar o no.
+
+Durante la ejecución de la prueba se registraron los valores de energía, voltaje y temperatura de la EPS así como el nivel de SOC calculado. La tabla \ref{ch5:table:soc} muestra los resultados obtenidos, así como la estimación del SOC calculados a \textit{posteriori} para comprobar la operación realizada en el computador a bordo del satélite.
+
+%TODO: Tabla con datos EPS, SOC y su estimación.
 
 \paragraph{Presupuesto de energía.}
-Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera del presupuesto energético disponible así como una manera de planificar el consumo energético de la misión.
+EL nivel de SOC como variable de estado indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \textit{Dispatcher} quien realiza una comparación entre la energía requerida por un comando y la energía disponible en ese momento.
+
+Durante la operación se lleva a cabo el test de SOC donde de manera artificial se cambian los requerimientos energéticos a una serie de comandos y se tratan de ejecutar lo cual queda registrado en la salida de la consola serial:
+
+%TODO: Conola con el test de SOC
+
+La tabla \ref{ch5:table:test_soc} resume los resultados de la prueba de SOC.
+
+%TODO: Table con la prueba de SOC.
+
+
+El resto de las restricciones del presupuesto energético están fuera de la inteligencia programada al software de vuelo y quedan a criterio del operador del satélite quien en base a estos lineamientos puede decidir qué comandos programar en el plan de vuelo del día, por ejemplo.
 
 \subsubsection{Órbita}
 \paragraph{Actualizar parámetros de órbita.}
-Se debe contar con una estrategia de estimación y actualización de los parámetros de órbita del satélite con el objetivo de contar con la información necesaria para la ejecución de acciones dependientes de la posición real de satélite. Ejemplos de este tipo de acciones son la ejecución de un experimento en algún \textit{payload} o en enlace con una estación terrena para descargar datos de telemetría.
+En esta versión del software de vuelo no se contemplan métodos de estimación de órbita y se relega esta requerimiento al operador del satélite. En tierra se puede realizar la propagación de órbita obtener una relación entre el plan de vuelo del satélite y su posición orbital para así programar las operaciones requeridas en momentos determinados.
 
 \subsubsection{\textit{Payloads}}
 \paragraph{Ejecución de comandos de \textit{payloads}}.
-El sistema de control debe tener la capacidad de controlar diferentes subsistemas asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo del satélite pueden variar de misión en misión e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el sistema de control debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
+En esta versión del software de vuelo y dada las características de los \textit{payloads} que van a bordo, a características de ejecutar determinadas acciones de \textit{payloads} puede ser completamente programada a través del plan de vuelo si se proveen los comandos pertinentes a cada uno.
 
 
