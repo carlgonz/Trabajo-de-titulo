@@ -9,7 +9,7 @@
 \acrodef{GPL}{\textit{General Public License}}
 \acrodef{RTOS}{\textit{Real Time Operating System}}
 
-\chapter{Marco Tórico}
+\chapter{Marco Teórico}
 
 % ============= SISTEMAS EMBEBIDOS ==============
 \section{Sistemas embebidos}
@@ -27,7 +27,7 @@ Para el diseño de sistemas embebidos se debe considerar ciertos aspectos que los
 	
 	\item Existen limitaciones físicas. Normalmente estos sistemas poseen limitadas características de: poder de cómputo; memoria de datos y de programa; espacio físico; y disponibilidad de energía.
 	
-	\item El diseño de \textit{software} para sistemas embebidos requiere una interacción de bajo nivel. Existe una amplia gama de plataformas de \textit{hardware} para desarrollar sistemas embebidos y se requiere interactuar también con una amplia gama de dispositivos externos. Por esto se requiere desarrollar capas de controladores de periféricos que oculten las diferencias de \textit{hardware} a la aplicación final del sistema.
+	\item El diseño de \textit{software} para sistemas embebidos requiere una interacción de bajo nivel. Existe una amplia gama de plataformas de \textit{hardware} para desarrollar sistemas embebidos y se requiere interactuar también con una variedad de dispositivos externos. Por esto se requiere desarrollar capas de controladores de periféricos que oculten las diferencias de \textit{hardware} a la aplicación final del sistema.
 	
 	\item Es importante considerar aspectos de seguridad y confiabilidad del sistema durante todo su desarrollo debido a que la mayoría de los sistemas embebidos son usados para controlar otros sistemas críticos en diversos procesos.
 \end{itemize}
@@ -45,8 +45,8 @@ Todo sistema embebido está formado fundamentalmente por un microcontrolador que 
 
 A continuación se describen las características específicas de los microcontroladores PIC24 que corresponde al dispositivo utilizado en este trabajo.
 
-\paragraph{Arquitectura}
-Poseen un juego de instrucciones \ac{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo excepto: divisiones; cambios de contexto; y acceso por tabla a memoria de programa\cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos\cite{PIC24F} lo que significa que el dispositivo posee una memoria de datos tipo \ac{RAM} separada de la memoria de datos (FLASH) pudiendo acceder de manera independiente e incluso simultáneamente a las instrucciones del programa y a los datos de éste alojados en \ac{RAM}. La arquitectura de la CPU la completa una \ac{ALU} con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones con capacidad para atender hasta 8 de ellas  de manera simultánea lo que permite liberar al procesador de la espera de sucesos asíncronos ya que son notificados y atendidos de manera específica 
+\paragraph{Arquitectura.}
+Poseen un juego de instrucciones \ac{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo excepto: divisiones; cambios de contexto; y acceso por tabla a memoria de programa\cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos\cite{PIC24F} lo que significa que el dispositivo posee una memoria de datos tipo \ac{RAM} separada de la memoria de datos (FLASH) pudiendo acceder de manera independiente e incluso simultáneamente a las instrucciones del programa y a los datos de éste alojados en \ac{RAM}. La arquitectura de la CPU la completa una \ac{ALU} con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones con capacidad para atender hasta 8 de ellas de manera simultánea lo que permite liberar al procesador de la espera de sucesos asíncronos ya que son notificados y atendidos de manera específica 
 en una rutina de atención de la interrupción.
 
 % ················ IMAGEN ·················
@@ -57,8 +57,8 @@ en una rutina de atención de la interrupción.
 \end{figure}
 %··········································
 
-\paragraph{Periféricos}
-La familia de microcontroladores PIC24F integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware} especialmente diseñado. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizados en aplicaciones que requieran: conversores análogos a digitales; temporizadores; comunicación síncronas y asíncronas como RS232, SPI o I2C; USB o Ethernet; manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador por lo que su acceso y configuración se realizan mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librearías para acceder a estas funcionalidades a través de una API de más alto nivel además de una completa documentación de la arquitectura y funcionamiento de cada periférico.
+\paragraph{Periféricos.}
+La familia de microcontroladores PIC24F integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware} especialmente diseñado. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizados en aplicaciones que requieran: conversores análogo-digital; temporizadores; comunicación síncrona y asíncrona como RS232, SPI o I2C; USB o Ethernet; manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador por lo que su acceso y configuración se realizan mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librearías para acceder a estas funcionalidades a través de una API de más alto nivel además de una completa documentación de la arquitectura y funcionamiento de cada periférico.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -68,7 +68,27 @@ La familia de microcontroladores PIC24F integra en el mismo chip una serie de pe
 \end{figure}
 %··········································
 
-\paragraph{Desarrollo}
+\paragraph{Desarrollo.}
+Para el desarrollo de aplicaciones sobre este tipo de microcontroladores se requiere de al menos las siguientes herramientas:
+
+\begin{enumerate}
+    \item Compilador
+    \item Entorno de desarrollo
+    \item Programador
+\end{enumerate}
+
+Estas herramientas las provee el fabricante. En el caso del compilador y entorno de desarrollo a través de su página web se pueden obtener de manera gratuita (\url{http://www.microchip.com/developmenttools/}). 
+
+Se dispone de diferentes compiladores para dispositivos de 8, 16 y 32 bits correspondiendo para la familia PIC24 el compilador \texttt{xc16} para lenguaje C que es gratuito en su versión \textit{lite}. 
+
+El entorno de desarrollo integrado que se provee se denomina \textit{MPLABX} un programa multiplataforma basado en \textit{NetBeans} y que integra las funcionalidades del compilador y programador para proveer un entorno de desarrollo completo.
+
+Para grabar el \textit{software} desarrollado a estos dispositivos se debe utilizar una herramienta externa denomina programador. Existe un serie de programadores disponibles los cuales deben ser adquiridos por separado, entre los más populares se encuentran:
+\begin{itemize}
+    \item PICKIT3. Programador de bajo costo adecuado para entornos de desarrollo.
+    \item ICD3. Programador de alta velocidad para entornos de producción.
+    \item REAL ICE. Emulador y programador de gama alta adecuado para entornos de producción.
+\end{itemize}
 
 % ============= SISTEMAS OPERATIVOS ==============
 \subsection{Sistemas Operativos}
