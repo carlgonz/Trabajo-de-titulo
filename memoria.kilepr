@@ -159,10 +159,10 @@ order=3
 
 [item:Memoria/el6908_ch5.tex]
 archive=true
-column=129
+column=48
 encoding=ISO-8859-15
 highlight=LaTeX
-line=257
+line=523
 mode=LaTeX
 open=true
 order=4
@@ -424,10 +424,10 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch5.tex]
-CursorColumn=129
-CursorLine=257
+CursorColumn=48
+CursorLine=523
 JumpList=
-ViMarks=.,254,189,[,254,189,],254,189
+ViMarks=.,519,68,[,519,49,],519,68
 
 [view-settings,view=0,item:Memoria/el6908_ch6.tex]
 CursorColumn=0

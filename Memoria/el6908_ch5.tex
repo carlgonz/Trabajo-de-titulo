@@ -268,14 +268,29 @@ El envío de telemetría es activado desde la estación terrena por alguno de los s
 
 Durante la prueba sólo estuvo disponible el modo de respaldo por lo que se transmite la portadora durante el tiempo especificado en la configuración del software, en este caso de 10 segundos. El satélite detecta la señal y el software realiza el conteo mientras está presente como se observa en el registro:
 
-%TODO: Registro con el conteo de la señal
+\begin{verbatim}
+[2013-08-29 19:37:55.076357] RSSI_CNT=2
+[2013-08-29 19:37:57.480979] RSSI_CNT=4
+[2013-08-29 19:37:59.055074] RSSI_CNT=6
+[2013-08-29 19:38:01.055657] RSSI_CNT=8
+[2013-08-29 19:38:03.063135] RSSI_CNT=10
+[2013-08-29 19:38:05.055308] RSSI_CNT=12
+[2013-08-29 19:38:07.107302] com_doOnRSSI..
+[2013-08-29 19:38:07.116383] [Dispatcher] Orig: 0x1102 | Cmd: 0x8003 | Param: 2
+[2013-08-29 19:38:07.191023] >> Sending START_WRITE_TM command... [OK]
+[2013-08-29 19:38:08.990042] >>Sending START_SEND_TM command...
+[2013-08-29 19:38:09.769988] >> Telemetry transmited [OK]
+[2013-08-29 19:38:09.790260] >> Sending START_WRITE_TM command...[OK]
+[2013-08-29 19:38:12.316259] >>Sending START_SEND_TM command...
+[2013-08-29 19:38:13.104915] >> Telemetry transmited [OK]
+\end{verbatim}
 
-Esto provoca el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado registradas cada 10 minutos. En la estación terrena se reciben estos datos decodificados por el software del TNC y los resultados se detallan en la tabla \ref{ch4:table:result:tm}
+Esto provoca el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado registradas cada 20 minutos. En la estación terrena se reciben estos datos decodificados por el software del TNC y los resultados se detallan en la figura \ref{ch5:result:telemetria}
 
-%TODO: Tabla con la telemetría recibida.
+%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
+\figura{img/test_telemetria.png}{width=0.8\textwidth}{Recepción de telemetría en la estación terrena}{ch5:result:telemetria}{hb!}
 
-
-Se observa que a pesar de las fallas en el sistema de comunicaciones el software de vuelo puede ejecutar la descarga de telemetría operando en modo de respaldo.
+Se observa que a pesar de las fallas en el sistema de comunicaciones el software de vuelo puede ejecutar la descarga de telemetría operando en modo de respaldo. AL igual que el \textit{beacon} la señal es recibida pero por fallas en el equipo abordo de satélite los datos son recibidos correctamente y el software indica un error en la decodificación de los datos.
 
 \subsubsection{Control central}
 \paragraph{Organizar telemetría.}
@@ -298,15 +313,25 @@ El plan de vuelo consiste en una lista de comandos a ejecutar y su parámetro dur
 \end{tabular} \label{ch5:table:flightplan}
 \end{table}
 
-El correcto funcionamiento de este módulo se comprueba a través de los registros de la consola, que cuentan con una estampa de tiempo para determinar la frecuencia y momento de ejecución de los comandos producidos por el plan de vuelo. En la tabla \ref{ch5:table:result:flightplan} se detalla una secuencia de comandos generados por este método y se diferencian en \texttt{taskDispatcher} por el código de origen que poseen.
+El correcto funcionamiento de este módulo se comprueba a través de los registros de la consola, que cuentan con una estampa de tiempo para determinar la frecuencia y momento de ejecución de los comandos producidos por el plan de vuelo. A continuación se observa el resultado de la ejecución del comando \texttt{rtc\_print} proveniente del plan de vuelo:
 
-%TODO: Tabla con los comandos ejecutados por flightplan
+\begin{verbatim}
+[2013-08-29 17:40:06.811852] [Dispatcher] Orig: 0x1103 | Cmd: 0x7007 | Param: 0
+[2013-08-29 17:40:06.837689] >>[29/8/13 - 17:40:14]
+[2013-08-29 18:00:06.914741] [Dispatcher] Orig: 0x1103 | Cmd: 0x7007 | Param: 0
+[2013-08-29 18:00:06.969861] >>[29/8/13 - 18:00:14]
+[2013-08-29 18:20:06.919318] [Dispatcher] Orig: 0x1103 | Cmd: 0x7007 | Param: 0
+[2013-08-29 18:20:06.952946] >>[29/8/13 - 18:20:14]
+[2013-08-29 18:40:07.004340] [Dispatcher] Orig: 0x1103 | Cmd: 0x7007 | Param: 0
+[2013-08-29 18:40:07.036649] >>[29/8/13 - 18:40:14]
+\end{verbatim}
 
-Se observa que ..... %TODO: Resultados
+El registro obtenido en la consola muestra como de manera exacta cada 20 minutos se ejecuta el comando \texttt{0x7007} aquevalente a \texttt{rtc\_print} proveniente del módulo \texttt{0x1103} que identifica a \texttt{taskFlightPlan} y como resultado se muestra en pantalla la hora leída desde el RTC del satélite.
 
-En la figura \ref{ch5:figure:result:flightplan} se ha graficado toda la serie de comandos ejecutados durante la serie y que provienen de este módulo.
+En la figura \ref{ch5:figure:result:flightplan} se ha graficado toda la serie de comandos ejecutados durante la prueba y que provienen de este módulo con lo cual se comprueba la ejecución precisa y periódica del plan de vuelo configurado.
 
-%TODO: Grafico con los comandos ejecutados de flightplan
+%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
+\figura{img/plot_fplan.png}{scale=0.7}{Gráfico de funcionamiento del plan de vuelo}{ch5:figure:result:flightplan}{ht!}
 
 De este modo se comprueba el correcto funcionamiento de este módulo que ofrece una manera flexible y configurable para programar la ejecución de comandos en momentos específicos de la órbita.
 
@@ -380,15 +405,20 @@ Las variables de estado son actualizadas periódicamente en el módulo \texttt{tas
  -----------------------------------
 \end{verbatim}
 
-Para comprobar la correcta actualización de las variables de estado durante el funcionamiento del satélite se ha toda una serie de ellas y se grafica su valor en el tiempo lo cual se muestra en la figura \ref{ch5:table:result:status_var}
+Para comprobar la correcta actualización de las variables de estado durante el funcionamiento del satélite se ha tomado un set de ellas y se grafica su valor en el tiempo lo cual se muestra en la figura \ref{ch5:figure:result:status_var}. 
 
-%TODO: Figura con grafico de las variables
-%TODO: Lista de variables
-%TODO: Resultado obtenidos
+%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
+\figura{img/plot_status_var.png}{scale=0.7}{Gráfico con el valor de las variables de estado en el tiempo}{ch5:figure:result:status_var}{ht!}
 
-Es muy importante que ciertas variables se mantengan entre cada reinicio del sistema para poder ejecutar el software de vuelo en el estado anterior al reinicio. Esto se comprueba en las pruebas de reinicio verificando el valor de las siguientes variables: ppc\_hoursAlive, ppc\_hoursWithoutReset, ppc\_resetCounter y dep\_ant\_deployed. La información se resume en el gráfico de la figura \ref{ch4:figure:result:status_var_reset}
+El set de variables consideradas en el gráfico tiene por objetivo mostrar el funcionamiento en el tiempo del repositorio de estados más que un análisis exhaustivo de las implicaciones de sus valores instantáneos. Los resultados muestran como este repositorio permite mantener actualizado el estado de funcionamiento del satélite retro-alimentando al resto de los módulos de software con esta información. Acá se almacenan variables con información instantánea como el caso de los voltajes y corrientes en el sistema de energía o en nivel de RSSI presente el sistema de comunicaciones. Otras variables son modificadas de manera periódica como la hora actual del sistema o la cantidad de horas totales de funcionamiento. Algunas variables representan configuraciones de funcionamiento del satélite y no varían a menos que se instruya una modificación manual de ellas como el caso de las potencias de transmisión de telemetría y \textit{beacon} del \textit{transcevier} abordo.
 
-%TODO: Grafico con esas variables de estado.
+Es muy importante que ciertas variables se mantengan entre cada reinicio del sistema para poder que el software de vuelo retome su estado anterior de funcionamiento ante una falla o \textit{reset}. Esto se comprueba en las pruebas de reinicio verificando el valor de las siguientes variables: \texttt{ppc\_lastResetSource}, \texttt{ppc\_hoursAlive}, \texttt{ppc\_hoursWithoutReset}, \texttt{ppc\_resetCounter} y \texttt{dep\_ant\_deployed}. La información se resume en el gráfico de la figura \ref{ch5:figure:result:status_var_reset}
+
+%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
+\figura{img/plot_status_reset.png}{scale=0.7}{Variables de estado ante un reinicio}{ch5:figure:result:status_var_reset}{ht!}
+
+
+En el gráfico se observa que ciertas variables se van actualizando con el tiempo como el caso de las horas de funcionamiento y las horas sin reinicio. Las pruebas de \textit{reset} comienzan a las 19:44 [Hrs] lo cual se refleja en el valor de las variables \texttt{ppc\_hoursWithoutReset} y \texttt{ppc\_resetCounter} que indican la cantidad de horas en que el sistema ha funcionado sin reiniciarse y el contador de estos eventos respectivamente. La prueba incluye diferentes tipos de reinicio (por software, por hardware o por \textit{watchdog}) los cuales se observan en la variable \texttt{ppc\_lastResetSource} a la vez que el contador va aumentado. La prueba del buen funcionamiento del sistema ante estos eventos es que el valor de las variables de estado sigue siendo coherente cada vez que el sistema se vuelve a iniciar como se ve en el valor del indicador del despliegue de antenas (\texttt{dep\_ant\_deployed}), el contador de reinicio y la cantidad total de horas de funcionamiento.
 
 \paragraph{Inicio del sistema.}
 El inicio del sistema cuenta de dos etapas. En la primera se inician funciones de bajo nivel como configuraciones de periféricos del procesador, puertos de entrada-salida, instanciar variables del sistema operativo e iniciarlo. De la correcta ejecución de esta etapa depende la posibilidad de contar con la salida serial para la consola por lo que se comprueba su funcionamiento a través su registro:
@@ -413,7 +443,7 @@ Starting FreeRTOS [->]
 >>[Deployment] Started
 \end{verbatim}
 
-Desde este momento se inicia la segunda etapa de inicio implementada en \texttt{taskDeployment}, en este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo funcionando se procede a la inicio de todas la funciones de la capa de aplicación del software de vuelo incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En esto momento se ejecuta el periodo de inactividad si corresponde así como el despliegue de antenas. La salida por consola es incremental a cada función que realiza este módulo y demuestra la correcta ejecución de la secuencia de inicio:
+Desde este momento se inicia la segunda etapa de inicio implementada en \texttt{taskDeployment}, en este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo funcionando así que se procede al inicio de todas la funciones de la capa de aplicación del software de vuelo incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En esto momento se ejecuta el periodo de inactividad si corresponde así como el despliegue de antenas. La salida por consola es incremental a cada función que realiza este módulo y demuestra la correcta ejecución de la secuencia de inicio:
 
 \begin{verbatim}
 [Deployment] INITIALIZING SUCHAI FLIGHT SOFTWARE
@@ -483,27 +513,90 @@ ______________________________________________________________________________
 \end{verbatim}
 
 \subsubsection{Área de energía}
-%TODO:  ----------- ACA VAMOS --------
 \paragraph{Estimación de la carga de la batería.}
-La estimación de carga de baterías está a cargo del controlador de la EPS y su estimación se actualiza de manera periódica como parte de las tareas del \textit{listener} de \textit{taskHousekeeping} cada 20 segundos. El parámetro denominado SOC (\textit{State Of Charge}) es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la EPS. Esta variable es utilizada por el sistema para determinar si un comando se puede ejecutar o no.
+La estimación de carga de baterías está a cargo del controlador de la EPS y su estimación se actualiza de manera periódica como parte de las tareas del \textit{listener} de \textit{taskHousekeeping} cada 20 segundos. El parámetro denominado SOC (\textit{State Of Charge}) es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la EPS. Esta variable es utilizada por el sistema para determinar si un comando se puede ejecutar o no. Las lecturas de los sensores del sistema de energía fueron registrados cada cinco minutos durante la prueba y su resultado se observa en la figura \ref{ch5:figure:result:eps_var}
 
-Durante la ejecución de la prueba se registraron los valores de energía, voltaje y temperatura de la EPS así como el nivel de SOC calculado. La tabla \ref{ch5:table:soc} muestra los resultados obtenidos, así como la estimación del SOC calculados a \textit{posteriori} para comprobar la operación realizada en el computador a bordo del satélite.
+%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
+\figura{img/plot_eps_var.png}{scale=0.7}{Gráfico con variables de EPS}{ch5:figure:result:eps_var}{ht!}
 
-%TODO: Tabla con datos EPS, SOC y su estimación.
+Se registraron además los valores de energía, voltaje y temperatura de la EPS así como el nivel de SOC calculado. La tabla \ref{ch5:figure:result:soc} muestra los resultados obtenidos, así como la estimación del SOC calculados a \textit{posteriori} para comprobar la operación realizada en el computador a bordo del satélite.
+
+%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
+\figura{img/plot_soc.png}{width=0.95\textwidth}{Gráfico de estimación de SOC}{ch5:figure:result:soc}{ht!}
 
 \paragraph{Presupuesto de energía.}
 EL nivel de SOC como variable de estado indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \textit{Dispatcher} quien realiza una comparación entre la energía requerida por un comando y la energía disponible en ese momento.
 
-Durante la operación se lleva a cabo el test de SOC donde de manera artificial se cambian los requerimientos energéticos a una serie de comandos y se tratan de ejecutar lo cual queda registrado en la salida de la consola serial:
+Durante la operación se lleva a cabo el test de SOC donde de manera artificial se cambian los requerimientos energéticos de una serie de comandos a niveles mayores al de la energía disponible y se intenta su ejecución. El comando correspondiente es el \texttt{0x8006} o \texttt{tcm\_set\_sysreq} que afecta a todos los comandos del grupo \texttt{TCM} que contiene funciones encargadas de generar telemetría y \textit{beacons} cambiando el nivel de energía que requieren al valor ingresado por el usuario. En la consola serial queda registrado la elevación de los requerimientos de energía de este grupo a 10 mientras que el SOC del sistema es 4:
 
-%TODO: Conola con el test de SOC
+\begin{verbatim}
+[2013-08-29 20:17:59.701281] SOC= 4
+[2013-08-29 20:18:10.788012] exe_cmd 0x8006 10
+[2013-08-29 20:18:10.823338] [Console] Se genera comando: 0x8006
+[2013-08-29 20:18:10.860289] [Dispatcher] Orig: 0x1101 | Cmd: 0x8006 | Param: 10
+[2013-08-29 20:18:10.890811] [Dispatcher] CMD Result: 1
+\end{verbatim}
+
+Así cuando se intenta ejecutar un comando del grupo \texttt{0x8000} estos son rechazados por el \textit{Dispatcher} evitando su ejecución:
+
+\begin{verbatim}
+[2013-08-29 20:19:10.667124] exe_cmd 0x8000 0
+[2013-08-29 20:19:10.825339] [Console] Se genera comando: 0x8000
+[2013-08-29 20:19:10.864141] [Dispatcher] Command: 0x8000 | From: 0x1101 Refused because of SOC 
+[2013-08-29 20:19:11.197873] [Dispatcher] Orig: 0x1102 | Cmd: 0x3007 | Param: 0
+[2013-08-29 20:19:11.231369] [Dispatcher] CMD Result: 1
+\end{verbatim}
+
+Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras algunas operaciones que demandan grandes cantidades de energía el nivel de SOC disminuya quedando bajo el umbral que requieren los comandos. Este es el caso de las transmisiones de telemetría y \textit{beacons} como se observa en el siguiente registro donde luego de dos envíos de telemetría el nivel de SOC baja a 3 causando que una posterior solicitud de descarga de datos sea rechazada:
+
+\begin{verbatim}
+[2013-08-29 20:08:56.149539] com_doOnRSSI..
+[2013-08-29 20:08:56.171706] [Dispatcher] Orig: 0x1102 | Cmd: 0x8003 | Param: 2
+[2013-08-29 20:08:56.221945] >> Sending START_WRITE_TM command... 
+[2013-08-29 20:08:58.031927] >> Sending START_SEND_TM command...
+[2013-08-29 20:08:58.798705] >> Telemetry transmited [OK]
+
+[2013-08-29 20:08:58.854076] >> Sending START_WRITE_TM command... 
+[2013-08-29 20:09:01.352976] >> Sending START_SEND_TM command...
+[2013-08-29 20:09:02.133597] >> Telemetry transmited [OK]
+
+[2013-08-29 20:09:02.414715] [Dispatcher] Orig: 0x1104 | Cmd: 0x5000 | Param: 0
+[2013-08-29 20:09:02.429875] drp_updateAll_dat_CubesatVar()..
+[2013-08-29 20:09:02.710113] SOC= 3
+
+[2013-08-29 20:09:06.121742] RSSI_CNT=2
+[2013-08-29 20:09:08.138337] RSSI_CNT=4
+[2013-08-29 20:09:10.146584] RSSI_CNT=6
+[2013-08-29 20:09:12.197035] RSSI_CNT=8
+[2013-08-29 20:09:14.152838] RSSI_CNT=10
+[2013-08-29 20:09:16.140583] RSSI_CNT=12
+[2013-08-29 20:09:18.140335] com_doOnRSSI..
+[2013-08-29 20:09:18.158957] [Dispatcher] Command: 0x8003 | From: 0x1102 Refused because of SOC 
+\end{verbatim}
+
 
 La tabla \ref{ch5:table:test_soc} resume los resultados de la prueba de SOC.
 
-%TODO: Table con la prueba de SOC.
+\begin{table}[ht!] \caption{Resultados para test SOC}
+\centering
+\begin{tabular}{llllll}
+\hline
+\textbf{Hora} & \textbf{Comando} & \textbf{Nombre} & \textbf{SysReq} & \textbf{SOC} & \textbf{Resultado} \\ \hline
+20:18:10 & 0x8006 & tcm\_set\_sysreq & 1 & 4  & Ejecutado \\
+20:18:19 & 0x5000 & drp\_updateAll\_dat\_CubesatVar & 1 & 4  & Ejecutado \\
+20:18:33 & 0x300C & trx\_tm\_trxstatus   & 4 & 4  & Ejecutado \\
+20:19:10 & 0x8000 & tcm\_testframe & 10 & 4  & Rechazado \\
+20:19:13 & 0x8000 & tcm\_testframe & 10 & 4  & Rechazado \\
+20:19:19 & 0x8002 & tcm\_send\_beacon & 10 & 4  & Rechazado \\
+20:19:19 & 0x5000 & drp\_updateAll\_dat\_CubesatVar & 1 & 4  & Ejecutado \\
+20:19:45 & 0x8003 & tcm\_sendTM\_cubesatVar & 10 & 4  & Rechazado \\
+20:20:03 & 0x8003 & tcm\_sendTM\_cubesatVar & 10 & 4  & Rechazado \\ \hline
+\end{tabular} \label{ch5:table:test_soc}
+\end{table}
 
+Se observa que el control realizado por \texttt{Dispatcher} aplica efectivamente las indicaciones del presupuesto de energía planificado, el cual se expresa en el parámetro SOC y la cantidad de energía que requiere cada comando a ejecutar. Durante la prueba todos los comandos que requieren al menos el nivel de energía disponible fueron ejecutados mientras que aquellos con requerimientos superiores fueron rechazados.
 
-El resto de las restricciones del presupuesto energético están fuera de la inteligencia programada al software de vuelo y quedan a criterio del operador del satélite quien en base a estos lineamientos puede decidir qué comandos programar en el plan de vuelo del día, por ejemplo.
+El \textit{power budget} se aplica a diferentes niveles dentro del sistema que representa el satélite, la parte que corresponde al software de vuelo tiene relación con la estimación de la cantidad de energía disponible en base a los parámetros de voltaje, corriente y temperatura que entrega la EPS así como evitar la ejecución de comandos que requieren más recursos energéticos que los disponible que es el ámbito que cubre esta prueba. El resto de la planificación energética queda por parte del equipo de operación del sistema en cuanto a determinar la cantidad de energía correcta para cada comando, la frecuencia de ejecución de aquellos de alto consumo como el envío de \textit{beacon} o la correcta programación del plan de vuelo.
 
 \subsubsection{Órbita}
 \paragraph{Actualizar parámetros de órbita.}
