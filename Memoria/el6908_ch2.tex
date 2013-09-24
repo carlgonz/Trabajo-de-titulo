@@ -77,35 +77,31 @@ Para el desarrollo de aplicaciones sobre este tipo de microcontroladores se requ
     \item Programador
 \end{enumerate}
 
-Estas herramientas las provee el fabricante. En el caso del compilador y entorno de desarrollo a través de su página web se pueden obtener de manera gratuita (\url{http://www.microchip.com/developmenttools/}). 
-
-Se dispone de diferentes compiladores para dispositivos de 8, 16 y 32 bits correspondiendo para la familia PIC24 el compilador \texttt{xc16} para lenguaje C que es gratuito en su versión \textit{lite}. 
-
-El entorno de desarrollo integrado que se provee se denomina \textit{MPLABX} un programa multiplataforma basado en \textit{NetBeans} y que integra las funcionalidades del compilador y programador para proveer un entorno de desarrollo completo.
+Por lo general es el fabricante del dispositivo el que provee la mayoría de ellas.En este caso el compilador y entorno de desarrollo se pueden obtener a través de su página web(\url{http://www.microchip.com/developmenttools/}). Se dispone de diferentes compiladores para dispositivos de 8, 16 y 32 bits correspondiendo para la familia PIC24 el compilador \texttt{xc16} para lenguaje C que es gratuito en su versión \textit{lite}. El entorno de desarrollo integrado que se provee se denomina \textit{MPLABX} un programa multiplataforma basado en \textit{NetBeans} y que integra las funcionalidades del compilador y programador sumado a un editor de texto avanzado para proveer un entorno de desarrollo completo.
 
 Para grabar el \textit{software} desarrollado a estos dispositivos se debe utilizar una herramienta externa denomina programador. Existe un serie de programadores disponibles los cuales deben ser adquiridos por separado, entre los más populares se encuentran:
 \begin{itemize}
-    \item PICKIT3. Programador de bajo costo adecuado para entornos de desarrollo.
-    \item ICD3. Programador de alta velocidad para entornos de producción.
+    \item PICKIT3. Programador y depurador de bajo costo adecuado para entornos de desarrollo.
+    \item ICD3. Programador y depurador adecuado para entornos de producción.
     \item REAL ICE. Emulador y programador de gama alta adecuado para entornos de producción.
 \end{itemize}
 
 % ============= SISTEMAS OPERATIVOS ==============
 \subsection{Sistemas Operativos}
-Un sistema operativo es la aplicación base de un sistema computacional pues brinda servicios básicos al resto de las aplicaciones de uso general que se ejecutan en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones. El \textit{hardware} puede variar considerablemente entre un sistema y otro, por eso se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware} las cuales no están disponibles para la aplicación. La figura \ref{os} es un esquema que ilustra un sistema operativo como una capa de abstracción del \textit{hardware}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
+Un sistema operativo es la aplicación base de un sistema computacional pues brinda servicios básicos al resto de las aplicaciones de uso general que se ejecutan en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro por lo que se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware} las cuales no están disponibles para la aplicación. La figura \ref{os} es un esquema que ilustra un sistema operativo como una módulo intermedio al \textit{hardware} que presta servicios a las aplicaciones. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
 \centering
 \fbox{\includegraphics[scale=0.5]{img/os.png}}
-\caption{Sistema Operativo como capa de abstracción}\label{os}
+\caption{Sistema Operativo como capa de abstracción de \textit{hardware}}\label{os}
 \end{figure}
 %··········································
 
 \subsubsection{Sistemas Operativos de Tiempo Real}
-Parte fundamental de un sistema operativo es su \textit{scheduler}, módulo encargado de intercambiar entre las múltiples tareas que se deben ejecutar cediendo un espacio de tiempo para utilizar le procesador. La forma en que trabaja el \textit{scheduler} define el tipo de sistema operativo que se posee. Un sistema operativo de tiempo real posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutara en un determinado momento se pueden cumplir los requerimientos estrictos de \textit{timing}\cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que normalmente requieren respuesta en tiempo real ante eventos no predecibles.\\
+Parte fundamental de un sistema operativo es su \textit{scheduler}, módulo encargado de intercambiar entre las múltiples tareas que se deben ejecutar cediendo un espacio de tiempo para utilizar el procesador. Un sistema operativo de tiempo real posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutará en un determinado momento se pueden cumplir los requerimientos estrictos de \textit{timing}\cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que normalmente requieren respuesta en tiempo real ante eventos no predecibles como las interrupciones.\\
 
-La figura \ref{rtos} demuestra la forma de conseguir un sistema de tiempo real mediante el uso de prioridades para las diferentes tareas. En este ejemplo la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo ante la precencia de ciertos evento el sistema debe responder de manera instantánea cambiado de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica, por ejemplo. En este caso se asigna una alta prioridad para asegurar que el sistema operativo siempre ejecutara esta tarea cuando corresponda.
+La figura \ref{rtos} muestra la forma de conseguir un sistema de tiempo real mediante el uso de prioridades para las diferentes tareas. En este ejemplo la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo ante la presencia de ciertos eventos el sistema debe responder de manera instantánea cambiado de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica, por ejemplo, en tal caso se asigna una alta prioridad para asegurar que el sistema operativo siempre ejecute esta tarea cuando corresponda.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -115,14 +111,18 @@ La figura \ref{rtos} demuestra la forma de conseguir un sistema de tiempo real m
 \end{figure}
 %··········································
 
+%TODO: Agregar la descripcion de los kernels aca
+
 \subsubsection{FreeRTOS}
-FreeRTOS es un tipo de \ac{RTOS} que está diseñado para ser lo suficientemente pequeño como para ser utilizado en un microcontrolador como sistemas embebidos\cite{FREERTOS}. Como estos sistemas son realmente limitados, normalmente no existe la posibilidad de ejecutar un sistema operativo completo como GNU-Linux, pero FreeRTOS provee un kernel capaz de manejar múltiples tareas con prioridades; comunicación entre tareas; \textit{timing} y primitivas de sincronización. Por su reducido tamaño no provee funcionalidades de alto nivel como una consola de comandos; así como tampoco funcionalidades de bajo nivel como controladores para el \textit{hardware} o periférico. Entre sus principales características se encuentran:
+FreeRTOS es un tipo de \ac{RTOS} que está diseñado para ser lo suficientemente pequeño en términos de consumo de memoria como para ser utilizado en un microcontrolador\cite{FREERTOS_PIC24}. Como estos sistemas son realmente limitados, normalmente no existe la posibilidad de ejecutar un sistema operativo completo como GNU-Linux, pero FreeRTOS provee un kernel capaz de manejar múltiples tareas con prioridades; comunicación entre tareas; \textit{timing} y primitivas de sincronización. Por su reducido tamaño no provee funcionalidades de alto nivel como una consola de comandos; así como tampoco funcionalidades de bajo nivel como controladores para el \textit{hardware} o periféricos. 
+
+Entre sus principales características se encuentran\cite{FREERTOS_PIC24}:
 
 \begin{itemize}
 	\item \textit{Scheduler pre-emptive} o cooperativo.
 	\item Sincronización y comunicación entre tareas a través de colas, semáforos, semáforos binarios y mutexes.
 	\item Mutexes con herencia de prioridades.
-	\item Software \textit{timers}.
+	\item \texttt{Software} \textit{timers}.
 	\item Bajo consumo de memoria (Entre 6K y 10K en ROM).
 	\item Altamente configurable.
 	\item Detección de \textit{stack overflow}
@@ -134,7 +134,7 @@ FreeRTOS es un tipo de \ac{RTOS} que está diseñado para ser lo suficientemente p
 \end{itemize}
 
 \paragraph{Funcionamiento}
-Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función que se ejecuta de manera continua. Una tarea se puede encontrar dos estados fundamentales: ejecutándose y no ejecutándose. Cuando una tarea se está ejecutando tiene el control del procesador y el código dentro de la función que representa a la tarea es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados como se observa en la figura\ref{task_state}: se inicia en un estado ``listo'' lo que indica que la tarea está en condiciones de ser selecciona por el \textit{scheduler} y pasar a estado ``ejecutándose''; el estado ``bloqueado'' significa que la tarea no está disponible para ser ejecutada pues está en espera de algún evento, por ejemplo, la liberación de un mutex; cuando la tarea está en estado ``suspendida'' tampoco se puede ejecutar, la tarea debe explícitamente reanudarse para quedar en condiciones de ser 
+Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función, que se ejecuta de manera continua. Una tarea se puede encontrar en dos estados fundamentales: ejecutándose y no ejecutándose. Cuando una tarea se está ejecutando tiene el control del procesador y el código dentro de la función que representa a la tarea es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados como se observa en la figura \ref{task_state}: se inicia en un estado ``listo'' lo que indica que la tarea está en condiciones de ser selecciona por el \textit{scheduler} y pasar a estado ``ejecutándose''; el estado ``bloqueado'' significa que la tarea no está disponible para ser ejecutada pues está en espera de algún evento, por ejemplo, la liberación de un mutex; y por último el estado ``suspendida'' donde tampoco se puede ejecutar y la tarea debe explícitamente reanudarse para quedar en condiciones de ser 
 ejecutada.
 
 % ················ IMAGEN ·················
@@ -145,9 +145,9 @@ ejecutada.
 \end{figure}
 %··········································
 
-La creación de taras y el control de sus estados se realiza a través de la API de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar sobre una tarea.\\
+La creación de tareas y el control de sus estados se realiza a través de la API de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar sobre una tarea.
 
-El \textit{scheduler} es la parte fundamental del kernel que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multitarea, cuando en realidad sólo una tarea puede ejecutarse a la vez ya que se posee un solo procesador. Como se detalla en la figura \ref{scheduler} la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea y una vez que este tiempo se cumple se debe guardar el estado de ejecución de esta tarea y se procede a ejecutar otra. Así cada una de las tareas se ejecuta durante una pequeña porción de tiempo, hasta que completa su trabajo; si el tiempo de proceso asignado a cada tarea es lo suficientemente pequeño pareciera que muchas cosas ocurrieron simultáneamente. Claramente una sola tarea tomaría, en términos absolutos, menos tiempo en terminar si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar en conjunto tareas que toman mucho tiempo de proceso y otras 
+El \textit{scheduler} es la parte fundamental del kernel que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multitarea, cuando en realidad sólo una tarea puede ejecutarse a la vez ya que se posee un solo procesador. Como se detalla en la figura \ref{scheduler}, la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea y una vez que este tiempo se cumple se debe guardar el estado de ejecución de esta tarea y se procede a ejecutar otra. Así cada una de las tareas se ejecuta durante una pequeña porción de tiempo, hasta que completa su trabajo; si el tiempo de proceso asignado a cada tarea es lo suficientemente pequeño pareciera que muchas cosas ocurrieron simultáneamente. Una sola tarea tomaría, en términos absolutos, menos tiempo en terminar si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar en conjunto tareas que toman mucho tiempo de proceso y otras 
 relativamente cortas.
 
 % ················ IMAGEN ·················
@@ -158,81 +158,77 @@ relativamente cortas.
 \end{figure}
 %··········································
 
-El algoritmo de \textit{scheduling} se basa en un sistema de prioridades, donde la tarea en condiciones de ejecutarse que tenga la mayor prioridad siempre debe ser ejecutada. Si varias tareas en estado ``listo'' comparten la misma prioridad se aplica un algoritmo de \textit{round-robing}. Las tareas que están en estado ``suspendido'' y ``bloqueado'' nunca son seleccionadas por el \textit{scheduler} y por lo tanto no consumen recursos. Haciendo un correcto uso de las prioridades y los diferentes estados se consigue un sistema que se ejecuta de manera fluida y haciendo un uso óptimo del procesador.
-
-% \paragraph{Ejemplo de uso}
-
+El algoritmo de \textit{scheduling} se basa en un sistema de prioridades, donde la tarea en condiciones de ejecutarse que tenga la mayor prioridad siempre debe ser ejecutada. Si varias tareas en estado ``listo'' comparten la misma prioridad se aplica un algoritmo de \textit{round-robin}. Las tareas que están en estado ``suspendido'' y ``bloqueado'' nunca son seleccionadas por el \textit{scheduler} y por lo tanto no consumen recursos. Haciendo un correcto uso de las prioridades y los diferentes estados se consigue un sistema que se ejecuta de manera fluida y haciendo un uso óptimo del procesador.
 
 % ============= INGENIERIA DE SOFTWARE ==============
 \subsection{Ingeniería de Software}
 
-% ============= LICENCIAS DE SOFTWARE ==============
-\subsubsection{Licencias de Software}
-Se entiende por licencia de \textit{software} a un contrato entre el desarrollador del \textit{software} y el usuario final para su utilización según una serie de términos o condiciones. La licencia puede ceder ciertos derechos al usuario final; controlar la cantidad de copias que puede utilizar; el ámbito geográfico y temporal para la utilización; o bien proteger al desarrollador frente a la utilización del programa informático que se licencia. Existen al menos tres tipos de licencias de \textit{software}:
-
-\begin{itemize}
-	\item \textbf{Privativas:}  El \textit{software} es distribuido al usuario bajo un \ac{EULA} en que el propietario fija las condiciones de uso y se reserva la propiedad del programa informático. Generalmente impide el acceso al código fuente; la realización de ingeniería inversa; el uso del \textit{software} por más de un usuario; se entrega el derecho de uso por un tiempo definido y por lo general provee cierta asesoría técnica. Es común que se debe pagar por el uso de un programa bajo este tipo de licencia.
-	
-	\item \textbf{Libres:} Este tipo de licencias otorgan al receptor la libertad de usar, estudiar, compartir y modificar el \textit{software}. Existen varias licencias que cumplen con esta definición, por ejeplo: MIT, BSD, \ac{LGPL} y \ac{GPL}. Se dividen en dos tipos básicos licencias con \textit{copyleft} y sin \textit{copyleft}. Se habla de una licencia con \textit{copyleft} cuando esta indica que el \textit{software} derivado debe mantener la misma licencia original impidiendo la generación de \textit{software} privativo a partir de desarrollos libres, por ejemplo. Por lo general cumplir esta licencia requiere que se garantice el acceso al código fuente, de aquí el termino conocido como \textit{software} de código abierto. La mayoría del \textit{software} bajo estas licencias se distribuye de forma gratuita aunque su uso comercial no está necesariamente prohibido. No todo \textit{software} gratuito es necesariamente \textit{software} libre.
-	
-	\item \textbf{Dominio Público:} Si un programa informático se distribuye sin ningún tipo de licencia, se dice que es de dominio público. No posee ningún tipo de restricción sobre su uso, así como ninguna responsabilidad sobre sus creadores.
-\end{itemize}
-
-La aplicación de licencias se rige según las normativas legales locales. En el caso de las licencias libres por lo general basta con distribuir el texto de la licencia junto con la aplicación y agregar un encabezado indicando el tipo de licencia que se utiliza. Para atribuir autoría se suele utilizar las definiciones de la Convención de Berna, que indica que todo lo que se escribe queda automáticamente sujeto a copyright desde el momento en que la obra es fijada en un soporte material\cite{GNU}. En Chile la legislación vigente al respecto es la Ley 17.336 de propiedad Intelectual.
-
-\subsubsection{\ac{GPL}}
-La \ac{GPL} es una licencia de \textit{software} creada en 1989 por la \textit{Free Software Foundation} que busca declarar que el \textit{software} así licenciado es \textit{software} libre y por lo tanto el usuario posee los siguientes derechos\cite{GPL}:
-\begin{itemize}
-	\item Libertad de usar el \textit{software} para cualquier propósito.
-	\item Libertad de modificar el \textit{software} para adaptarlo a las propias necesidades.
-	\item Libertad para compartir el \textit{software}.
-	\item Libertad para publicar los cambios que se han realizado.
-\end{itemize}
-
-Actualmente se encuentra en su versión 3.0 que a diferencia de versiones previas es una licencia con \textit{copyleft} y agrega cláusulas para proteger la libertad del usuario frente a nuevas prácticas en contra del \textit{software} libre, tales como\cite{GPL}:
-\begin{itemize}
-	\item Tivoización: El término se refiere a la práctica de limitar los derechos de los usuarios que compran sistemas que funcionan con \textit{software} libre mediante mecanismos de \textit{hardware}, por ejemplo evitando la ejecución de versiones modificadas del \textit{software} embebido.
-	\item Leyes que prohíben \textit{software} libre: Se asegura de que ciertas leyes puedan limitar los derechos del usuario de un \textit{software} con licencia \ac{GPL}.
-	\item Uso malicioso de patentes: Evita el uso indiscriminado de patentes, como por ejemplo, intentar obtener beneficios patentado desarrollos de \textit{software} libre lo cual es una amenaza a la liberta de los usuarios.
-\end{itemize}
-
-\paragraph{Aplicación de la licencia} Para licenciar un proyecto de \textit{software} libre bajo la \ac{GPL} V3.0 se deben seguir los siguientes pasos\cite{GNU}:
-\begin{enumerate}
-	\item Agregar un aviso informativo del \textit{copyright} al inicio de cada archivo con código fuente de la aplicación. Un ejemplo es la siguiente línea: \texttt{«Copyright 2012 Universidad de Chile»}
-	
-	\item Bajo el aviso de \textit{copyright} se agrega una autorización de copia indicando que el \textit{software} se distribuye bajo los términos de la licencia \ac{GPL}. Un ejemplo de este aviso se cita en un ejemplo posterior.
-	
-	\item Se debe incluir junto al código fuente el texto completo de la licencia en un archivo llamado \texttt{LICENSE}. El texto de la licencia se puede obtener desde el siguiente enlace: \url{http://www.gnu.org/licenses/gpl.txt}.
-\end{enumerate}
-
-A continuación se detalla el encabezado que debería incluir cada fichero del proyecto de \textit{software} hipotético llamado \texttt{Foobar}  que es licenciado bajo \ac{GPL}.
-
-\begin{verbatim}
-    Foobar - Description - «Copyright 2012 Universidad de Chile»
-	
-    This file is part of Foobar.
-
-    Foobar is free \textit{software}: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    Foobar is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-\end{verbatim}
-
-% \subsubsection{Arquitectura de Software}
+% % ============= LICENCIAS DE SOFTWARE ==============
+% \subsubsection{Licencias de Software}
+% Se entiende por licencia de \textit{software} a un contrato entre el desarrollador del \textit{software} y el usuario final para su utilización según una serie de términos o condiciones. La licencia puede ceder ciertos derechos al usuario final; controlar la cantidad de copias que puede utilizar; el ámbito geográfico y temporal para la utilización; o bien proteger al desarrollador frente a la utilización del programa informático que se licencia. Existen al menos tres tipos de licencias de \textit{software}:
+% 
+% \begin{itemize}
+% 	\item \textbf{Privativas:}  El \textit{software} es distribuido al usuario bajo un \ac{EULA} en que el propietario fija las condiciones de uso y se reserva la propiedad del programa informático. Generalmente impide el acceso al código fuente; la realización de ingeniería inversa; el uso del \textit{software} por más de un usuario; se entrega el derecho de uso por un tiempo definido y por lo general provee cierta asesoría técnica. Es común que se debe pagar por el uso de un programa bajo este tipo de licencia.
+% 	
+% 	\item \textbf{Libres:} Este tipo de licencias otorgan al receptor la libertad de usar, estudiar, compartir y modificar el \textit{software}. Existen varias licencias que cumplen con esta definición, por ejeplo: MIT, BSD, \ac{LGPL} y \ac{GPL}. Se dividen en dos tipos básicos licencias con \textit{copyleft} y sin \textit{copyleft}. Se habla de una licencia con \textit{copyleft} cuando esta indica que el \textit{software} derivado debe mantener la misma licencia original impidiendo la generación de \textit{software} privativo a partir de desarrollos libres, por ejemplo. Por lo general cumplir esta licencia requiere que se garantice el acceso al código fuente, de aquí el termino conocido como \textit{software} de código abierto. La mayoría del \textit{software} bajo estas licencias se distribuye de forma gratuita aunque su uso comercial no está necesariamente prohibido. No todo \textit{software} gratuito es necesariamente \textit{software} libre.
+% 	
+% 	\item \textbf{Dominio Público:} Si un programa informático se distribuye sin ningún tipo de licencia, se dice que es de dominio público. No posee ningún tipo de restricción sobre su uso, así como ninguna responsabilidad sobre sus creadores.
+% \end{itemize}
+% 
+% La aplicación de licencias se rige según las normativas legales locales. En el caso de las licencias libres por lo general basta con distribuir el texto de la licencia junto con la aplicación y agregar un encabezado indicando el tipo de licencia que se utiliza. Para atribuir autoría se suele utilizar las definiciones de la Convención de Berna, que indica que todo lo que se escribe queda automáticamente sujeto a copyright desde el momento en que la obra es fijada en un soporte material\cite{GNU}. En Chile la legislación vigente al respecto es la Ley 17.336 de propiedad Intelectual.
+% 
+% \subsubsection{\ac{GPL}}
+% La \ac{GPL} es una licencia de \textit{software} creada en 1989 por la \textit{Free Software Foundation} que busca declarar que el \textit{software} así licenciado es \textit{software} libre y por lo tanto el usuario posee los siguientes derechos\cite{GPL}:
+% \begin{itemize}
+% 	\item Libertad de usar el \textit{software} para cualquier propósito.
+% 	\item Libertad de modificar el \textit{software} para adaptarlo a las propias necesidades.
+% 	\item Libertad para compartir el \textit{software}.
+% 	\item Libertad para publicar los cambios que se han realizado.
+% \end{itemize}
+% 
+% Actualmente se encuentra en su versión 3.0 que a diferencia de versiones previas es una licencia con \textit{copyleft} y agrega cláusulas para proteger la libertad del usuario frente a nuevas prácticas en contra del \textit{software} libre, tales como\cite{GPL}:
+% \begin{itemize}
+% 	\item Tivoización: El término se refiere a la práctica de limitar los derechos de los usuarios que compran sistemas que funcionan con \textit{software} libre mediante mecanismos de \textit{hardware}, por ejemplo evitando la ejecución de versiones modificadas del \textit{software} embebido.
+% 	\item Leyes que prohíben \textit{software} libre: Se asegura de que ciertas leyes puedan limitar los derechos del usuario de un \textit{software} con licencia \ac{GPL}.
+% 	\item Uso malicioso de patentes: Evita el uso indiscriminado de patentes, como por ejemplo, intentar obtener beneficios patentado desarrollos de \textit{software} libre lo cual es una amenaza a la liberta de los usuarios.
+% \end{itemize}
+% 
+% \paragraph{Aplicación de la licencia} Para licenciar un proyecto de \textit{software} libre bajo la \ac{GPL} V3.0 se deben seguir los siguientes pasos\cite{GNU}:
+% \begin{enumerate}
+% 	\item Agregar un aviso informativo del \textit{copyright} al inicio de cada archivo con código fuente de la aplicación. Un ejemplo es la siguiente línea: \texttt{«Copyright 2012 Universidad de Chile»}
+% 	
+% 	\item Bajo el aviso de \textit{copyright} se agrega una autorización de copia indicando que el \textit{software} se distribuye bajo los términos de la licencia \ac{GPL}. Un ejemplo de este aviso se cita en un ejemplo posterior.
+% 	
+% 	\item Se debe incluir junto al código fuente el texto completo de la licencia en un archivo llamado \texttt{LICENSE}. El texto de la licencia se puede obtener desde el siguiente enlace: \url{http://www.gnu.org/licenses/gpl.txt}.
+% \end{enumerate}
+% 
+% A continuación se detalla el encabezado que debería incluir cada fichero del proyecto de \textit{software} hipotético llamado \texttt{Foobar}  que es licenciado bajo \ac{GPL}.
+% 
+% \begin{verbatim}
+%     Foobar - Description - «Copyright 2012 Universidad de Chile»
+% 	
+%     This file is part of Foobar.
+% 
+%     Foobar is free \textit{software}: you can redistribute it and/or modify
+%     it under the terms of the GNU General Public License as published by
+%     the Free Software Foundation, either version 3 of the License, or
+%     (at your option) any later version.
+% 
+%     Foobar is distributed in the hope that it will be useful,
+%     but WITHOUT ANY WARRANTY; without even the implied warranty of
+%     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%     GNU General Public License for more details.
+% 
+%     You should have received a copy of the GNU General Public License
+%     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+% \end{verbatim}
+% 
 
 % ============= CALIDAD DE SOFTWARE =============
 \subsubsection{Calidad de software}
-Los requerimientos no funcionales de un proyecto de \textit{software} puede definirse como los parámetros de calidad buscados en producto en sí. Como parámetros de calidad se pueden entender una serie de calificativos muy subjetivos y tal vez difícilmente medibles como: rapidez, seguridad, escalabilidad o modularidad. Algunos conceptos pueden ser utilizados de manera poco clara o equivalentes como lo extensible o escalable que puede ser un \textit{software}, sin dejar claro las diferencias o acotaciones de estos conceptos. Es por esto que se han creado normas en torno a las metodologías para desarrollar y utilizar modelos de calidad de \textit{software} que permitan establecer de manera clara los parámetros a medir. 
+Los requerimientos no funcionales de un proyecto de \textit{software} pueden definirse como los parámetros de calidad buscados en el producto. Como parámetros de calidad se pueden entender una serie de calificativos muy subjetivos y tal vez difícilmente medibles como: rapidez, seguridad, escalabilidad o modularidad. Algunos conceptos pueden ser utilizados de manera poco clara o equivalentes como lo extensible o escalable que puede ser un \textit{software}, sin dejar claro las diferencias o acotaciones entre ellos. Es por esto que se han creado normas en torno a las metodologías para desarrollar y utilizar modelos de calidad de \textit{software} que permitan establecer de manera clara los parámetros a medir. 
 
-En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua norma ISO/IEC 9126, que plantea un modelo de calidad \textit{software} que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de \textit{software} durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; identificación de los objetivos del diseño del \textit{software}; identificación de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto de \textit{software} está completo \cite{ISO25010}.
+En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua norma ISO/IEC 9126, que plantea un modelo de calidad \textit{software} que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de una aplicación durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; identificación de los objetivos del diseño del \textit{software}; identificación de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto está completo \cite{ISO25010}.
 
 A continuación se definen los parámetros de calidad fijados en la norma ISO/IEC 25010 para productos de \textit{software}, así como un resumen a través de la figura \ref{img:ch2:iso25010}.
 
@@ -244,11 +240,11 @@ A continuación se definen los parámetros de calidad fijados en la norma ISO/IEC 
 	\item \textbf{Adecuación Funcional}. Grado en que las funciones facilitan el cumplimiento de las tareas requeridas.
 	\end{itemize}
 
-\item \textbf{Eficiencia del desempeño}. Desempeño relativo a la cantidad de recursos usado bajo ciertas condiciones.
+\item \textbf{Eficiencia del desempeño}. Desempeño relativo a la cantidad de recursos usados bajo ciertas condiciones.
 	\begin{itemize}
-	\item \textbf{Tiempo}. El grado en que el sistema cumple con requerimientos de tiempo de respuesta y tasa de rendimiento.
+	\item \textbf{Tiempo}. El grado en que el sistema cumple con los requerimientos de tiempo de respuesta y tasa de rendimiento.
 	\item \textbf{Utilización de recursos}. Grado en que la cantidad y tipos de recursos usados por el sistema cumple los requerimientos.
-	\item \textbf{Capacidad}. Grado en que los límites máximos de un sistema cumplelos requerimientos
+	\item \textbf{Capacidad}. Grado en que los límites máximos de un sistema cumple los requerimientos
 	\end{itemize}
 \end{itemize}
 
@@ -266,14 +262,14 @@ A continuación se definen los parámetros de calidad fijados en la norma ISO/IEC 
 	\item \textbf{Reconocible como apropiado}. Grado en que los usuarios pueden reconocer que el producto es apropiado para sus necesidades.
 	\item \textbf{Aprendizaje}. Grado en que el producto se puede aprender a usar de manera efectiva, sin riesgos y satisfactoria.
 	\item \textbf{Operatividad}. Grado en que el producto tiene atributos que lo hacen fácil de operar
-	\item \textbf{Protección de cometer errores}. Grado en que el sistema protege al usuario de cometer errores.
+	\item \textbf{Protección de cometer errores}. Grado en que el sistema previene al usuario de cometer errores.
 	\item \textbf{Estética de la interfaz de usuario}. Grado en que la interfaz de usuario permite una interacción placentera y satisfactoria.
 	\item \textbf{Accesibilidad}. Cómo el producto puede ser usado por personas con variedad de características y capacidades.
 	\end{itemize}
 \end{itemize}
 
 \begin{itemize}
-\item Fiabilidad. Grado en que el producto o sus componentes cumplen las funciones especificadas por un determinado periodo de tiempo.
+\item \textbf{Fiabilidad}. Grado en que el producto o sus componentes cumplen las funciones especificadas por un determinado periodo de tiempo.
 	\begin{itemize}
 	\item \textbf{Madurez}. Grado en que el sistema cumples las necesidades de fiabilidad bajo una operación normal.
 	\item \textbf{Disponibilidad}. Grado en que el sistema es operacional y accesible cuando se requiere su uso.
@@ -288,7 +284,7 @@ A continuación se definen los parámetros de calidad fijados en la norma ISO/IEC 
 	\item \textbf{Confidencialidad}. Grado en que el sistema asegura que los datos sólo son accesibles por las personas autorizadas.
 	\item \textbf{Integridad}. Grado en que el sistema previene el acceso y modificación de los datos o programas.
 	\item \textbf{No rechazo}. Grado en que es posible demostrar que las acciones han tenido lugar, para no poder ser negadas más tarde.
-	\item \textbf{Responsabilidad}. Grado en que las acciones de una entidad puedes ser asociadas de manera inequívoca a esa entidad.
+	\item \textbf{Responsabilidad}. Grado en que las acciones de una entidad pueden ser asociadas de manera inequívoca a esa entidad.
 	\item \textbf{Autenticidad}. Grado en que la identidad de un sujeto o recurso puede ser comprobada.
 	\end{itemize}
 
@@ -297,7 +293,7 @@ producto o sistema puede ser modificado por los mantenedores.
 	\begin{itemize}
 	\item \textbf{Modularidad}. Grado en que un sistema o \textit{software} está compuesto por componentes discretos de modo que el cambio en un componente tiene mínimo impacto en el resto del sistema.
 	\item \textbf{Reusabilidad}. Grado en que un activo puede ser usado en más de un sistema, o en la construcción de otro.
-	\item \textbf{Analizable}. Grado en de eficiencia y eficacia con que es posible identificar el impacto de un cambio en una parte del sistema, o diagnosticar deficiencias o fallas en alguna de sus partes, o identificar las partes que deben ser modificadas.
+	\item \textbf{Analizable}. Grado de eficiencia y eficacia con que es posible identificar el impacto de un cambio en una parte del sistema, o diagnosticar deficiencias o fallas en alguna de sus partes, o identificar las partes que deben ser modificadas.
 	\item \textbf{Modificable}. Grado en el sistema puede ser modificado de manera efectiva y eficiente, sin introducir defectos o degradar la calidad existente.
 	\item \textbf{Testeable}. Grado en que es posible establecer un criterio para probar el sistema y las pruebas que pueden ser desarrolladas para determinar que el criterio se ha cumplido.
 	\end{itemize}
@@ -310,6 +306,8 @@ producto o sistema puede ser modificado por los mantenedores.
 	\end{itemize}
 \end{itemize}
 
+Estos parámetros de calidad se definen también como requerimientos del proyecto definiendo la importancia de cada apartado en el contexto de la aplicación final.
+
 %Figura - Esquema ISO25010
 \figura{img/ISO25010.jpg}{width=\textwidth}{ISO/IEC 25010, categorías y subcategorías.}{img:ch2:iso25010}{!h}
 
@@ -320,16 +318,16 @@ producto o sistema puede ser modificado por los mantenedores.
 
 % ============= PATRONES DE DISEÑO ==============
 \subsection{Patrones de diseño}\label{ch2:sec:214}
-En computación, especialmente en la programación orientada a objetos, se utilizan patrones para sortear la difuctad de generar buenos diseños seleccionando los objetos pertinentes y sus correspondientes relaciones dentro de a aplicación. Los programadores experimentados tienden a reutilizar soluciones bien probadas para luego apadtarlas al contexto específico de un nuevo problema generando una metodología general para resolver cierta clase de problemas, estas metodologías son llamadas patrones de diseño y se encuentran bien documentas para su aplicación sucesiva en cada nueva aplicación.\cite{DESIGN_PATTERNS}
+En computación, especialmente en la programación orientada a objetos, se utilizan patrones para sortear la dificultad de generar buenos diseños seleccionando los objetos pertinentes y sus correspondientes relaciones dentro de la aplicación. La reutilización de soluciones previas es una técnica muy utilizada en desarrollo de nuevo \textit{software} las que al irse adaptando a nuevos problemas generan una metodología  para resolver cierta clase de ellos. Estas metodologías son llamadas patrones de diseño y se encuentran bien documentas para su aplicación sucesiva en cada nueva aplicación.\cite{DESIGN_PATTERNS}
 
-Un patrón de diseño por lo tanto, describe un problema de diseño particular y recurrente dentro de cierto contexto, presentando esquema genérico y bien probado que resulve este problema. El patrón describe los componentes que consitutyen la solución, sus responsabilidades, relaciones y la forma en que colaboran entre sí.\cite{SYSTEM_PATTERNS}
+Un patrón de diseño por lo tanto, describe un problema particular y recurrente dentro de cierto contexto, presentando un esquema genérico y bien probado que resuelve este problema. El patrón describe los componentes que consitutyen la solución, sus responsabilidades, relaciones y la forma en que colaboran entre sí.\cite{SYSTEM_PATTERNS}
 
 Los patrones de diseño se encuentran documentados de manera bien homogénea a través de una plantilla que permite comprender rápidamente los siguientes aspectos fundamentales del diseño: cuál es el problema que se resuelve; cuál es la solución propuesta; y las consecuencias de su aplicación tales como ventajas y desventajas. Para ejemplificar a continuación se detallará uno de los ejemplos clásicos de patrones de diseño, denominado Modelo-Vista-Controlador.\cite{SYSTEM_PATTERNS}
 
 \paragraph{Modelo-Vista-Controlador.} Este patrón de diseño divide una aplicación interactiva en tres componentes: el modelo, que contiene la funcionalidad base y los datos; la vista, que despliega la información al usuario; y el controlador, que maneja la entrada del usuario para cambiar el estado de la aplicación. Así, la interfaz gráfica se refleja en el controlador y la vista, donde cada acción se propaga a través del controlador hacia el modelo, actualizando a la vez la vista.\cite{DESIGN_PATTERNS}\cite{SYSTEM_PATTERNS}
 
 \begin{itemize}
-    \item \textbf{Contexto:} aplicaciones interactivas son un interfaz de usuario flexible.
+    \item \textbf{Contexto:} aplicaciones interactivas con una interfaz de usuario flexible.
     
     \item \textbf{Problema:} el diseño de una interfaz gráfica de usuario que esté desacoplada del programa principal. La interfaz gráfica por lo general debe ser flexible, permitiendo cambios en su distribución o la forma de llamar a las funcionalidades o varios métodos de entrada que llamando a la misma funcionalidad como botones, linea de comandos o menús. También se puede requerir portar la interfaz gráfica a diferentes ambientes o estándares manteniendo la funcionalidad de la aplicación. Otro caso típico corresponde a la visualización de la misma información de diferentes maneras o en diferentes ventana, como lo pueden ser vistas de gráficos o tablas para los mismos datos, por lo tanto se requiere desacoplar los datos de la vista para evitar la duplicación o corrupción de la información.
     
@@ -339,31 +337,29 @@ Los patrones de diseño se encuentran documentados de manera bien homogénea a tra
     
     \item \textbf{Estructura:} los componentes que completan la estructura del patrón MVC se detallan a continuación:
     \begin{itemize}
-        \item \textbf{Modelo:} encapsula la información y todas las funcionalidades de la aplicación, de manera independiente de su representación gráfica. Provee los métodos para realizar los procesos específicos de la aplicación así como para acceder a los datos de esta. A la vez implementa el mecanismo de propagación de los cambios hacia las diferentes vista suscritas a este modelo.
+        \item \textbf{Modelo:} encapsula la información y todas las funcionalidades de la aplicación, de manera independiente de su representación gráfica. Provee los métodos para realizar los procesos específicos de la aplicación así como para acceder a los datos de ésta. A la vez implementa el mecanismo de propagación de los cambios hacia las diferentes vista suscritas a este modelo.
         
-        \item \textbf{Vista:} despliega la información al usuario, a partir de los datos del modelo. Permite múltiples formas de visualizar el modelo. Provee un método de actualización que es activado por el mecanismo de propagación de cambios del modelo suscrito.
+        \item \textbf{Vista:} despliega la información al usuario a partir de los datos del modelo y puede permitir múltiples formas de visualizarlo. Provee un método de actualización que es activado por el mecanismo de propagación de cambios del modelo suscrito.
         
         \item \textbf{Controlador:} cada vista tiene asociado un controlador que recibe la entrada del usuario, como presionar un botón o seleccionar una entrada de menú. El controlador solicita el servicio correspondiente al modelo, causando a la vez una actualización de la vista si es necesario.
     \end{itemize}
     
     Para clarificar las relaciones entre los componentes del patrón se cuenta con el diagrama de la figura \ref{ch2:patterns:mvc:classes}. La esencia dinámica del patrón en ejecución se observa a través del diagrama de colaboración detallado en la figura \ref{ch2:patterns:mvc:collaboration}    
     
-    \item \textbf{Consecuencias:} alguno de los beneficios que provee son: múltiples vistas para el mismo modelo; vistas sincronizadas dado que los cambios en el modelo se propagan a las vistas que lo comparten; vista y controlador intercambiable de manera independiente del modelo, permitiendo portar la aplicación a diferentes plataformas sin cambiar la funcionalidad. Por otro lado los inconvenientes que genera son: aumento de complejidad, al necesitar adaptar cada elemento de la vista al controlador y funcionalidades; excesivo número de actualizaciones al propagar cambios del modelo a todas las vistas; alto acoplamiento entre la vista y el controlador, aún como elementos separados su diseño está muy relacionado; acoplamiento entre el modelo y el conjunto vista-controlador, ya que cualquier cambios en la interfaz de los servicios que provee el modelo tiene un efecto directo en el funcionamiento de la vista y el controlado pues acceden directamente a estos servicios.
+    \item \textbf{Consecuencias:} alguno de los beneficios que provee son: múltiples vistas para el mismo modelo las cuales pueden estar sincronizadas dado que los cambios en el modelo se propagan a aquellas que lo comparten; vista y controlador intercambiable de manera independiente del modelo, permitiendo portar la aplicación a diferentes plataformas sin cambiar la funcionalidad. Por otro lado los inconvenientes que genera son: aumento de complejidad, al necesitar adaptar cada módulo al controlador y sus funcionalidades; excesivo número de actualizaciones al propagar cambios del modelo a todas las vistas; alto acoplamiento entre la vista y el controlador, aún como elementos separados su diseño está muy relacionado; acoplamiento entre el modelo y el conjunto vista-controlador, ya que cualquier cambio en la interfaz que provee el modelo tiene un efecto directo en el funcionamiento de este conjunto pues accede directamente a sus servicios.
     
 \end{itemize}
 
-\figura{img/mvc_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño MVC.}{ch2:mvc:command:classes}{!h}
+\figura{img/mvc_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño MVC.}{ch2:patterns:mvc:classes}{!h}
 
-\figura{img/mvc_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño MVC.}{ch2::mvc:command:collaboration}{!h}
+\figura{img/mvc_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño MVC.}{ch2:patterns:mvc:collaboration}{!h}
 
-Como se ve, el proceso de diseño de una aplicación, parte por la busca de patrones de diseño claramente documentados y que soluciones un tipo de problema similar al buscado. Comparar patrones de diseño cuando se tienen varios candidatos a solucionar el problema también se hace sencillo en cuanto la forma de presentar cada patrón permite obtener sus principales características y posible implementación.  Además una aplicación puede hacer uso de varios patrones de diseño en diferentes niveles de su arquitectura para cumplir la totalidad de las especificaciones.
+A partir del ejemplo se observa que el proceso de creación de una aplicación parte por la búsqueda de patrones de diseño bien documentados y que solucionen un tipo de problema similar al buscado. Comparar patrones de diseño cuando se tienen varios candidatos a solucionar el problema también se hace sencillo en cuanto la forma de presentar cada patrón permite obtener sus principales características y posible implementación. Además una aplicación puede hacer uso de varios patrones de diseño en diferentes niveles de su arquitectura para cumplir la totalidad de las especificaciones.
 
-No obstante se debe considerar que el patrón de diseño en sí, no entregará la solución completa a un problema concreto, en cuanto sólo presenta una visión general de la solución, sin ahondar en los detalles de implementación o funcionalidades específicas del problema en cuestión. Los patrones de diseño resuelven una clase de problema relacionado, si el problema que se busca solucionar corresponde con los alcances de algún patrón de diseño, se tiene el punto de partida para la solución, pero se debe adaptar y completar el esquema original con los requerimientos y funcionalidades específicas de la nueva aplicación.
+No obstante se debe considerar que el patrón de diseño en sí, no entregará la solución completa a un problema concreto, en cuanto sólo presenta una visión general de la solución, sin ahondar en los detalles de implementación o funcionalidades específicas de la aplicación en cuestión. Los patrones de diseño resuelven una clase de problema relacionado, si el que se busca solucionar corresponde con los alcances de algún patrón de diseño, se tiene el punto de partida para la solución, pero se debe adaptar y completar el esquema original con los requerimientos y funcionalidades específicas del nuevo desarrollo.
 
 \subsubsection{Arquitecturas de \textit{software} basadas en patrones}
-Si bien el diseño de aplicaciones basadas en patrones está muy enfocada en la programación orientada a objetos y se beneficia de sus posibilidades, esta técnica se puede extender más allá y ser aplicada en cualquier paradigma o lenguaje de programación. En efecto a nivel de diseño de arquitectura de \textit{software}, la mayoría de los patrones requieren cierta capacidad de abstracción del lenguaje de programación como módulos o estructuras de datos\cite{SYSTEM_PATTERNS} lo cual abre las posibilidades de utilizar esta técnica de diseño sobre lenguajes procedurales como los utilizados en la programación de sistemas embebidos.
-
-
+Si bien el diseño de aplicaciones basadas en patrones está muy enfocada en la programación orientada a objetos y se beneficia de sus posibilidades, esta técnica se puede extender más allá y ser aplicada en cualquier paradigma o lenguaje de programación. En efecto, a nivel de diseño de arquitectura de \textit{software}, la mayoría de los patrones sólo requieren cierta capacidad de abstracción del lenguaje de programación como módulos o estructuras de datos\cite{SYSTEM_PATTERNS} lo cual abre las posibilidades de utilizar esta técnica de diseño sobre lenguajes procedurales como los utilizados en la programación de sistemas embebidos.
 
 \subsubsection{Command Pattern}
 Dentro de los patrones clasificados como de comportamiento se encuentra el patrón de procesador de comandos o mejor conocido por su nombre en inglés \textit{command pattern}\cite{DESIGN_PATTERNS} o \textit{command processor pattern}\cite{SYSTEM_PATTERNS} el cual es de especial interés en este trabajo. Lo esencial de este patrón es separar el requerimiento de un servicio de su ejecución, encapsulándolo en la forma de un comando.
@@ -371,22 +367,23 @@ Dentro de los patrones clasificados como de comportamiento se encuentra el patró
 \begin{itemize}
     \item \textbf{Contexto:} Aplicaciones que requieren flexibilidad al añadir funcionalidades. Interfaces gráficas flexibles y extensibles. Aplicaciones orientadas a la ejecución de funciones por parte del usuario soportando características como llevar un registro de ejecución o deshacer acciones. Aplicaciones donde el instante de generación de un requerimiento es independiente del instante en que se ejecuta.
     
-    \item \textbf{Problema:} Una aplicación que requiere dar soporte a una gran cantidad de funcionalidades, se puede ver beneficiada del aislar la forma genérica en que se realiza el llamado a esta función de su implementación misma. También cuando se requiere implementar funcionalidades como registro de eventos, deshacer, macros o suspender cierta ejecución de un proceso, se ve la necesidad de separar las funcionalidades del núcleo de la aplicación que las gestiona. Una aplicación que requiere ser altamente escalable sin afectar el código existente debe encontrar una manera homogénea de agregar estas funcionalidades nuevas.
+    \item \textbf{Problema:} Una aplicación que requiere dar soporte a una gran cantidad de funcionalidades, se puede ver beneficiada de aislar la forma genérica en que se realiza el llamado a cada función de la implementación misma. También cuando se requiere implementar funcionalidades como registro de eventos, deshacer, programación de macros o suspender cierta ejecución de un proceso, se ve la necesidad de separar las funcionalidades del núcleo de la aplicación que las gestiona. Una aplicación que requiere ser altamente escalable, sin afectar el código existente, debe encontrar una manera homogénea de agregar estas funcionalidades nuevas.
     
-    \item \textbf{Solución:} Encapsular los requerimientos en objetos llamados comandos, así cada llamada a una función específica crea un nuevo comando, también específico a esa llamada que implementa la funcionalidad. El patrón describe la estructura de gestión para la generación y ejecución de los comandos la cual es homogénea para cada comandos requerido. Las adaptabilidad y extensión de la aplicación se realiza mediante la implementación de nuevos comandos sobre el sistema de gestión base.
+    \item \textbf{Solución:} Encapsular los requerimientos en objetos denominados comandos, así cada llamada a una función específica crea uno nuevo, también específico a esa llamada que implementa la funcionalidad. El patrón describe la estructura de gestión para la generación y ejecución de los comandos la cual es homogénea para cada uno. La adaptabilidad y extensión de la aplicación se realiza mediante la implementación de nuevos comandos sobre el sistema de gestión base.
     
     \item \textbf{Estructura:} La arquitectura está compuesta por los siguientes módulos.
     \begin{itemize}
-        \item \textbf{Comando:} Todos los comandos poseen una estructura básica, implementando un método para ejecutar el comando. Para cada función requerida en la aplicación se crea una derivación de la estructura base del comando que implementa la lógica requerida del comando.
-        \item \textbf{Controlador o cliente:} Representa la interfaz de la aplicación y para cada requerimiento crea el comando adecuado el que es transferido al procesador de los comandos.
-        \item \textbf{Procesador de comandos o \textit{invoker}:} Recibe los comandos, agenda e inicia su ejecución. Este módulo es independiente de cada comando, en cuanto sólo utiliza la interfaz genérica que cada comando debe respetar.
-        \item \textbf{Proveedor o receptor:} Provee la funcionalidad del comando en sí ya que la lógica de ejecución del comando incluye el llamado uno o varios del los servicios entregados por el proveedor.
+        \item \textbf{Comando:} Todos los comandos poseen una estructura básica, implementando un método para ejecutalo. Para cada función requerida en la aplicación se crea una derivación de la estructura base del comando que implementa la lógica requerida.
+        \item \textbf{Controlador o cliente:} Representa la interfaz de la aplicación y para cada requerimiento crea el comando adecuado el que es transferido al \textit{invoke}.
+        \item \textbf{Procesador de comandos o \textit{invoker}:} Recibe los comandos, agenda e inicia su ejecución. Este módulo es independiente de cada orden, en cuanto sólo utiliza la interfaz genérica que cada comando debe respetar.
+        \item \textbf{Proveedor o receptor:} Provee la funcionalidad del comando en sí ya que su lógica de ejecución incluye el llamado uno o varios del los servicios entregados por el proveedor que puede ser representado como una librería de funciones a ejecutar, por ejemplo.
     \end{itemize}
+    
     El diagrama de la figura \ref{ch2:patterns:command:classes} detalla las relaciones entre los diferentes módulos o clases del patrón. La dinámica de la arquitectura se rescata en en la figura \ref{ch2::patterns:command:collaboration} que corresponde a un diagrama de colaboración entre los elementos de la estructura descrita.
     
     \item \textbf{Consecuencias:} La aplicación de este patrón de diseño implica los siguientes beneficios:
     \begin{itemize}
-        \item Los comandos pueden ser requeridos de manera flexible, según se implemente el controlador. De hecho podrían existir más de un controlador o cliente generando el mismo comando desde diferentes modos.
+        \item Los comandos pueden ser requeridos de manera flexible, es decir, desde diferentes fuentes según se implemente el controlador correspondiente. De hecho podrían existir más de un controlador o cliente generando el mismo comando de diferentes lugares.
         \item La aplicación es fácil de modificar y extender a través de la implementación de nuevos comandos dado que el procesador de comandos sólo trabaja con la interfaz genérica del comandos. Es posible agregar comandos más complejos combinando los ya existentes en una especie de macro.
         \item El procesador de comandos al centralizar la gestión de estos es el lugar adecuado para implementar servicios como:registro de comandos ejecutados; filtrar la ejecución de comandos; posponer, repetir o deshacer la ejecución de comandos; o gestionar un sistema de prioridades entre comandos.
     \end{itemize}
