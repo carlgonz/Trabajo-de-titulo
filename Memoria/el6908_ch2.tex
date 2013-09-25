@@ -384,17 +384,16 @@ Dentro de los patrones clasificados como de comportamiento se encuentra el patró
     \item \textbf{Consecuencias:} La aplicación de este patrón de diseño implica los siguientes beneficios:
     \begin{itemize}
         \item Los comandos pueden ser requeridos de manera flexible, es decir, desde diferentes fuentes según se implemente el controlador correspondiente. De hecho podrían existir más de un controlador o cliente generando el mismo comando de diferentes lugares.
-        \item La aplicación es fácil de modificar y extender a través de la implementación de nuevos comandos dado que el procesador de comandos sólo trabaja con la interfaz genérica del comandos. Es posible agregar comandos más complejos combinando los ya existentes en una especie de macro.
-        \item El procesador de comandos al centralizar la gestión de estos es el lugar adecuado para implementar servicios como:registro de comandos ejecutados; filtrar la ejecución de comandos; posponer, repetir o deshacer la ejecución de comandos; o gestionar un sistema de prioridades entre comandos.
+        \item La aplicación es fácil de modificar y extender a través de la implementación de nuevos comandos dado que el procesador de comandos sólo trabaja con la interfaz genérica de ellos. Es posible agregar algunos más complejos combinando los ya existentes en una especie de macro.
+        \item El procesador de comandos, al centralizar la gestión de éstos, es el lugar adecuado para implementar servicios como: registro de comandos ejecutados; filtrar su ejecución; posponer, repetir o deshacer la ejecución de estos; o gestionar un sistema de prioridades entre comandos.
     \end{itemize}
     
-    Entre las ventajas y limitaciones de este diseño conviene mencionar:
+    Entre las desventajas y limitaciones de este diseño se debe mencionar:
     \begin{itemize}
-        \item La cantidad de comandos puede crecer considerablemente aumentando la complejidad de la aplicación.
-        \item La retroalimentación entre la ejecución del comando y el cliente que lo crea puede ser limitada.
-        \item Al desacoplar el momento de generar el comando con el momento de la ejecución en sí, pueden existir limitaciones en implementar aplicaciones basadas en eventos pues el comando obtendrá algunos parámetros de la aplicación sólo durante su ejecución.
+        \item La cantidad de comandos puede crecer considerablemente en cuanto aumenta la complejidad de la aplicación.
+        \item El cliente que genera un comando tiene poca o nula información sobre el momento en que efectivamente éste se ejecuta o sobre el resultado de su ejecución.
+        \item Se dificulta la creación de aplicaciones fuertemente basadas en eventos, ya que el momento en que el comando obtiene los parámetros para su ejecución puede ser diferente al momento en que se crea.
     \end{itemize}
-
 \end{itemize}
 
 \figura{img/command_processor_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño procesador de comandos.}{ch2:patterns:command:classes}{!h}
@@ -407,7 +406,7 @@ Dentro de los patrones clasificados como de comportamiento se encuentra el patró
 %TODO: Agregar una descripcion breve
 
 \subsubsection{Satélites tipo Cubesat}
-A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo proveer acceso al espacio a pequeños \textit{payloads} en un corto periodo de desarrollo y abajo costo se provee un nuevo estándar para pico-satélites denominado Cubesat. El estándar considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 [kg] como el detallado en la figura \ref{img:ch2:cubesat} (a). El proyecto contempla tanto las especificaciones generales del satélite así como una plataforma estándar para desplegar los satélites desde el vehículo de lanzamiento, denominada P-POD. Cada P-POD consiste en un compartimiento capaz de albergar tres Cubesat y desplegarlos mediante una sistema de resortes ante la señal generada por el vehículo de lanzamiento. La figura \ref{img:ch2:cubesat} (b) detalla la estructura de un P-POD.
+A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo proveer acceso al espacio a pequeños \textit{payloads} en un corto periodo de desarrollo y a bajo costo. Para esto se desarrolla un nuevo estándar de vehículo espacial que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 [kg] como el mostrado en la figura \ref{img:ch2:cubesat} (a). El proyecto contempla tanto las especificaciones generales del satélite así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento, denominada P-POD que consiste en un compartimiento capaz de albergar tres Cubesat de 1U y desplegarlos mediante una sistema de resortes ante la señal generada por el vehículo de lanzamiento. La figura \ref{img:ch2:cubesat} (b) ilustra la estructura de un P-POD.
 
 %···················· FIGURE ····················
 \begin{figure}[ht!] \centering
@@ -417,7 +416,7 @@ A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una ini
 \end{figure}
 %···············································
 
-\paragraph{Estándar.} Las restricciones que fija el estándar Cubesat se detallan formalmente en las especificaciones de diseño desarrolladas por \textit{California Polytechnic State University}\cite{CUBESAT_CDS} y a continuación se detallan las principales consideraciones:
+\paragraph{Estándar.} Las restricciones que fija el estándar Cubesat se detallan formalmente en las especificaciones de diseño desarrolladas por \textit{California Polytechnic State University}\cite{CUBESAT_CDS} y a continuación se resumen las principales consideraciones:
 \begin{itemize}
 	\item \textbf{Requerimientos generales}
 	\begin{itemize}
@@ -429,11 +428,11 @@ A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una ini
 	\item \textbf{Requerimientos Mecánicos}
 	\begin{itemize}
 		\item La configuración y dimensiones del satélite deben estar de acuerdo a la figura \ref{img:ch2:cds}
-		\item El cubo debe tener dimensiones de 100x100x113 [mm] en x,y,z respectivamente según la figura \ref{img:ch2:cds}
+		\item El cubo debe tener dimensiones de 100x100x113 [mm] en los ejes x,y,z respectivamente según la figura \ref{img:ch2:cds}
 		\item Los componentes no deben sobresalir más de 6.5 [mm] en dirección normal a cada cara.
 		\item Sólo los rieles exteriores de la estructura pueden tener contacto con el P-POD.
-		\item El satélite no debe superar los 1.33 [kg] de masa.
-		\item La estructura externa debe estar construida en aluminio 7075 o 6061.
+		\item El satélite no debe superar los 1.33 [Kg] de masa.
+		\item La estructura externa debe estar construida en aluminio 7075 o 6061 anodizado en los rieles.
 	\end{itemize}
 
 	 \item \textbf{Requerimientos Eléctricos}
@@ -447,22 +446,22 @@ A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una ini
 	 \begin{itemize}
 	 	\item Cubesat con baterías deben ser capaces de recibir el comandos para apagar transmisiones según las regulaciones de la FCC.
 	 	\item Todos los mecanismos de despliegue del satélite no se deben activar antes de 30 minutos luego del despliegue desde el P-POD.
-	 	\item Transmisores de rados de potencia mayor a 1mW no debe transmitir antes de cumplirse 30 minutos luego del despliegue desde el P-POD.
+	 	\item Transmisores de radio de potencia mayor a 1[mW] no debe transmitir antes de cumplirse 30 minutos luego del despliegue desde el P-POD.
 	 	\item Se debe contar con la licencia de uso de frecuencia de radio. Para frecuencias \textit{amateur} la coordinación se realiza a través de la \textit{International Amateur Radio Union} [IARU].
 	 \end{itemize}
 
 \end{itemize}
 
-El estándar mencionado corresponde a un Cubesat de una unidad (1U). Adicionalmente se pueden combinar hasta tres unidades para obtener Cubesat de 2U o 3U y así contar con mayor volumen para posicionar los componentes físicos del satélite y una mayor superficie para situar panales solares que brinden mayor autonomía energética.
+El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalmente, se pueden combinar hasta tres unidades para obtener Cubesat de 2U o 3U y así contar con mayor volumen para posicionar los componentes físicos del satélite y una mayor superficie para situar panales solares y así brindar mayor autonomía energética.
 
-\figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño del estándar Cubsat}{img:ch2:cds}{!h}
+\figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño del estándar Cubesat}{img:ch2:cds}{!h}
 
 \paragraph{Aplicaciones}
 En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
 
-Desde el punto de vista educacional, dadas las características de rápido desarrollo y a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educaciones y gobiernos de todo el mundo, teniendo como antecedente que la mayoría de los proyectos de satélites Cubesat han sido desarrollados por estudiantes en universidades utilizando componentes comerciales o desarrollos propios. El valor educacional de un proyecto satelital de estas características incluye: el desarrollo de nueva tecnología aeroespacial, que puede ser probada a pequeña escala en ambientes realistas; la formación de profesionales entrenados en el área mediante la experiencia práctica que brinda la ejecución de este tipo proyectos; la aplicación de metodologías en la formación académica que incluyan el trabajo en equipos multidisciplinarios.
+Desde el punto de vista educacional, dadas las características de rápido desarrollo y a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educaciones y gobiernos de todo el mundo, teniendo como antecedente que la mayoría de los proyectos de satélites Cubesat han sido desarrollados por estudiantes en universidades utilizando componentes comerciales o desarrollos propios. El valor educacional de un proyecto satelital de estas características incluye: el desarrollo de nueva tecnología aeroespacial, que puede ser probada a pequeña escala en ambientes realistas; la formación de profesionales entrenados en el área mediante la experiencia práctica que brinda la ejecución de este tipo proyectos; la aplicación de metodologías en la formación académica que incluyan el trabajo en equipos multidisciplinarios, entre otros.
 
-Contando con una plataforma estándar de vehículo espacial se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico capaces de tomar diferentes datos en el espacio abriendo las posibilidades de desarrollar investigación científica. Entre las aplicaciones más destacadas se encuentra la observación remota de la tierra mediante el uso de sensores para tomar datos sobre la ionosfera y termosfera, o el uso de cámaras fotográficas que provean imágenes para un estudio posterior. Este tipo de misiones y sus datos pueden ser llegar incluso a poner a prueba sistemas de predicción o alerta temprana de desastres\cite{BECERRA_DIAZ}.
+Contando con una plataforma estándar de vehículo espacial se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico capaces de tomar diferentes datos en el espacio para su posterior análisis o uso en proyectos de investigación. Entre las aplicaciones más destacadas se encuentra la observación remota de la tierra mediante el uso de sensores para tomar datos sobre la ionosfera y termosfera, o el uso de cámaras fotográficas que provean imágenes para estudios posteriores. Este tipo de misiones y sus datos pueden llegar incluso a poner a prueba sistemas de predicción o alerta temprana de desastres\cite{BECERRA_DIAZ}.
 
 Iniciativas privadas o de propósito general tales como redes de comunicaciones de apoyo en caso de catástrofe, redes de comunicaciones privadas, monitoreo remoto de plantaciones y proyectos de exploración minera son algunas de las posibles aplicaciones capaces de ser desarrolladas como un proyecto aeroespacial tipo Cubesat.
 
@@ -477,9 +476,9 @@ El proyecto SUCHAI (\textit{Satellite of University of Chile for Aerospace Inves
 
 \figura{img/suchai_logo.png}{scale=0.3}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
 
-Se trata de un satélite tipo Cubesat de una unidad con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} a ser escuchado y decodificado por la estación terrena, ejecutar experimentos asociados a \textit{payloads} guardando estos datos y enviar como telemetría a la estación terrena la información de funcionamiento del satélite y los datos de los diferentes \textit{payloads}. Por otro lado, el desarrollo del proyecto permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local que será la base para futuras misiones relacionadas. Además permitirá integrar a alumnos de pregrado en el desarrollo de un proyecto multidisciplinario que requiere proponer soluciones no triviales a un problema abierto.
+Se trata de un satélite tipo Cubesat de una unidad con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} a ser escuchado y decodificado por la estación terrena, ejecutar experimentos asociados a \textit{payloads} guardando estos datos y enviar como telemetría a la estación terrena la información de funcionamiento del satélite y los datos de los diferentes \textit{payloads}. Por otro lado, el ejecución del proyecto permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local que será la base para futuras misiones relacionadas. Además permitirá integrar a alumnos de pregrado en el desarrollo de un proyecto multidisciplinario que requiere proponer soluciones no triviales a un problema abierto.
 
-El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media para ejecutar el \textit{software} que controla la operación del satélite en vuelo; el sistema de comunicaciones compuesto por un transmisor y receptor de radio UHF así como antenas a desplegar durante la operación; y un sistema de control de energía o EPS que incluya baterías y panales solares para proveer la energía eléctrica que permite operar al satélite así como cargar las baterías. Como carga útil se considera la integración de: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de la ionosfera tipo \textit{langmuir probe}; dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escasos de aire.
+El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media para ejecutar el \textit{software} que controla la operación del satélite en vuelo; el sistema de comunicaciones compuesto por un transmisor y receptor de radio UHF así como antenas a desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares para proveer la energía eléctrica que permite operar al satélite así como también cargar baterías. Como carga útil se considera la integración de: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de la ionosfera tipo \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire.
 
 % \subsection{Investigaciones asociadas}
 % \paragraph{Lagmuir Probe}
