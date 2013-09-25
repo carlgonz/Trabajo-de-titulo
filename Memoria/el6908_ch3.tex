@@ -1,90 +1,88 @@
 \chapter{Diseño del software}\label{ch3}
 
-\section{Resumen}
-
-En este capítulo se describe el proceso de diseño del \textit{software} de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos operacionales de la misión; requerimientos no operacionales relacionados con la calidad del \textit{software}; la plataforma de \textit{hardware} sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final. El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de ésta y se centra en específico en el diseño de una arquitectura a nivel de aplicación basada en un patrón de diseño. Finalmente se realiza un análisis del diseño para plantear una arquitectura final que permita implementar todas las funcionalidades detalladas en los requerimientos no operacionales.
+% \section{Resumen}
+% 
+% En este capítulo se describe el proceso de diseño del \textit{software} de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos operacionales de la misión; requerimientos no operacionales relacionados con la calidad del \textit{software}; la plataforma de \textit{hardware} sobre la que se debe diseñar para tener claro las limitaciones y alcances del diseño final. El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de ésta y se centra en específico en el diseño de una arquitectura a nivel de aplicación basada en un patrón de diseño. Finalmente se realiza un análisis del diseño para plantear una arquitectura final que permita implementar todas las funcionalidades detalladas en los requerimientos no operacionales.
 
 \section{Requerimientos}
 \subsection{Requerimientos operacionales}
-Los requerimientos operacionales se refieren a las funcionalidades que se espera que el computador a bordo del bus SUCHAI deba realizar. Estos requerimientos son los requisitos básicos que el sistema debe cumplir para considerar que se cuenta con un satélite capaz de llevar a cabo la misión del proyecto SUCHAI y son clasificados según el área de la misión que se ve afectada.
+Los requerimientos operacionales se refieren a las funcionalidades que se espera que el computador a bordo del satélite SUCHAI deba realizar. Son los requisitos básicos que el sistema debe cumplir para considerar que se cuenta con un satélite capaz de llevar a cabo la misión del proyecto SUCHAI y son clasificados según el área de la misión que se ve afectada.
 
 La lista de requerimientos proviene de una serie de reuniones sostenidas con los integrantes de los diferentes grupos de trabajo según los lineamientos del jefe de proyecto.
 
 \subsubsection{Área de comunicaciones}
 \paragraph{Configuración inicial del \textit{transcevier}.}
-El satélite debe ser capaz de fijar las configuraciones iniciales del sistema de comunicaciones como encender el \textit{transcevier}, silenciar las comunicaciones durante determinado tiempo inmediatamente después del lanzamiento, configurar la frecuencia de transmisión a la frecuencia asignada por la IARU y la potencia, configurar y encender beacon, entre otros.
+El satélite debe ser capaz de fijar las configuraciones iniciales del sistema de comunicaciones como encender el \textit{transcevier}, silenciar las comunicaciones durante determinado tiempo inmediatamente después del lanzamiento, configurar la frecuencia de transmisión a la asignada por la IARU y la potencia si el equipo lo permite, configurar y encender la baliza o \textit{beacon}, entre otros.
 
 El sistema debe almacenar de manera permanente estas configuraciones iniciales, para reconfigurar el \textit{transcevier} en caso de reinicio o falla así como permitir una reconfiguración de parámetros durante el desarrollo de la misión.
 
 \paragraph{Despliegue de antenas.}
-El satélite, luego de transcurrido el tiempo de silencio radial obligatorio, debe desplegar las antenas de comunicaciones con la estación terrena. Esto se realiza mediante la activación de algún sistema eléctrico, que cuenta con cierto sistema de retroalimentación para comprobar que las antenas fueron efectivamente desplegadas. Esta operación puede requerir sucesivos intentos, hasta que las antenas sean desplegadas.
+El satélite, luego de transcurrido el tiempo de silencio radial obligatorio, debe desplegar las antenas de comunicaciones. Esto se realiza mediante la activación de un sistema eléctrico, que cuenta con retroalimentación para comprobar que las antenas fueron efectivamente desplegadas. Esta operación puede requerir sucesivos intentos, hasta que las antenas sean desplegadas.
 
 \paragraph{Procesamiento de telecomandos.}
 El sistema de comunicaciones debe ser capaz de recibir telecomandos desde la estación terrena y el \textit{software} de control deberá recogerlos y ejecutar las acciones requeridas. Esto incluye la definición de un formato de telecomandos; la capacidad del sistema de analizar los comandos y sus argumentos dentro de un paquete de comunicaciones; y la posterior ejecución del comando recibido.
 
 \paragraph{Protocolo de enlace.}
-El satélite debe ser capaz de recibir y enviar datos a la estación terrena, para esto se requiere en primer lugar, que el satélite se pueda rastrear para lo cual se debe emitir una señal de baliza o \textit{beacon}; segundo, el satélite debe escuchar la estación terrena para determinar si se recibirán ordenes o se descargará información; y tercero, establecer un protocolo de enlace que permita realizar las operaciones de descarga y subida de datos.
+El satélite debe ser capaz de recibir y enviar datos a la estación terrena, para esto se requiere en primer lugar, que el satélite se pueda rastrear para lo cual se debe emitir una señal de baliza o \textit{beacon}; segundo, el satélite debe escuchar la estación terrena para determinar si se recibirán ordenes o se descargará información; y tercero, proceder con las operaciones de descarga y subida de datos.
 
 \paragraph{Envío de telemetría.}
 El satélite recolectará los datos requeridos por la misión, que incluyen información general sobre el estado del vehículo espacial y sus subsistemas así como los datos generados por \textit{payloads} abordo. El envío de telemetría puede ser automático cada vez que el satélite se enlace con la estación terrena o bajo demanda a través de telecomandos que indiquen el tipo de información que es requerida.
 
 \subsubsection{Control central}
 \paragraph{Organizar telemetría.}
-Durante la misión se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para mantener estos datos y un sistema de organización de los diferentes datos guardados con el objetivo de ser requeridos de manera selectiva para ser enviados como telemetría a la estación terrena.
+Durante la misión se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para guardarlos y un sistema de organización de los diferentes datos con el objetivo de ser requeridos de manera selectiva para ser enviados como telemetría a la estación terrena.
 
 \paragraph{Plan de vuelo.}
 El satélite debe ser capaz de recibir y ejecutar un plan de vuelo consistente en una serie de acciones a ejecutar en momentos determinados de tiempo. El plan de vuelo puede ser precargado en el satélite antes de ser lanzado así como ser actualizado mediante telecomandos. Esto provee flexibilidad en las tareas que se ejecutarán durante la misión, permitiendo controlar el uso de los diferentes recursos del satélite.
 
 \paragraph{Obtener el estado del sistema.}
-De manera autónoma el \textit{software} de control debe recolectar información básica sobre el estado del sistema en general. Esta información será usada para determinar la salud del sistema y tomar las acciones necesarias en vuelo o bien será descargada como telemetría para ser posteriormente analizada. Ejemplos de variables asociadas al estado del sistema son el nivel de carga de las baterías, la hora del sistema, el estado del sistema de comunicaciones, el estado del sistema de control, entre otras.
+De manera autónoma el \textit{software} de control debe recolectar información básica sobre el estado del satélite en general. Esta información será usada para determinar la salud del sistema y tomar las acciones necesarias en vuelo o bien será descargada como telemetría para ser posteriormente analizada. Ejemplos de variables asociadas al estado del sistema son el nivel de carga de las baterías, la hora del reloj interno, el estado del dispositivo de comunicaciones, el estado del computador abordo, entre otras.
 
 \paragraph{Inicialización del sistema.}
 El \textit{software} control debe poseer un algoritmo de inicio del sistema en general, que considera la inicialización del \textit{software} con los parámetros adecuados a un estado adecuado, la inicialización de otros módulos o subsistemas así como las obligaciones de silencio radial durante el lanzamiento, despliegue de antenas, etc.
 
-El \textit{software} de control debe tener la capacidad de reiniciarse de manera segura y considerando variables fundamentales del estado anterior al reinicio.
+El \textit{software} de control debe tener la capacidad de reiniciarse de manera segura manteniendo variables fundamentales y la consistencia con el estado anterior al reinicio 
 
 \subsubsection{Área de energía}
 \paragraph{Estimación de la carga de la batería.}
-El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable del sistema para ser utilizado por el sistema de control de energía utilizada por el satélite.
+El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable para ser utilizado por el sub-sistema de control de energía utilizado por el satélite.
 
 \paragraph{Presupuesto de energía.}
-Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera del presupuesto energético disponible así como una manera de planificar el consumo energético de la misión.
+Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera de la capacidad energética disponible así como una manera de planificar el consumo de energía de la misión.
 
 \subsubsection{Órbita}
 \paragraph{Actualizar parámetros de órbita.}
-Se debe contar con una estrategia de estimación y actualización de los parámetros de órbita del satélite con el objetivo de contar con la información necesaria para la ejecución de acciones dependientes de la posición real de satélite. Ejemplos de este tipo de acciones son la ejecución de un experimento en algún \textit{payload} o en enlace con una estación terrena para descargar datos de telemetría.
+Se debe contar con una estrategia de estimación y actualización de los parámetros de órbita del satélite con el objetivo de contar con la información necesaria para la ejecución de acciones dependientes de la posición real de satélite. Ejemplos de este tipo de acciones son la ejecución de un experimento, algún \textit{payload} o el enlace con una estación terrena para descargar datos de telemetría.
 
 \subsubsection{\textit{Payloads}}
-\paragraph{Ejecución de comandos de \textit{payloads}}.
+\paragraph{Ejecución de comandos de \textit{payloads}.}
 El sistema de control debe tener la capacidad de controlar diferentes subsistemas asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo del satélite pueden variar de misión en misión e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el sistema de control debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
 
 \subsubsection{Tolerancia a fallos}
 El sistema debe tener cierto grado de tolerancia a fallos de \textit{hardware} y \textit{software} que permitan mantener la misión operativa. Debido las adversas condiciones del medio espacial y la incapacidad de acceder directamente al dispositivo este debe ser capaz de:
 \begin{itemize}
 	\item Restablecer su funcionamiento normal luego de un reinicio, evitando la pérdida de información
-	\item Restablecer el funcionamiento del sistema ante fallas causadas por radiación.
+	\item Restablecer en la medida de lo posible, el funcionamiento del sistema ante fallas causadas por radiación.
 	\item Recuperarse ante fallas de \textit{software}
-	\item Establecer estados de funcionamiento según nivel de fallas.
+	\item Establecer modos de funcionamiento a prueba de fallos.
 	\item Detectar y solucionar problemas al desplegar antenas.
-	\item Capacidad de \textit{debug} durante el desarrollo y previo lanzamiento
+	\item Capacidad de \textit{debug} durante el desarrollo y previo al lanzamiento
 \end{itemize}
 
-\subsection{Requerimientos no funcionales}
-Por requerimientos no funcionales se entienden aquellos atributos asociados a la calidad del \textit{software} o criterios que permiten determinar cómo debería ser el \textit{software} que se está diseñando. A diferencia del los requerimientos funcionales que explican lo que el \textit{software} debería hacer, los requerimientos no funcionales explican las cualidades y restricciones que guiarán el proceso de diseño.
+\subsection{Requerimientos no operacionales}
+Por requerimientos no funcionales se entienden aquellos atributos asociados a la calidad del \textit{software} o criterios que permiten determinar cómo debería ser la aplicación que se está diseñando. A diferencia de los requerimientos funcionales, que explican lo que el \textit{software} debería hacer, los no funcionales explican las cualidades y restricciones que guiarán el proceso de diseño.
 
 El eje principal para el diseño del \textit{software} de control del satélite responde a contar con un \textit{software} que sea altamente mantenible debido a dos factores básicos: primero, el desarrollo del \textit{software} será incremental, estará a cargo de más de una persona, por lo tanto debe ser flexible en la adición de funcionalidades desacoplando módulos para que las intervenciones en el código sean lo más acotadas posible; segundo, el sistema debe ser la base para futuras misiones aeroespaciales, por lo tanto debe ser fácilmente adaptable a nuevos requerimientos funcionales que incluyen la adición de nuevos \textit{payloads} y sus módulos de control. En el futuro la arquitectura del sistema debe proveer la capacidad de análisis del sistema a los nuevos desarrolladores con el objetivo de determinar claramente qué módulos se deben intervenir para agregar nuevas funcionalidades o corregir posibles errores. Especial mención requiere la necesidad de expandir el sistema, pues se considera como filosofía de trabajo en el proyecto 
 SUCHAI el contar siempre con un sistema funcional ante la eventual posibilidad de lanzar el satélite. Así, se partirá implementado un sistema que realice las operaciones básicas o requerimientos mínimos para así agregar complejidad y funciones al \textit{software} de manera incremental. Lo anterior conduce a poner especial énfasis en el diseño de una arquitectura que genere un \textit{software} modular, reusable, analizable y modificable, elementos agrupados en la característica 'mantenible' de la norma ISO/IEC 25010\cite{ISO25010}.
 
-La fiabilidad del sistema es un elemento importante en cualquier misión espacial debido al ambiente extremo en el cual se desarrolla la misión, lo que incluye grandes cambios de temperatura y los efectos de la radiación solar sobre los componentes electrónicos\cite{REQUERIDA}. Esto significa que el sistema debe tener una nivel de tolerancia a fallas y ser capaz de recuperarse ante una interrupción o fallo. En lo que a \textit{software} respecta, la característica de tolerancia a fallos será considera en su nivel básico, debido a que por lo general esto significa diseñar sistemas altamente redundantes con una serie de estados de funcionamiento que elevan la complejidad del diseño siguiendo una línea contraria a otros requerimientos no operacionales.
+La fiabilidad del sistema es un elemento importante en cualquier misión espacial debido al ambiente extremo en el cual se desarrolla la misión, lo que incluye grandes cambios de temperatura y los efectos de la radiación solar sobre los componentes electrónicos. Esto significa que el sistema debe tener un nivel de tolerancia a fallos y ser capaz de recuperarse ante una interrupción o reinicio. En lo que a \textit{software} respecta, la característica de tolerancia a fallos será considera en su nivel básico, debido a que por lo general esto significa diseñar sistemas altamente redundantes con una serie de estados de funcionamiento que elevan la complejidad del diseño y el costo, siguiendo una línea contraria a otros requerimientos no operacionales así como a la filosofía propia de los satélites tipo Cubesat que por lo general utilizan componentes de tipo comercial.
 
-%CITAR MEMORIAS QUE HABLEN DE TOLERANCIA A FALLAS
+La idoneidad funcional es un requisito importante, desde el siguiente punto de vista: si bien en la etapa de diseño no se busca obtener una solución detallada de la implementación de cada uno de los requerimientos operacionales, la arquitectura seleccionada debe tener una respuesta a cada función necesaria de implementar para ser considerada como válida. Posiblemente, en las primeras iteraciones se busque cumplir con los requisitos mínimos de la misión, pero la arquitectura debe ser la idónea para delinear claramente la forma de agregar todas las funcionalidades requeridas y que las tareas requeridas sean llevadas a cabo de manera correcta.
 
-La idoneidad funcional es un requisito importante, desde el siguiente punto de vista: si bien en la etapa de diseño no se busca obtener una solución detallada de la implementación de cada uno de los requerimientos operacionales, la arquitectura seleccionada de tener una respuesta a cada función necesaria de implementar para ser considerada como válida. Posiblemente en las primeras iteraciones se busque cumplir con los requisitos mínimos de la misión, pero la arquitectura debe ser la idónea para delinear claramente la forma de agregar todas las funcionalidades requeridas y que las tareas requeridas sean llevadas a cabo de manera correcta.
+Existen algunas características de calidad que no serán relevantes en este diseño ya que al ser la primera aproximación en la materia para el equipo se requiere mantener cierto nivel de simplicidad en la solución, luego probarla y así ganar la experiencia necesaria en el desarrollo de futura tecnología aeroespacial. Por ejemplo el desempeño, referido a términos computacionales, no es una restricción importante por la siguientes razones: se cuenta con una plataforma de baja capacidad de cómputo y limitados recursos energéticos; el sistema requiere realizar una cantidad baja de tareas y aquellas de alta demanda computacional pueden ser realizadas en tierra; tampoco se consideran acciones que requieran una gran precisión de tiempo. La seguridad tampoco es una componente fundamental, si bien, se podría requerir evitar un uso mal intencionado de la plataforma por parte de otros operadores satelitales -salvo por errores- esto es poco probable; por el contrario se busca obtener la mayor cooperación posible de otros operadores 
+como la comunidad de radio-aficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que por la naturaleza de las plataformas a que se apunta se cuenta con muy bajo nivel de estandarización en los niveles más cercanos al \textit{hardware}.
 
-Existen algunos características de calidad que no serán relevantes en este diseño ya que al ser la primera aproximación en la materia para el equipo se requiere mantener cierto nivel de simplicidad en la solución, luego probarla y así ganar la experiencia necesaria en el desarrollo de tecnología aeroespacial. Por ejemplo el desempeño, referido a términos computacionales, no es una restricción importante por la siguientes razones: se cuenta con una plataforma de baja capacidad de cómputo y limitados recursos energéticos; el sistema requiere realizar una cantidad limitada de tareas; tareas de alta demanda computacional pueden ser realizadas en tierra; y no se consideran tareas que requieran una gran precisión de tiempo. La seguridad tampoco es una componente fundamental, si bien, se podría requerir evitar un uso mal intencionado de la plataforma por parte de otros operadores satelitales -salvo por errores- esto es poco probable; por el contrario se busca obtener la mayor cooperación posible de otros operadores 
-como por ejemplo la comunidad de radioaficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que por la naturaleza de las plataformas a que se apunta se cuenta con muy bajo nivel de estandarización en los niveles más cercanos al \textit{hardware}.
-
-Por último la tabla \ref{tbl:ch2:req_no_func} resume los requerimientos no funcionales del proyecto asignándole cierta prioridad o importancia a considerar en el diseño.
+Por último la tabla \ref{tbl:ch2:req_no_func} resume los requerimientos no funcionales del proyecto asignándole una determinada prioridad o importancia a considerar en el diseño.
 
 \tabla{tablas/req_no_operacionales.pdf}{width=\textwidth}{Requerimientos no funcionales}{tbl:ch2:req_no_func}{!h}
 
