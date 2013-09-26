@@ -32,7 +32,7 @@ Para el diseño de sistemas embebidos se debe considerar ciertos aspectos que los
 	\item Es importante considerar aspectos de seguridad y confiabilidad del sistema durante todo su desarrollo debido a que la mayoría de los sistemas embebidos son usados para controlar otros sistemas críticos en diversos procesos.
 \end{itemize}
 
-\subsubsection{Microcontroladores PIC}
+\subsection{Microcontroladores PIC}
 
 Todo sistema embebido está formado fundamentalmente por un microcontrolador que brinda la capacidad de cómputo y el control de diferentes periféricos que normalmente están integrados en el mismo chip. Entre los principales fabricantes de microcontroladores se encuentran: Microchip, Texas Instrument, ARM, Motorola, NVidia. Este trabajo se concentra en los microcontroladores PIC desarrollados por la compañía Microchip. La familia de microcontroladores  PIC es bastante amplia adaptándose a un amplio rango de necesidades. La tabla \ref{pic_list} resume las principales características de los diferentes modelos y puede ser utilizada como una guía para determinar el dispositivo adecuado según la aplicación:
 
@@ -87,7 +87,7 @@ Para grabar el \textit{software} desarrollado a estos dispositivos se debe utili
 \end{itemize}
 
 % ============= SISTEMAS OPERATIVOS ==============
-\subsection{Sistemas Operativos}
+\section{Sistemas Operativos}\label{ch2:sistema_operativo}
 Un sistema operativo es la aplicación base de un sistema computacional pues brinda servicios básicos al resto de las aplicaciones de uso general que se ejecutan en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro por lo que se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware} las cuales no están disponibles para la aplicación. La figura \ref{os} es un esquema que ilustra un sistema operativo como una módulo intermedio al \textit{hardware} que presta servicios a las aplicaciones. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
 
 % ················ IMAGEN ·················
@@ -98,8 +98,48 @@ Un sistema operativo es la aplicación base de un sistema computacional pues brin
 \end{figure}
 %··········································
 
-\subsubsection{Sistemas Operativos de Tiempo Real}
-Parte fundamental de un sistema operativo es su \textit{scheduler}, módulo encargado de intercambiar entre las múltiples tareas que se deben ejecutar cediendo un espacio de tiempo para utilizar el procesador. Un sistema operativo de tiempo real posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutará en un determinado momento se pueden cumplir los requerimientos estrictos de \textit{timing}\cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que normalmente requieren respuesta en tiempo real ante eventos no predecibles como las interrupciones.\\
+Los servicios básicos que provee a través de su kernel son:
+
+\begin{itemize}
+    \item \textbf{Gestión de tareas:} También denominada gestión de procesos o \textit{scheduler}. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se debe entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación y posee sus propios recursos y limitaciones de tiempo. Pueden existir varios procesos funcionando a la vez y el sistema operativo se encarga de proveer tiempo de procesamiento a cada una de las tareas disponibles. Existen diferentes alternativas apara gestionar la ejecución de las tareas entre las que sobresalen dos: \textit{preemptive} y cooperativo. La implementación de la aplicación depende mucho del tipo de \textit{scheduler} de que utiliza el sistema operativo por lo cual se describe cada uno a continuación:
+    \begin{itemize}
+        \item \textbf{Modo \textit{preemptive}:} El sistema operativo puede interrumpir la actual tarea en cualquier momento de su ejecución para realizar el cambio de contexto y ceder el procesador a una diferente. Por lo generar se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, entonces el \textit{scheduler} se asegura de que siempre se esté ejecutando la tarea de mayor prioridad disponible.
+        
+        \item \textbf{Modo cooperativo:} En el modo cooperativo el sistema operativo nunca inicia un cambio de contexto sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva. El sistema operativo es quien decide la siguiente tarea a ejecutar ya sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas y cooperar con la ejecución del resto iniciado el proceso de cambio de contexto.
+    \end{itemize}
+    
+    \item \textbf{Comunicación y sincronización entre tareas:} Si bien cada tarea posee su propio contexto de ejecución y pueden existir varias funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre ellas para compartir estados y mensajes que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de \textit{hardware} o requerirán de memoria compartida en esquemas tipo productor-consumidor donde el sistema operativo es quien provee las estructuras de sincronización adecuadas y los mecanismos de comunicación asegurar que la información compartida no se corrompa y no existan interferencias entre tareas al acceder simultáneamente a recursos compartidos.
+    
+    \item \textbf{Temporización:} Dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs} para controlar la periodicidad o límites de tiempo de ejecución de cada tarea.
+    
+    \item \textbf{Gestión de memoria:} Las diferentes tareas y procesos que se ejecutan en el sistema requieren reservar, usar y liberar memoria de datos para su ejecución de manera segura, es decir, sin corromper la memoria utilizada por el resto de los procesos o el propio sistema operativo. Por esto el sistema operativo debe proveer servicios de gestión de memoria, como por ejemplo, la reserva dinámica de memoria de datos.
+    
+    \item \textbf{Gestión de dispositivos de entrada y salida:} Los dispositivos de entrada y salida son compartidos por todas las tareas que se ejecutan, por lo tanto el sistema operativo provee el servicio de gestionar el acceso a estos dispositivos de manera uniforme y organizada.
+\end{itemize}
+
+En cuanto a la arquitectura de \textit{software} presente en un sistema operativo, se pueden encontrar al menos tres opciones bien conocidas que corresponden al kernel monolítico, arquitectura en capas y micro kernel\cite{EMBEDDED_ARCHITECTURE} las que se detallan a continuación:
+
+\begin{itemize}
+    \item \textbf{Kernel monolítico:} En este tipo de kernel los servicios del sistema operativos se encuentran integrados a lo largo de la arquitectura que provee las cinco funcionalidades mencionadas anteriormente. Dada la dificultad de escalar y depurar este tipo de kernel, existe una variante en la cual los servicios del sistema operativo se integran como módulos. Una arquitectura básica de este tipo de sistemas se refleja en la figura \ref{img:ch3:kernel} (a). Algunos sistemas operativos que usan esta arquitectura son: Linux, Jbed RTOS y MicroC/OS-II.
+    
+    \item \textbf{Micro kernel:} Un sistema operativo con arquitectura de micro kernel provee las funcionalidades mínimas necesarias para su funcionamiento como el gestor de memorias y el gestor de procesos. El resto de las funcionalidades se proveen de manera separada usualmente en una arquitectura tipo cliente-servidor. Este tipo de sistemas es muy común en sistemas embebidos debido a que mantiene controlado el tamaño en memoria del sistema operativo y la velocidad de respuesta del sistema al no incluir componentes que son poco o para nada utilizados. Ejemplos de sistemas operativos con micro kernel son: FreeRTOS, Salvo RTOS y VxWorks. El esquema de estos sistema se aprecia en la figura \ref{ch2:img:kernel} (b).
+
+    \item \textbf{Arquitectura de capas:} Los servicios del sistema operativos se presentan en una arquitectura jerárquica de capas, donde cada capa depende de los funcionalidades que proveen las capas inferiores. Ejemplos son: DOS/eRTOS y VRTX. Esta arquitectura se presenta en la figura \ref{img:ch3:kernel} (c).
+\end{itemize}
+
+%TODO: REHACER LOS DIAGRAMAS
+%···················· FIGURE ····················
+\begin{figure}[ht!] \centering
+\subfloat[Kernel monolítico]{\includegraphics[width=0.45\textwidth]{img/kernel_monolitico.jpg}}
+\hspace{0.01cm}
+\subfloat[Micro kernel]{\includegraphics[width=0.45\textwidth]{img/kernel_micro.jpg}}\\
+\subfloat[Kernel en capas]{\includegraphics[width=0.45\textwidth]{img/kernel_capas.jpg}}
+\caption{Arquitecturas de sistemas operativos}\label{ch2:img:kernel}
+\end{figure}
+%················································
+
+\subsection{Sistemas Operativos de Tiempo Real}
+Un sistema operativo de tiempo real posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutará en un determinado momento se pueden cumplir los requerimientos estrictos de \textit{timing}\cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que normalmente requieren respuesta en tiempo real ante eventos no predecibles como las interrupciones.\\
 
 La figura \ref{rtos} muestra la forma de conseguir un sistema de tiempo real mediante el uso de prioridades para las diferentes tareas. En este ejemplo la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo ante la presencia de ciertos eventos el sistema debe responder de manera instantánea cambiado de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica, por ejemplo, en tal caso se asigna una alta prioridad para asegurar que el sistema operativo siempre ejecute esta tarea cuando corresponda.
 
@@ -161,7 +201,7 @@ relativamente cortas.
 El algoritmo de \textit{scheduling} se basa en un sistema de prioridades, donde la tarea en condiciones de ejecutarse que tenga la mayor prioridad siempre debe ser ejecutada. Si varias tareas en estado ``listo'' comparten la misma prioridad se aplica un algoritmo de \textit{round-robin}. Las tareas que están en estado ``suspendido'' y ``bloqueado'' nunca son seleccionadas por el \textit{scheduler} y por lo tanto no consumen recursos. Haciendo un correcto uso de las prioridades y los diferentes estados se consigue un sistema que se ejecuta de manera fluida y haciendo un uso óptimo del procesador.
 
 % ============= INGENIERIA DE SOFTWARE ==============
-\subsection{Ingeniería de Software}
+\section{Ingeniería de Software}
 
 % % ============= LICENCIAS DE SOFTWARE ==============
 % \subsubsection{Licencias de Software}
@@ -225,7 +265,7 @@ El algoritmo de \textit{scheduling} se basa en un sistema de prioridades, donde 
 % 
 
 % ============= CALIDAD DE SOFTWARE =============
-\subsubsection{Calidad de software}
+\subsection{Calidad de software}
 Los requerimientos no funcionales de un proyecto de \textit{software} pueden definirse como los parámetros de calidad buscados en el producto. Como parámetros de calidad se pueden entender una serie de calificativos muy subjetivos y tal vez difícilmente medibles como: rapidez, seguridad, escalabilidad o modularidad. Algunos conceptos pueden ser utilizados de manera poco clara o equivalentes como lo extensible o escalable que puede ser un \textit{software}, sin dejar claro las diferencias o acotaciones entre ellos. Es por esto que se han creado normas en torno a las metodologías para desarrollar y utilizar modelos de calidad de \textit{software} que permitan establecer de manera clara los parámetros a medir. 
 
 En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua norma ISO/IEC 9126, que plantea un modelo de calidad \textit{software} que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de una aplicación durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; identificación de los objetivos del diseño del \textit{software}; identificación de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto está completo \cite{ISO25010}.
@@ -324,7 +364,8 @@ Un patrón de diseño por lo tanto, describe un problema particular y recurrente d
 
 Los patrones de diseño se encuentran documentados de manera bien homogénea a través de una plantilla que permite comprender rápidamente los siguientes aspectos fundamentales del diseño: cuál es el problema que se resuelve; cuál es la solución propuesta; y las consecuencias de su aplicación tales como ventajas y desventajas. Para ejemplificar a continuación se detallará uno de los ejemplos clásicos de patrones de diseño, denominado Modelo-Vista-Controlador.\cite{SYSTEM_PATTERNS}
 
-\paragraph{Modelo-Vista-Controlador.} Este patrón de diseño divide una aplicación interactiva en tres componentes: el modelo, que contiene la funcionalidad base y los datos; la vista, que despliega la información al usuario; y el controlador, que maneja la entrada del usuario para cambiar el estado de la aplicación. Así, la interfaz gráfica se refleja en el controlador y la vista, donde cada acción se propaga a través del controlador hacia el modelo, actualizando a la vez la vista.\cite{DESIGN_PATTERNS}\cite{SYSTEM_PATTERNS}
+\subsubsection{Modelo-Vista-Controlador.} 
+Este patrón de diseño divide una aplicación interactiva en tres componentes: el modelo, que contiene la funcionalidad base y los datos; la vista, que despliega la información al usuario; y el controlador, que maneja la entrada del usuario para cambiar el estado de la aplicación. Así, la interfaz gráfica se refleja en el controlador y la vista, donde cada acción se propaga a través del controlador hacia el modelo, actualizando a la vez la vista.\cite{DESIGN_PATTERNS}\cite{SYSTEM_PATTERNS}
 
 \begin{itemize}
     \item \textbf{Contexto:} aplicaciones interactivas con una interfaz de usuario flexible.
@@ -361,7 +402,7 @@ No obstante se debe considerar que el patrón de diseño en sí, no entregará la so
 \subsubsection{Arquitecturas de \textit{software} basadas en patrones}
 Si bien el diseño de aplicaciones basadas en patrones está muy enfocada en la programación orientada a objetos y se beneficia de sus posibilidades, esta técnica se puede extender más allá y ser aplicada en cualquier paradigma o lenguaje de programación. En efecto, a nivel de diseño de arquitectura de \textit{software}, la mayoría de los patrones sólo requieren cierta capacidad de abstracción del lenguaje de programación como módulos o estructuras de datos\cite{SYSTEM_PATTERNS} lo cual abre las posibilidades de utilizar esta técnica de diseño sobre lenguajes procedurales como los utilizados en la programación de sistemas embebidos.
 
-\subsubsection{Command Pattern}
+\subsubsection{Command Pattern}\label{ch2:command_pattern}
 Dentro de los patrones clasificados como de comportamiento se encuentra el patrón de procesador de comandos o mejor conocido por su nombre en inglés \textit{command pattern}\cite{DESIGN_PATTERNS} o \textit{command processor pattern}\cite{SYSTEM_PATTERNS} el cual es de especial interés en este trabajo. Lo esencial de este patrón es separar el requerimiento de un servicio de su ejecución, encapsulándolo en la forma de un comando.
 
 \begin{itemize}
@@ -402,10 +443,10 @@ Dentro de los patrones clasificados como de comportamiento se encuentra el patró
 
 % ============= SATELITES ==============
 
-\subsection{Pequeños Satélites}
+\section{Pequeños Satélites}
 %TODO: Agregar una descripcion breve
 
-\subsubsection{Satélites tipo Cubesat}
+\subsection{Satélites tipo Cubesat}
 A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo proveer acceso al espacio a pequeños \textit{payloads} en un corto periodo de desarrollo y a bajo costo. Para esto se desarrolla un nuevo estándar de vehículo espacial que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 [kg] como el mostrado en la figura \ref{img:ch2:cubesat} (a). El proyecto contempla tanto las especificaciones generales del satélite así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento, denominada P-POD que consiste en un compartimiento capaz de albergar tres Cubesat de 1U y desplegarlos mediante una sistema de resortes ante la señal generada por el vehículo de lanzamiento. La figura \ref{img:ch2:cubesat} (b) ilustra la estructura de un P-POD.
 
 %···················· FIGURE ····················
@@ -478,7 +519,9 @@ El proyecto SUCHAI (\textit{Satellite of University of Chile for Aerospace Inves
 
 Se trata de un satélite tipo Cubesat de una unidad con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} a ser escuchado y decodificado por la estación terrena, ejecutar experimentos asociados a \textit{payloads} guardando estos datos y enviar como telemetría a la estación terrena la información de funcionamiento del satélite y los datos de los diferentes \textit{payloads}. Por otro lado, el ejecución del proyecto permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local que será la base para futuras misiones relacionadas. Además permitirá integrar a alumnos de pregrado en el desarrollo de un proyecto multidisciplinario que requiere proponer soluciones no triviales a un problema abierto.
 
-El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media para ejecutar el \textit{software} que controla la operación del satélite en vuelo; el sistema de comunicaciones compuesto por un transmisor y receptor de radio UHF así como antenas a desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares para proveer la energía eléctrica que permite operar al satélite así como también cargar baterías. Como carga útil se considera la integración de: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de la ionosfera tipo \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire.
+El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media para ejecutar el \textit{software} que controla la operación del satélite en vuelo; el sistema de comunicaciones compuesto por un transmisor y receptor de radio UHF así como antenas a desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares para proveer la energía eléctrica que permite operar al satélite así como también cargar baterías. Como carga útil se considera la integración de: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de la ionosfera tipo \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satellite SUCHAI en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
+
+\figura{img/suchai_satellite.jpg}{width=\textwidth}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{!h}
 
 % \subsection{Investigaciones asociadas}
 % \paragraph{Lagmuir Probe}

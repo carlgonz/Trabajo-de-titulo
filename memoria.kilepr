@@ -102,17 +102,17 @@ archive=true
 column=0
 encoding=ISO-8859-15
 highlight=LaTeX
-line=44
+line=123
 mode=LaTeX
 open=true
 order=0
 
 [item:Memoria/bibliografia.bib]
 archive=true
-column=20
+column=72
 encoding=UTF-8
 highlight=BibTeX
-line=147
+line=106
 mode=BibTeX
 open=true
 order=5
@@ -129,20 +129,20 @@ order=5
 
 [item:Memoria/el6908_ch2.tex]
 archive=true
-column=931
+column=34
 encoding=ISO-8859-15
 highlight=LaTeX
-line=480
+line=422
 mode=LaTeX
 open=true
 order=1
 
 [item:Memoria/el6908_ch3.tex]
 archive=true
-column=10
+column=0
 encoding=ISO-8859-15
 highlight=LaTeX
-line=99
+line=328
 mode=LaTeX
 open=true
 order=2
@@ -389,13 +389,13 @@ order=-1
 
 [view-settings,view=0,item:Memoria/Memoria.tex]
 CursorColumn=0
-CursorLine=44
+CursorLine=123
 JumpList=
-ViMarks=
+ViMarks=.,97,23,[,97,0,],97,23
 
 [view-settings,view=0,item:Memoria/bibliografia.bib]
-CursorColumn=20
-CursorLine=147
+CursorColumn=72
+CursorLine=106
 JumpList=
 ViMarks=.,98,25,[,98,25,],98,25
 
@@ -406,16 +406,16 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:Memoria/el6908_ch2.tex]
-CursorColumn=931
-CursorLine=480
+CursorColumn=34
+CursorLine=422
 JumpList=
-ViMarks=.,480,931,[,480,931,],480,931
+ViMarks=.,366,14,[,366,14,],366,14
 
 [view-settings,view=0,item:Memoria/el6908_ch3.tex]
-CursorColumn=10
-CursorLine=99
+CursorColumn=0
+CursorLine=328
 JumpList=
-ViMarks=.,99,9,[,98,14,],99,9
+ViMarks=.,327,25,[,328,0,],-1,-1
 
 [view-settings,view=0,item:Memoria/el6908_ch4.tex]
 CursorColumn=9

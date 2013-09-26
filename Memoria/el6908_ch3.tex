@@ -94,25 +94,31 @@ Para que el sistema desarrollado en el proyecto SUCHAI pueda considerarse como u
 Dada la naturaleza iterativa de la metodología de trabajo, es importante considerar los requerimientos mínimos a la hora de la implementación de la arquitectura pues dará al sistema la simplicidad necesaria asegurando funcionalidad. La completitud de los requerimientos operacionales se obtendrá a través de mejoras incrementales sobre los requerimientos mínimos ya mencionados.
 
 \section{Plataforma}
-La plataforma para la cual se diseña el \textit{software} corresponde a un kit Cubesat de una unidad (1U) de la compañía Pumpkins Inc. El kit está compuesto por los siguientes elementos:
+La plataforma para la cual se diseña el \textit{software} corresponde a un kit Cubesat de una unidad (1U) de la compañía Pumpkins Inc. similar al mostrado en la figura \ref{ch3:img:cubesatkit} (a). El kit está compuesto por los siguientes elementos:
 \begin{itemize}
-    \item Chasis de 1U.
+    \item Chasis de 1U tipo esqueleto (ver figura \ref{ch3:img:cubesatkit} (b)).
     \item Placa madre rev. D.
     \item Módulo de procesador D1 con PIC24FJ256GA110.
-    \item 
     \item Placa de desarrollo.
     \item Programador y \textit{debuger} Microchip ICD3.
 \end{itemize}
 
-Adicionalmente se cuenta con los siguientes dispositivos para EPS y comunicaciones respectivamente:
+Adicionalmente se cuenta con los siguientes dispositivos para EPS y comunicaciones respectivamente que completan la base del vehículo satelital:
 
 \begin{itemize}
-    \item EPS: Clyde Space CS-1UEPS2-NB
-    \item \textit{Transceiver}: Allspace AS-COM01
+    \item EPS Clyde Space CS-1UEPS2-NB
+    \item \textit{Transceiver} Allspace AS-COM01
 \end{itemize}
 
 %Figura - CubesatKit 1U
-\figura{img/cubesatkit_1u.jpg}{scale=1}{Chasis Pumpkins para Cubesat de 1U}{img:ch3:cubesatkit_1u}{!h}
+%···················· FIGURE ····················
+\begin{figure}[hb!] \centering
+\subfloat[CubesatKit]{\includegraphics[width=0.48\textwidth]{img/cubesatkit.png}}
+\hspace{1cm}
+\subfloat[Chasis Cubesat 1U]{\includegraphics[width=0.3\textwidth]{img/cubesatkit_1u.jpg}}
+\caption{CubesatKit de Pumpkins Inc.}\label{img:ch3:cubesatkit}
+\end{figure}
+%················································
 
 Por lo tanto se cuenta con todo el \textit{hardware} básico para el funcionamiento del satélite y se considera fijo para el proceso de diseño del \textit{software} de vuelo.
 
@@ -254,46 +260,17 @@ Corresponde a la rutina de atención de interrupciones las siguientes operaciones
 \end{itemize}
 
 \subsection{Sistema operativo}
-El sistema operativo es la capa de abstracción entre la capa de aplicación y el \textit{hardware} en la arquitectura de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo\cite{EMBEDDED_ARCHITECTURE}. Los servicios básicos que provee el sistema operativo a través de su kernel son:
+El sistema operativo es la capa de abstracción entre la capa de aplicación y el \textit{hardware} en la arquitectura de un sistema embebido. Permite diseñar la aplicación sin considerar las particularidades de la plataforma en que se ejecuta así como estructurar la aplicación en una serie de procesos o tareas cuya gestión la proveen los servicios del sistema operativo\cite{EMBEDDED_ARCHITECTURE} como se ha detallado en la sección \ref{ch2:sistema_operativo} los servicios básicos que debe proveer son:
 
 \begin{itemize}
-	\item \textbf{Gestión de tareas:} También denominada gestión de procesos. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se debe entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación y posee sus propios recursos y limitaciones de tiempo. Varias tareas pueden existir a la vez en el sistema y el sistema operativo se encarga de proveer de tiempo de procesamiento a cada una de las tareas disponibles. Existen diferentes alternativas apara gestionar la ejecución de las tareas en el sistema, de las cuales sobresalen dos: \textit{preemptive} y cooperativo. La implementación de la aplicación y las tareas dependen mucho del modo de gestión de tareas que utiliza el sistema operativo por lo cual se describe cada uno a continuación:
-	\begin{itemize}
-		\item \textbf{Modo \textit{preemptive}:} El sistema operativo puede interrumpir la actual tarea cualquier momento de su ejecución para realizar el cambio de contexto y ceder el procesador a una tarea diferente. Por lo generar se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, entonces el sistema de gestión de tareas se asegura de que siempre se esté ejecutando la tarea de mayor prioridad disponible.
-		
-		\item \textbf{Modo cooperativo:} En el modo cooperativo el sistema operativo nunca inicia un cambio de contexto sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva tarea. El sistema operativo es quien decide la siguiente tarea a ejecutar ya sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas y cooperar con la ejecución del resto de las tareas iniciado el proceso de cambio de contexto.
-	\end{itemize}
-	
-	\item \textbf{Comunicación y sincronización entre tareas:} Si bien cada tarea posee su propio contexto de ejecución y pueden existir varias tareas funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre tareas para compartir estados y mensajes que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de \textit{hardware} o requerirán de memoria compartida en esquemas tipo productor-consumidor donde el sistema operativo es quien provee las estructuras de sincronización adecuadas. El sistema operativo de encarga de proveer los mecanismos de comunicación y sincronización para asegurar que la información compartida no se corrompa y no existan interferencias entre tareas al acceder a recursos compartidos.
-	
-	\item \textbf{Temporización:} Dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs} para controlar la periodicidad o límites de tiempo de ejecución de cada tarea.
-	
-	\item \textbf{Gestión de memoria:} Las diferentes tareas y procesos que se ejecutan en el sistema requieren reservar, usar y liberar memoria de datos para su ejecución de manera segura, es decir, sin corromper la memoria utilizada por el resto de los procesos o el propio sistema operativo. Por esto el sistema operativo debe proveer servicios de gestión de memoria, como por ejemplo, la reserva dinámica de memoria de datos.
-	
-	\item \textbf{Gestión de dispositivos de entrada y salida:} Los dispositivos de entrada y salida son compartidos por todas las tareas que se ejecutan, por lo tanto el sistema operativo provee el servicio de gestionar el acceso a estos dispositivos de manera uniforme y organizada.
-	
+    \item Gestión de tareas.
+    \item Sincronización entre tareas.
+    \item Temporización.
+    \item Gestion de memoria.
+    \item Gestion de dispositivos de entrada y salida.
 \end{itemize}
 
-En cuanto a la arquitectura de \textit{software} presente en un sistema operativo, se pueden encontrar al menos tres opciones bien conocidas: kernel monolítico, arquitectura en capas y micro kernel\cite{EMBEDDED_ARCHITECTURE}.
-
-\paragraph{Kernel monolítico.} En este tipo de kernel los servicios del sistema operativos se encuentran integrados a lo largo de la arquitectura que provee las cinco funcionalidades mencionadas anteriormente. Dada la dificultad de escalar y depurar este tipo de kernel, existe una variante en la cual los servicios del sistema operativo se integran como módulos. Una arquitectura básica de este tipo de sistemas se refleja en la figura \ref{img:ch3:kernel} a. Algunos sistemas operativos que usan esta arquitectura son: Linux, Jbed RTOS y MicroC/OS-II.
-
-\paragraph{Arquitectura de capas.} Los servicios del sistema operativos se presentan en una arquitectura jerárquica de capas, donde cada capa depende de los funcionalidades que proveen las capas inferiores. Ejemplos son: DOS/eRTOS y VRTX. Esta arquitectura se presenta en la figura \ref{img:ch3:kernel} b.
-
-\paragraph{Micro kernel.} Un sistema operativo con arquitectura de micro kernel provee las funcionalidades mínimas necesarias para su funcionamiento como el gestor de memorias y el gestor de procesos. El resto de las funcionalidades se proveen de manera separada usualmente en una arquitectura tipo cliente-servidor. Este tipo de sistemas es muy común en sistemas embebidos debido a que mantiene controlado el tamaño en memoria del sistema operativo y la velocidad de respuesta del sistema al no incluir componentes que son poco o para nada utilizados. Ejemplos de sistemas operativos con micro kernel son: FreeRTOS, Salvo RTOS y VxWorks. El esquema de estos sistema se aprecia en la figura \ref{img:ch3:kernel} c.
-
-%TODO: REHACER LOS DIAGRAMAS
-%···················· FIGURE ····················
-\begin{figure}[ht!] \centering
-\subfloat[Kernel monolítico]{\includegraphics[width=0.3\textwidth]{img/kernel_monolitico.jpg}}
-\subfloat[Kernel en capas]{\includegraphics[width=0.3\textwidth]{img/kernel_capas.jpg}} \\
-\subfloat[Micro kernel]{\includegraphics[width=0.3\textwidth]{img/kernel_micro.jpg}}
-\caption{Arquitecturas de sistemas operativos}\label{img:ch3:kernel}
-\end{figure}
-%················································
-
-
-En el diseño del \textit{software} de vuelo el diseño de un sistema operativo está fuera del alcance del proyecto en cuanto existen una serie de alternativas ya disponibles para uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante para la plataforma de \textit{hardware} utilizada.
+El diseño de un sistema operativo está fuera del alcance del proyecto en cuanto existen una serie de alternativas ya disponibles para uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante para la plataforma de \textit{hardware} utilizada.
 
 \begin{table}[ht!] \caption{Comparación de sistemas operativos para sistemas embebidos}
 \footnotesize
@@ -310,6 +287,10 @@ embOS & Micro kernel & Preemptive con prioridades & No tiene & Semáforos, mensaj
 \end{tabularx}\label{tab:chp3:so}
 \end{table}
 
+En particular nos interesan dos de ellos: Salvo RTOS, por ser parte del kit adquirido y el recomendado por el fabricante del computador a bordo; y FreeRTOS por ser una solución ampliamente utilizada comercialmente en sistemas embebidos además de poseer una licencia libre y ser gratuito.
+
+%TODO Comparar los sistemas operativos
+
 %REF
 %http://www.avix-rt.com/Products/Specification/specification.html
 %http://micrium.com/rtos/ucosii/features/
@@ -319,20 +300,19 @@ embOS & Micro kernel & Preemptive con prioridades & No tiene & Semáforos, mensaj
 
 \subsection{Aplicación}
 
-Para el diseño de la aplicación se estudió la adaptación de un patrón de diseño utilizado en la programación orientada a objetos, llamado \textit{command pattern}. Este patrón de diseño soluciona la necesidad de realizar peticiones a diferentes objetos sin necesidad de saber cómo se ejecutaran estas acciones, de este modo la petición es encapsulada en como un comando que entrega al objeto adecuado para ser ejecutado. Este patrón entrega algunas ventajas como: separar los módulos que generan los comandos de aquellos que los ejecutan; la posibilidad de gestionar colas de comandos, registros u deshacer acciones; y ofrecer un flujo uniforme para ejecutar las acciones permitiendo extender el \textit{software} al agregar comandos nuevos.
+Para el diseño de la aplicación se ha estudiado la adaptación de un patrón utilizado en la programación orientada a objetos, llamado \textit{command pattern}. Como se datalla en la sección \ref{ch2:command_pattern} este patrón de diseño soluciona la necesidad de realizar peticiones a diferentes objetos sin necesidad de saber cómo se ejecutaran estas acciones, de este modo la petición es encapsulada en como un comando que entrega al objeto adecuado para ser ejecutado. Este patrón entrega algunas ventajas como: separar los módulos que generan los comandos de aquellos que los ejecutan; la posibilidad de gestionar colas de comandos, registros u deshacer acciones; y ofrecer un flujo uniforme para ejecutar las acciones permitiendo extender el \textit{software} al agregar comandos nuevos.
 
-%TODO: MAS DETALLES DEL PATRON ESTUDIADO
+Como las restricciones que se han impuesto al diseño de la aplicación indican que no se utilizará un lenguaje de programación orientado a objetos, se realizará una adaptación de la idea de este patrón utilizando los recursos y servicios que proveen las capas inferiores de la arquitectura. En el patrón detallado en la figura \ref{ch2:patterns:command:classes} se observan dos tipos de módulos: activos y no activos.
 
-%TODO: *Solo se justifica tener tareas cuando son activas, no cuando se mantienen dormidas todo el tiempo y se deben sincronizar.
+Entre los módulos activos encontramos: los controladores o \textit{listeners} y el procesador de comandos. Además siguiendo la convención de E. Gamma\cite{DESIGN_PATTERNS} se requiere un receptor o \textit{executer}. La característica común de estos módulos es que son piezas que siempre se están ejecutando en la aplicación realizando tareas específicas, tomando decisiones en base a las reglas programas y forman la ruta crítica por donde fluye la información dentro del sistema. Para el sistema operativo estas piezas de \textit{software} se represetan como tareas que tendran su espacio de tiempo en el procesador, su espacio de memoria independiente y se comunican entre sí a través de las estructuras de sincronización que se proveen.
 
-Como las restricciones que se han impuesto al diseño de la aplicación indican que no se utilizará un lenguaje de programación orientado a objetos, se realizará una adaptación de la idea de este patrón de diseño, donde los objetos serán representados como módulos estáticos, con posibilidad de generar comunicación y sincronización entre estos módulos.
+Los módulos no activos son aquellos que sólo prestan servicios a las tareas funcionando dentro del sistema operativo, como librerías, estructuras de datos, controladores y repositorios de datos. Entre ellos se encuentra: la estructura de comandos genérica o \textit{abstract command}, los comandos, el proveedor de servicios o \textit{suplier} además de otras librerías y repositorios presentes en el sistema. No se justifica considerar estos elementos de \textit{software} como tareas debido a que pasan la mayor parte del tiempo sin realizar acciones salvo cuando son requeridos por módulos activos. Si estuvieran al mismo nivel que estos se debería agregar una completa batería de sincronización que permita activarlos y desactivarlos lo cual a la larga se hace complejo de mantener. La forma correcta de visualizarlos es como estructuras de datos, repositorios y librerías según corresponda, implementados según las posibilidades de la capa de sistema operativo, drivers o características propias del lenguaje de programación.
 
-%TODO: MAS DETALLES DE LA ADAPTACION
+A continuación se describe en detalle los módulos que conforman la arquitectura del \textit{software} en la capa de aplicación:
 
-Los módulos fundamentales de la arquitectura son lo siguientes:
-
-\paragraph{Listeners.} Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes dentro de \textit{command pattern}. Estos módulos son los únicos encargados de generar los comandos en el sistema. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene del hecho de que la justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de \textit{software} para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. Estos módulos permiten extender las 
-funcionalidades del satélite en cuanto se requiera un aplicación que dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se puede considerar como un \textit{listener} los siguientes procesos:
+\subsection{Listeners.} 
+Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes o controladores dentro de \textit{command pattern} (ver figura \ref{ch2:command_pattern}). Estos módulos son los únicos encargados de generar los comandos en la aplicación. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene de la siguiente filosofía adoptada en el diseño: la única justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de \textit{software} para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. 
+Estos módulos permiten extender las funcionalidades del satélite en cuanto se requiera un aplicación que, dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se pueden considerar como un \textit{listener} los siguientes procesos:
 
 \begin{itemize}
 	\item Dado un temporizador, realizar de manera periódica una revisión del estado del sistema.
@@ -343,9 +323,10 @@ funcionalidades del satélite en cuanto se requiera un aplicación que dado cierto
 
 Se hace hincapié en que la existencia de cada \textit{listener} requiere de una subsistema o variable al cual prestar atención, ya sea un temporizador, la posición actual o el arribo de un telecomando por mencionar algunos ejemplos. Una vez definido esto, el programador debe determinar bajo qué condiciones se toma la decisión de generar un determinado comando que realice las acciones requeridas.
 
-Los \textit{listeners} no realizan acciones que involucren directamente el acceso a otros subsistemas, evitando así el uso simultaneo de recursos de \textit{hardware} -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. Por lo tanto sólo se permite el acceso al repositorio de estados, repositorio de datos y repositorio de comandos. Tampoco en este nivel se ejecutan directamente los comandos, sino que son generados y encolados para su posterior funcionamiento. Esto plantea la limitante de que quien envía el comando no puede saber si fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr la retroalimentación necesaria a través de la lectura por parte del \textit{listener} del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado.
+Los \textit{listeners} no realizarán acciones que involucren directamente el acceso a bajo nivel hacia otros subsistemas, evitando así el uso simultáneo de recursos de \textit{hardware} compartido -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. El patrón de diseño indica que en este nivel tampoco se llevan a cabo directamente las acciones de los comandos, sino que son generados y encolados para su posterior ejecución. Esto plantea la limitante de que quien envía el comando no puede saber si efectivamente fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr cerrar el lazo de control a través de la lectura del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado. Por lo tanto sólo se permite el acceso a los repositorios de estados, datos y de comandos para obtener la realimentación necesaria de las acciones que han sido requeridas.
 
-\paragraph{Dispatcher.} El siguiente nivel en la arquitectura es el módulo \textit{Dispatcher}. Dentro del patrón de diseño original tiene su símil con el objeto denominado \textit{Invoker} en cuanto es el encargado de pedir la ejecución de un comando generado por un \textit{listener}. Todos los comandos que son generados por los múltiples \textit{listeners} llegan a al módulo \textit{dispatcher} y son encolados, en este nivel se realiza un control sobre los comandos que llegan y se pueden establecer políticas de rechazo a la ejecución de comandos. Si el comando es aceptado el \textit{dispatcher} encargará su ejecución al siguiente nivel de la arquitectura. Entre las responsabilidades que pueden ser asignadas se encuentran:
+\subsection{Dispatcher.} 
+El siguiente nivel en la arquitectura es el módulo \textit{Dispatcher}. Dentro del patrón de diseño original tiene su símil con el objeto denominado \textit{Invoker} en cuanto es el encargado de pedir la ejecución de un comando generado por un \textit{listener}. Todos los comandos que son generados por los múltiples \textit{listeners} llegan a al módulo \textit{dispatcher} y son encolados, en este nivel se realiza un control sobre los comandos que llegan y se pueden establecer políticas de rechazo a la ejecución de comandos. Si el comando es aceptado el \textit{dispatcher} encargará su ejecución al siguiente nivel de la arquitectura. Entre las responsabilidades que pueden ser asignadas se encuentran:
 
 \begin{itemize}
 	\item Recibir todos los comandos generados y decidir si serán enviados para su ejecución.
