@@ -89,16 +89,32 @@ Por último la tabla \ref{tbl:ch2:req_no_func} resume los requerimientos no funci
 \subsection{Requerimientos mínimos}
 Para que el sistema desarrollado en el proyecto SUCHAI pueda considerarse como un satélite, el vehículo debe satisfacer al menos los requerimientos mínimos dispuestos en la tabla \ref{tbl:ch2:req_min}.
 
-\tabla{tablas/req_minimos.pdf}{scale=1.0}{Requerimientos no mínimos}{tbl:ch2:req_min}{!h}
+\tabla{tablas/req_minimos.pdf}{scale=1.0}{Requerimientos mínimos}{tbl:ch2:req_min}{!h}
 
-Dada la naturaleza iterativa de la metodología de trabajo, es importante considerar los requerimientos mínimos a la hora de la implementación de la arquitectura pues dará al sistema la simplicidad necesaria asegurando funcionalidad. La completitud de los requerimientos operacionales se obtendrán como mejoras incrementales sobre los requerimientos mínimos ya mencionados.
+Dada la naturaleza iterativa de la metodología de trabajo, es importante considerar los requerimientos mínimos a la hora de la implementación de la arquitectura pues dará al sistema la simplicidad necesaria asegurando funcionalidad. La completitud de los requerimientos operacionales se obtendrá a través de mejoras incrementales sobre los requerimientos mínimos ya mencionados.
 
 \section{Plataforma}
-La plataforma para la cual se diseña el \textit{software} corresponde a un kit Cubesat de una unidad adquirido a la compañía Pumpkins Inc. El kit está compuesto por una chasis de 1U con caras perforadas, un computador abordo con placa madre tipo 
-%TODO COMPLETAR
+La plataforma para la cual se diseña el \textit{software} corresponde a un kit Cubesat de una unidad (1U) de la compañía Pumpkins Inc. El kit está compuesto por los siguientes elementos:
+\begin{itemize}
+    \item Chasis de 1U.
+    \item Placa madre rev. D.
+    \item Módulo de procesador D1 con PIC24FJ256GA110.
+    \item 
+    \item Placa de desarrollo.
+    \item Programador y \textit{debuger} Microchip ICD3.
+\end{itemize}
+
+Adicionalmente se cuenta con los siguientes dispositivos para EPS y comunicaciones respectivamente:
+
+\begin{itemize}
+    \item EPS: Clyde Space CS-1UEPS2-NB
+    \item \textit{Transceiver}: Allspace AS-COM01
+\end{itemize}
 
 %Figura - CubesatKit 1U
 \figura{img/cubesatkit_1u.jpg}{scale=1}{Chasis Pumpkins para Cubesat de 1U}{img:ch3:cubesatkit_1u}{!h}
+
+Por lo tanto se cuenta con todo el \textit{hardware} básico para el funcionamiento del satélite y se considera fijo para el proceso de diseño del \textit{software} de vuelo.
 
 \subsection{Computador a bordo}
 
@@ -110,9 +126,9 @@ La plataforma para la cual se diseña el \textit{software} corresponde a un kit C
 	\caption{Dos módulos que componen el computador a bordo del satélite}\label{img:ch3:obc}
 \end{figure}
 
-El computador a bordo del satélite está compuesto por una placa madre que contiene un conector PC104 a través del cual se conectan el resto de los subsistemas y por el módulo para el procesador que se conecta directamente a la placa madre.
+El computador a bordo del satélite está compuesto por una placa madre que contiene una interfaz PC104 a través del cual se conectan el resto de los subsistemas y por el módulo para el procesador que se conecta directamente a la placa madre.
 
-La placa cuenta además con un reloj de tiempo real que se comunica por I2C el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo; cuenta con una interfaz de memoria SD para contar con un medio de almacenamiento masivo de hasta 2GB; una interfaz USB 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador\cite{CUBESAT_MB}.
+La placa cuenta además con un reloj de tiempo real que se comunica por un bus I2C el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo. Cuenta con una interfaz de memoria SD para albergar un medio de almacenamiento masivo de hasta 2GB; una interfaz USB 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador\cite{CUBESAT_MB}.
 
 El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una memoria flash de 64Mbit con interfaz SPI; osciladores; circuitos de alimentación, protección de sobre corriente y reset. El microcontrolador posee la siguientes características\cite{CUBESAT_PPM}:
 
@@ -123,50 +139,57 @@ El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una mem
 	\item Hasta 16MIPS @ 32MHz.
 	\item 4 UARTs, 3 SPIs, 3 I2Cs.
 	\item ADC de 10bit, 16 canales, 500ksps.
-	\item 5 timers de 16bit.
+	\item 5 \textit{timers} de 16bit.
 	\item RTCC, WDT
+	\item Selector de pines de periféricos
 \end{itemize}
 
-Como se observa las capacidades de cómputo de las plataformas son muy limitadas, así como la cantidad de memoria de programa y de datos disponible. Esto supone fuertes restricciones tanto en el diseño e implementación del \textit{software} en tanto no se puede recurrir a alternativas como un sistema operativo Linux o utilizar lenguajes de programación interpretado tipo Java o Python. Las implicancias de las restricciones impuestas por la plataforma de \textit{hardware} derivan en los siguientes puntos:
+Como se observa la capacidad de cómputo de la plataforma es muy limitada, así como la cantidad de memoria de programa y de datos disponible. Esto supone fuertes restricciones tanto en el diseño e implementación del \textit{software} en tanto no se puede recurrir a alternativas como un sistema operativo Linux o la utilización lenguajes de programación interpretado tipo Java o Python. Las implicancias de las restricciones impuestas por la plataforma de \textit{hardware} derivan en los siguientes puntos:
 
 \begin{itemize}
 	\item Se deberá utilizar las herramientas de desarrollo que provee el fabricante del microcontrolador, es decir, lenguaje C para el compilador XC16 de Microchip.
-	\item Se debe efectuar un trabajo de bajo nivel implementado drivers para los periféricos del microcontrolador y para cada dispositivo que se agrega al sistema.
+	
+	\item Se debe efectuar un trabajo de bajo nivel implementando \textit{drivers} para los periféricos del microcontrolador y para cada dispositivo que se agregue al sistema.
+	
 	\item Sólo existen algunos sistemas operativos básicos para este tipo de dispositivos, y en general permiten organizar el \textit{software} en módulos, procesos o tareas que se ejecuten de manera concurrente.
-	\item Existe una cantidad muy limitada de código previo, reutilizable, para implementar el diseño de la aplicación, descartando de plano la posibilidad de utilizar bases de datos tipo SQL, protocolos TCP, UDP o librerías POSIX.
+	
+	\item Existe una cantidad muy limitada de código previo que se pueda reutilizar para implementar el diseño de la aplicación, descartando de plano la posibilidad de utilizar librerías para bases de datos, protocolos TCP, UDP o POSIX como en otros proyectos de similares características \cite{POLYSAT_TESIS}.
 \end{itemize}
 
 Con todo el diseño de la aplicación final será a medida y no deriva de un trabajo previo, con el objetivo de ajustarse a los requerimientos y restricciones de la mejor manera posible.
 
-
-
-
 \section{Arquitectura de software}
+La arquitectura del software de vuelo consiste en diseño conceptual con un alto grado de abstracción de los principales módulos que conformarán la aplicación y la manera de relacionarse entre sí.
+
+Se analizará esta arquitectura a diferentes niveles partiendo por una visión general de la aplicación en que se identifican las principales áreas en que se divide el software. Cada una de estas áreas o capas de abstracción presenta sus propias particularidades por lo que se requiere ahondar en el diseño de la arquitectura en cada uno de ellos.
+
 \subsection{Arquitectura Global}
-En este nivel se propone una arquitectura de capas. Las diferentes capas agrupan funcionalidades similares y cada una interactúa sólo con la directamente superior e inferior, en una dinámica donde la capa inferior es una prestadora de servicios para la capa superior\cite{SOFTWARE_ING}. Esta arquitectura es una buena forma de proveer sistemas portables entre diferentes plataformas de \textit{hardware} porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de \textit{software} en sistemas embebidos donde se pueden distinguir al menos tres niveles: capa de bajo nivel relacionada con los controladores de \textit{hardware}, también llamada a menudo como capa de abstracción de \textit{hardware} o HAL por sus siglas en inglés; la cada intermedia que corresponden al nivel del sistema operativo o gestor de tareas del sistema; y una capa superior que corresponde a la 
-aplicación final del sistema.
+A nivel global el software de vuelo se concibe como una serie de capas que agrupan funcionalidades similares y dónde cada una interactúa sólo con aquella directamente superior e inferior, en una dinámica donde la capa inferior es una prestadora de servicios para la capa superior\cite{SOFTWARE_ING}. Esta diseño se denomina arquitectura de capas y es una buena forma de proveer sistemas portables entre diferentes plataformas de \textit{hardware} porque en cuanto se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente. 
+
+La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada en general para el diseño de \textit{software} en sistemas embebidos donde se pueden distinguir al menos los siguientes niveles: capa de bajo nivel relacionada con los controladores de \textit{hardware}, también llamada capa de abstracción de \textit{hardware} o HAL por sus siglas en inglés; la capa intermedia que corresponde al nivel del sistema operativo o gestor de tareas del sistema; y una capa superior que corresponde a la 
+aplicación final del sistema en cuestión.
 
 \figura{img/arch_global.pdf}{scale=0.9}{Arquitectura de tres capas para un sistema embebido.}{img:ch3:arch_global}{!h}
 
-La capa de más bajo nivel corresponde a los controladores de \textit{hardware}, que pueden ser varios módulos específicos a cada pieza de \textit{hardware} o subsistema presente y permite a las capas superior acceder al \textit{hardware} sin conocer en detalle sus particularidades. Por ejemplo esta capa presta los servicios de acceder a periféricos de comunicaciones o subsistemas de \textit{hardware} externo como puden ser los diferentes \textit{payloads}. Por lo general existen varias alternativas de \textit{hardware} disponibles para un mismo objetivo o bien se requiere que el sistema se adapte a la presencia de diferentes \textit{payloads}, la integración de variado \textit{hardware} en este nivel permite mantener el resto del sistema intacto siempre y cuando se respeten las interfaces entre capas.
+La capa de más bajo nivel corresponde a los controladores de \textit{hardware}, que pueden ser varios módulos específicos a cada componente físico o subsistema presente y permite a las capas superio acceder a ellos sin conocer en detalle sus particularidades. Por ejemplo esta capa presta los servicios, para acceder a periféricos de comunicaciones o subsistemas de \textit{hardware} externo como pueden ser los diferentes \textit{payloads}. Por lo general existen varias alternativas de \textit{hardware} disponibles para un mismo objetivo o bien se requiere que el sistema se adapte a la presencia de diferentes \textit{payloads} por lo que la integración de varios controladores en este nivel permite mantener el resto del sistema intacto siempre y cuando se respeten las interfaces entre capas.
 
 La capa intermedia corresponde al sistema operativo, que provee soporte para la gestión de tareas en el sistema embebido permitiendo la ejecución concurrente de procesos. A este nivel de diseño la decisión de qué sistema operativo utilizar no es relevante, pues toda la lógica de gestión de tareas está concentrada en esta capa que utilizará las funcionalidades dadas por la capa de más bajo nivel y provee sus funcionalidades a la capa superior o de aplicación.
 
 La capa superior es específica a la aplicación e implementa la funcionalidad final del sistema embebido que se diseña. Nuevamente se observa la ventaja de utilizar un diseño de capas en la arquitectura global, en cuanto la capa inferior e intermedia será común en cualquier sistema embebido y el diseño de la aplicación final puede contar con estos servicios. Esto significa que al implementar ambos niveles se tiene un porcentaje considerable de un nuevo desarrollo listo.
 
-Una de las principales desventajas de esta arquitectura, sobre todo en sistema embebidos, es puede existir la necesidad de una comunicación entre capas no adyacentes\cite{SOFTWARE_ING} rompiendo la arquitectura. Esto se debe tratar de evitar, o al menos realizarlo de manera controlada.
+Una de las principales desventajas de esta arquitectura, sobre todo en sistemas embebidos, es que puede existir la necesidad de una comunicación entre capas no adyacentes rompiendo la arquitectura\cite{SOFTWARE_ING}. Esto se debe tratar de evitar, o al menos realizar de manera controlada.
 
 \subsection{Controladores de hardware}
-En todo sistema computacional se requiere de una capa de bajo nivel que realice la interfaz entre el \textit{hardware} y el \textit{software}, para entregar las funcionalidades de configurar, controlar y deshabilitar adecuadamente las diferentes piezas de \textit{hardware}. Se llaman controladores de \textit{hardware} o \textit{drivers} a aquellas librerías de \textit{software} que permiten inicializar y manejar el acceso a este \textit{hardware} por parte de las capas superiores de sistema operativo y aplicación\cite{EMBEDDED_ARCHITECTURE}.
+En todo sistema computacional se requiere de una capa de bajo nivel que realice la interfaz entre el \textit{hardware} y el \textit{software}, para entregar las funcionalidades de configurar, controlar y deshabilitar adecuadamente las diferentes piezas de \textit{hardware}. Se llaman controladores o \textit{drivers} a aquellas librerías que permiten inicializar y manejar el acceso a este \textit{hardware} por parte de las capas superiores de sistema operativo y aplicación\cite{EMBEDDED_ARCHITECTURE}.
 
-Se requiere al menos un controlador para cada \textit{hardware} existente en el sistema embebido, y se diseñan bajo la idea de agrupar \textit{hardware} de similares características o funcionalidades bajo una interfaz común que permita abstraer las particularidades de la implementación en cada pieza de \textit{hardware}. Hacia las capas superiores se maneja el ``que hace'' el dispositivo entregando por lo general funciones básicas que persisten entre diferentes arquitecturas de \textit{hardware} como: la inicialización, encendido o habilitación del dispositivo; su configuración; la lectura de datos desde el dispositivo; la escritura de datos hacia el dispositivo; y finalmente deshabilitar o apagar este dispositivo. Además cada \textit{hardware} puede poseer funcionalidades específicas que también deben ser accesibles a través del driver.
+Se requiere al menos un controlador para cada componente electrónico existente en el sistema embebido y se diseñan bajo la idea de agrupar aquellos de similares características o funcionalidades bajo una interfaz común que permita abstraer las particularidades de la implementación de cada uno. Hacia las capas superiores se maneja el ``qué hace'' el dispositivo entregando por lo general funciones básicas que persisten entre diferentes arquitecturas de \textit{hardware} como: la inicialización, encendido o habilitación del dispositivo; su configuración; la lectura y escritura de datos desde y hacia el dispositivo; y finalmente deshabilitar o apagar. Además cada \textit{hardware} puede poseer funcionalidades específicas que también deben ser accesibles a través del \textit{driver}.
 
-Hacia la capa de \textit{hardware} el controlador maneja el ``como'', lo que incluye por lo general el manejo de las interfaces de entrada y salida de datos; manejo de las interrupciones; o manejo de la memoria del dispositivo. Si bien la implementación de cada controlador es específica al dispositivo, se pueden diferenciar al menos tres tipos de arquitecturas comunes en la implementación de estas piezas de \textit{software}: controladores de entrada y salida síncronos; controladores de entrada y salida asíncronos; y colas de entrada de datos seriales.
+Hacia la capa de \textit{hardware} el controlador maneja el ``cómo'', lo que incluye por lo general el control de las interfaces de entrada y salida de datos, manejo de las interrupciones, o de la memoria del dispositivo. Si bien la implementación de cada controlador es específica al dispositivo, se pueden diferenciar al menos tres tipos de arquitecturas comunes en la implementación de estas piezas de \textit{software}: controladores de entrada y salida síncronos; controladores de entrada y salida asíncronos; y colas de entrada de datos seriales.
 
 \subsubsection{Controladores de entrada y salida síncronos}
 Se considera el uso de una arquitectura de controladores síncronos cuando las tareas que lo invocan necesariamente deben esperar la respuesta del controlador. Si se provee la adecuada sincronización, entonces el resto del sistema puede seguir funcionando mientras la tarea en cuestión se encuentra esperando. Cuando el controlador termina el proceso de entrada o salida de datos, la tarea retoma su funcionamiento.
 
-La arquitectura correspondiente se detalla en la figura \ref{img:ch3:driver:sincrono} donde se observa que el driver se provee como un módulo, o función, que es llamado por alguna capa superior en la arquitectura. Una vez que el controlador tiene acceso al dispositivo a través de alguna estructura de sincronización realiza las operaciones de entrada y salida. Estas operaciones se pueden o no realizar a través de rutinas de atención de interrupciones o bien mediante un \textit{polling} al estado del dispositivo. Si se usa la rutina de atención de interrupciones, esta pieza de \textit{software} también se considera parte del controlador.
+La arquitectura correspondiente se detalla en la figura \ref{img:ch3:driver:sincrono} donde se observa que el \textit{driver} se provee como un módulo, o función, que es llamado por alguna capa superior en la arquitectura. Una vez que el controlador tiene acceso al dispositivo a través de alguna estructura de sincronización realiza las operaciones de entrada y salida. Estas operaciones se pueden o no realizar a través de rutinas de atención de interrupciones o bien mediante un \textit{polling} al estado del dispositivo. Si se usa la rutina de atención de interrupciones, esta pieza de \textit{software} también se considera parte del controlador.
 
 \figura{img/driver_sincrono.pdf}{scale=1.3}{Arquitectura para controladores síncronos}{img:ch3:driver:sincrono}{!h}
 
@@ -178,7 +201,7 @@ El módulo del controlador realiza las siguientes acciones:
 	\item Retornar la información requerida.
 \end{itemize}
 
-Cuando se utiliza una rutina de atención de interrupciones, esta se encarga de las siguientes operaciones:
+Cuando se utiliza una rutina de atención de interrupciones, ésta se encarga de las siguientes operaciones:
 \begin{itemize}
 	\item Atender la interrupción y restablecer el estado del dispositivo.
 	\item Obtener datos desde, o agregar datos en el dispositivo
@@ -186,9 +209,9 @@ Cuando se utiliza una rutina de atención de interrupciones, esta se encarga de l
 \end{itemize}
 
 \subsubsection{Controladores de entrada y salida asíncronos}
-En ocasiones la tarea que solicita a acciones al controlador puede continuar su ejecución sin esperar el resultado. En esta caso se habla de un controlador asíncrono. Este tipo de driver no es común de encontrar y por lo general se puede evitar cuando, para la tarea que llama al driver, no tiene mucho sentido avanzar en su ejecución antes de que se terminen las operaciones de entrada y salida. Un caso especial corresponde a la ejecución en diferentes etapas de la operaciones del driver, en donde la tarea mandante puede procesar los datos de una etapa mientras el proceso de entrada o salida continua su ejecución.
+En ocasiones la tarea que solicita las acciones al controlador puede continuar su ejecución sin esperar el resultado. En este caso se habla de un controlador asíncrono. Este tipo de \textit{driver} no es común de encontrar y por lo general se puede evitar cuando para la tarea que lo llama no tiene mucho sentido avanzar en su ejecución antes de que se terminen las operaciones de entrada y salida. Un caso especial a la ejecución de las operaciones en diferentes etapas, en donde la tarea mandante puede procesar los datos de una etapa mientras el proceso de entrada o salida continua su ejecución.
 
-La arquitectura para este tipo de drivers se detalla en la figura \ref{img:ch3:driver:asincrono}. Se observa que el driver lo componen el módulo o función que ejecuta la operaciones, la rutina de atención de interrupciones así como una cola de mensajes que almacena los resultados parciales de la operación de entrada o salida. Acá el driver se sincroniza con la tarea a través de una cola de mensajes, donde se almacenan los resultados parciales o de cada etapa del proceso completo para que la tarea pueda procesar en paralelo esta información.
+La arquitectura para este tipo de controladores se detalla en la figura \ref{img:ch3:driver:asincrono}. Se observa que el \textit{driver} lo componen el módulo o función que ejecuta la operaciones, la rutina de atención de interrupciones así como una cola de mensajes que almacena los resultados parciales de la operación de entrada o salida. La sincronización a través de esta cola permite a la tarea procesar en paralelo la información que se le entrega.
 
 \figura{img/driver_asincrono.pdf}{scale=1.3}{Arquitectura para controladores asíncronos}{img:ch3:driver:asincrono}{!h}
 
@@ -208,11 +231,11 @@ Mientras que en la rutina de atención de interrupciones se realiza lo siguiente:
 \end{itemize}
 
 \subsubsection{Cola de entrada de datos seriales}
-Un caso particular de driver asíncrono se observa de manera común en sistema embebidos y corresponde a la entrada de datos seriales asíncronos. En este tipo de controladores se cuenta con la llegada de una gran cantidad de datos y donde el término de la operación está determinada por la cantidad máxima de datos recibido o por algún dato indicador del término de la operación.
+Un caso particular de \textit{driver} asíncrono se observa de manera común en sistema embebidos y corresponde a la entrada de datos seriales asíncronos. En este tipo de controladores se cuenta con la llegada de una gran cantidad de datos y donde el término de la operación está determinada por la cantidad máxima recibida o por algún indicador del término de la operación.
 
-La arquitectura que responde a esta situación se detalla en la figura \ref{img:ch3:driver:serial}. En este caso además del módulo o función del controlador, la rutina de atención de interrupciones y una cola de mensajes (opcional) se agrega un \textit{buffer} de memoria que es creado previo inicio de las operaciones de entrada de datos y que es accedido por referencia para evitar el uso adicional de memoria y copia de datos entre llamadas.
+La arquitectura que responde a esta situación se detalla en la figura \ref{img:ch3:driver:serial}. En este caso además del módulo o función del controlador, la rutina de atención de interrupciones y una cola de mensajes (opcional); se agrega un \textit{buffer} de memoria que es creado previo inicio de las operaciones de entrada de datos y que es accedido por referencias para evitar el uso adicional de memoria.
 
-\figura{img/driver_serial.pdf}{scale=1.3}{Arquitectura de un controlador de entrada serial}{img:ch3:driver:serial}{!h}
+\figura{img/driver_serial.pdf}{scale=1.3}{Arquitectura de un controlador de entrada serial asíncrono}{img:ch3:driver:serial}{!h}
 
 Las operaciones que corresponden al módulo del controlador son:
 \begin{itemize}
@@ -226,8 +249,8 @@ Corresponde a la rutina de atención de interrupciones las siguientes operaciones
 \begin{itemize}
 	\item Atender la interrupción y restablecer el estado del dispositivo.
 	\item Obtener el nuevo dato desde el dispositivo.
-	\item Agregar nuevo datos al \textit{buffer} (por referencias).
-	\item Si se detectar e final de la operación, señalizar o agregar un mensaje a la cola.
+	\item Agregar el nuevo dato al \textit{buffer} (por referencia).
+	\item Si se detecta el final de la operación, señalizar o agregar un mensaje a la cola.
 \end{itemize}
 
 \subsection{Sistema operativo}
