@@ -310,7 +310,7 @@ Los módulos no activos son aquellos que sólo prestan servicios a las tareas func
 
 A continuación se describe en detalle los módulos que conforman la arquitectura del \textit{software} en la capa de aplicación:
 
-\subsection{Listeners.} 
+\subsubsection{Listeners.} 
 Los \textit{listeners} o escuchadores son los módulos en la capa superior de la arquitectura y emulan lo que serían los clientes o controladores dentro de \textit{command pattern} (ver figura \ref{ch2:command_pattern}). Estos módulos son los únicos encargados de generar los comandos en la aplicación. Pueden existir varios \textit{listeners} dado que implementan la inteligencia del sistema para generar la acciones deseadas ante diferentes circunstancias. Su denominación proviene de la siguiente filosofía adoptada en el diseño: la única justificación para que un \textit{listener} exista, es que se mantiene 'escuchando' alguna variable del sistema o el estado de un subsistema para tomar decisiones sobre los comandos que se deben ejecutar en cada momento. Los \textit{listeners} se pueden ver como las 'aplicaciones' o 'procesos' de otras arquitecturas de \textit{software} para pequeños satélites\cite{ION_TESIS}\cite{POLYSAT_TESIS} en cuanto acá se realizan procesos de manera periódica y se mantienen activos durante todo el funcionamiento del sistema. 
 Estos módulos permiten extender las funcionalidades del satélite en cuanto se requiera un aplicación que, dado ciertos parámetros, tome decisiones en tiempo real y ejecute las acciones necesarias, por ejemplo, conceptualmente se pueden considerar como un \textit{listener} los siguientes procesos:
 
@@ -325,60 +325,62 @@ Se hace hincapié en que la existencia de cada \textit{listener} requiere de una 
 
 Los \textit{listeners} no realizarán acciones que involucren directamente el acceso a bajo nivel hacia otros subsistemas, evitando así el uso simultáneo de recursos de \textit{hardware} compartido -como módulos de comunicaciones- que puedan causar un estado de \textit{data race}. El patrón de diseño indica que en este nivel tampoco se llevan a cabo directamente las acciones de los comandos, sino que son generados y encolados para su posterior ejecución. Esto plantea la limitante de que quien envía el comando no puede saber si efectivamente fue ejecutado o cuál fue el resultado de su ejecución. No obstante se puede lograr cerrar el lazo de control a través de la lectura del repositorio de estados y de la modificación de un estado en este repositorio por parte del comando generado. Por lo tanto sólo se permite el acceso a los repositorios de estados, datos y de comandos para obtener la realimentación necesaria de las acciones que han sido requeridas.
 
-\subsection{Dispatcher.} 
-El siguiente nivel en la arquitectura es el módulo \textit{Dispatcher}. Dentro del patrón de diseño original tiene su símil con el objeto denominado \textit{Invoker} en cuanto es el encargado de pedir la ejecución de un comando generado por un \textit{listener}. Todos los comandos que son generados por los múltiples \textit{listeners} llegan a al módulo \textit{dispatcher} y son encolados, en este nivel se realiza un control sobre los comandos que llegan y se pueden establecer políticas de rechazo a la ejecución de comandos. Si el comando es aceptado el \textit{dispatcher} encargará su ejecución al siguiente nivel de la arquitectura. Entre las responsabilidades que pueden ser asignadas se encuentran:
+\subsubsection{Dispatcher.} 
+El siguiente nivel en la arquitectura es el módulo \textit{dispatcher}. Dentro del patrón de diseño original tiene su símil con el objeto denominado \textit{invoker} en cuanto es el encargado de pedir la ejecución de un comando generado por un \textit{listener}. Todos los comandos que son generados por los múltiples \textit{listeners} llegan a este módulo y son agregados a una cola. En este nivel se realiza un control sobre los comandos que llegan y se pueden establecer políticas de rechazo a su ejecución. Si el comando es aceptado el \textit{dispatcher} encargará su ejecución al siguiente nivel de la arquitectura. Entre las responsabilidades que pueden ser asignadas se encuentran:
 
 \begin{itemize}
 	\item Recibir todos los comandos generados y decidir si serán enviados para su ejecución.
 	\item Ordenar la ejecución de comandos según prioridades.
-	\item Filtrar comandos según el estado de salud del sistema. Por ejemplo, evitar ejecutar comandos que usan mucha energía cuando
-	el nivel de carga de las baterías sea crítico.
-	\item Filtrar los comandos provenientes o hacia un determinado subsistema que pueda estar causando fallas.
+	\item Filtrar comandos según el estado de salud del sistema. Por ejemplo, evitar la ejecución de aquellos que usan mucha energía cuando el nivel de carga de las baterías sea crítico.
+	\item Filtrar los comandos provenientes o hacia un determinado sub-sistema que pueda estar causando fallas.
 	\item Llevar un registro de los comandos que se han generado
 	\item Llevar un registro del resultado de la ejecución de comandos.
 \end{itemize}
 
-Sólo una instancia de este módulo existe en el sistema permitiendo centrar en este apartado las estrategias de control de las operaciones que realizan en el sistema sin afectar el funcionamiento de otras áreas. La información que dispone el \textit{dispatcher} para establecer el control son dos: el estado del sistema obtenido desde el repositorio correspondiente y la meta información disponible en los comandos que son encolados.
+Sólo una instancia de este módulo existe en el sistema permitiendo centrar en este apartado las estrategias de control de las operaciones que se realizan sin afectar el funcionamiento de otras áreas. La información que dispone el \textit{dispatcher} para establecer el control son dos: el estado del sistema obtenido desde el repositorio correspondiente y la meta información disponible en los comandos que son encolados.
 
-\paragraph{Executer.} Corresponde al módulo final en el flujo de comandos del sistema, donde estos son ejecutados. Corresponde al objeto \textit{reciver} dentro del patrón de diseño original en cuanto este módulo es quien finalmente realiza las acciones solicitadas. El \textit{Executer} recibe un comando desde el \textit{Dispatcher} y obtiene la función que se debe ejecutar desde el repositorio de comandos. Se ejecuta la función que realiza todas las acciones que implementa dicho comando como: leer datos, acceder a dispositivos, cálculos y guardar resultados, se espera su término y su código de retorno es notificado finalmente al \textit{dispatcher}.
+Entre las ventajas que presenta este esquema se encuentra la capacidad de encapsular el proceso de auditoría de las operaciones que realiza el software así como la forma de ejecutar los comandos de cara a los clientes o \textit{listeners} que solicitan estas acciones. Este es el punto adecuado para implementar las funcionalidades de deshacer acciones, llevar un registro de sucesos, postergar la ejecución de comandos, entre otras.
 
-La funciones del \textit{executer} incluyen recibir el comando, identificar y obtener la función a ejecutar, sus parámetros realizar el llamado a la función, recibir el código de retorno y notificar a al \textit{dispatcher} el resultado del comando. En cuánto a la cantidad de \textit{executers} que pueden existir en el sistema se pueden tomar dos aproximaciones:
+La principal desventaja es que por ser el único módulo que recoge las acciones solicitadas por todos los \textit{listeners} puede representar el principal cuello de botella retrasando la ejecución de comandos a un punto en que no se logra cumplir con los requisitos de tiempo del resto de las tareas del software de vuelo. Por ello se debe mantener acotada la cantidad de acciones que se realizan en el \textit{dispatcher} y establecer un tamaño adecuado a la cola de llegada para no bloquear al resto de las tareas.
+
+\subsubsection{Executer.} 
+Corresponde al módulo final en el flujo de comandos del sistema, donde estos son ejecutados. Equivale al objeto \textit{receiver} dentro del patrón de diseño original en cuanto este módulo es quien finalmente realiza las acciones solicitadas. El \textit{executer} recibe un comando desde el \textit{dispatcher} y obtiene la función que se debe ejecutar desde el repositorio de comandos. Se ejecuta la función que realiza todas las acciones que implementa dicho comando como: leer datos, acceder a dispositivos, cálculos y guardar resultados, se espera su término y su código de retorno es notificado finalmente al \textit{dispatcher} para notificar la disponibilidad del \textit{executer} para un nuevo comando.
+
+Sus responsabilidades incluyen recibir el comando, identificar y obtener la función a ejecutar, los parámetros, realizar el llamado a la función, recibir el código de retorno y notificar a al \textit{dispatcher} el resultado del comando. En cuánto a la cantidad de \textit{executers} que pueden existir en el sistema se pueden tomar dos aproximaciones:
 
 \begin{itemize}
-	\item \textbf{Executer único:} Tener un sólo \textit{executer} que se ejecuta con máxima prioridad frente a los otros módulos permite brindar acceso exclusivo del sistema al comando en ejecución. Se ahorra de esta manera todos los problemas que surgen de sincronizar el uso compartido de recursos o subsistemas. Sin embargo se debe cuidar que el comando en ejecución no cause una falla que deje al sistema congelado.
+	\item \textbf{\textit{Executer} único:} Tener un sólo \textit{executer} que se ejecuta con máxima prioridad respecto al resto de las tareas permite brindar acceso exclusivo del sistema al comando en ejecución. Se ahorran, de esta manera, todos los problemas que surgen de sincronizar el uso compartido de recursos o sub-sistemas. Sin embargo se debe cuidar que el comando en ejecución no cause una falla que deje al sistema congelado.
 	
-	\item \textbf{Múltiples executers:} Se puede implementar una patrón \textit{Thread Pool}\cite{REQUERIDA} para permitir la ejecución de varios comandos de manera concurrente. Esto implica tener varios \textit{executers} esperando a recibir comandos desde una cola. Cuando un \textit{executer} esté disponible toma un comando y lo ejecuta, encolando también su resultado. Se puede obtener un sistema que funcione de manera más fluida cuando se cuenta con una alta demanda de comandos, sin embargo se requiere una cuidada sincronización de los recursos compartidos que utilice cada comando para evitar situaciones de \textit{data race}.
+	\item \textbf{Múltiples executers:} Se puede implementar una patrón \textit{Thread Pool} para permitir la ejecución de varios comandos de manera concurrente. Esto implica tener varios \textit{executers} esperando a recibir comandos desde una cola. Cuando uno de ellos esté disponible toma un comando y lo ejecuta, encolando también su resultado. Se puede obtener un sistema que funcione de manera más fluida cuando se cuenta con una alta demanda de comandos, sin embargo se requiere una cuidada sincronización de los recursos compartidos que utilice cada comando para evitar situaciones de \textit{data race}.
 \end{itemize}
 
-\paragraph{Repositorios.}
+\subsubsection{Repositorios.}
+Los módulos en ejecución requieren del acceso a los datos básicos del sistema, que indican el estado de funcionamiento y permiten tomar decisiones según determinadas variables de control; del mismo modo los comandos ejecutados requieren informar de cambios en el estado de funcionamiento, reconfiguración de parámetros y el almacenamiento de datos provenientes de experimentos. Ambas necesidades de acceder a la información disponible en el sistema se abstrae en el concepto de repositorios de datos que son módulos encargados de organizar toda la memoria disponible en el sistema y proveer métodos de acceso que transparenten la lectura y escritura de datos. Los repositorios de datos por lo general no son módulos activos en su ejecución, es decir, se tratan como librerías que proveen funciones para manejar el acceso a los datos, organizar el lugar físico en que se conservará la información y supervisar la integridad de éstos, sobre todo ante casos de falla o reinicio del sistema.
 
-Los módulos en ejecución requieren del acceso a los datos básicos del sistema, que indican el estado de funcionamiento y permiten tomar decisiones según determinadas variables de control; del mismo modo los comandos ejecutados requieren informar de cambios en el estado de funcionamiento, reconfiguración de parámetros y el almacenamiento de datos provenientes de experimentos. Ambas necesidades de acceder a la información disponible en el sistema se abstrae en el concepto de repositorios de datos que son módulos encargados de organizar toda la memoria disponible en el sistema y proveer métodos de acceso que transparenten la lectura y escritura de datos. Los repositorios de datos por lo general no son módulos activos en su ejecución, es decir, se tratan como librerías que proveen funciones para manejar el acceso a los datos, organizar el lugar físico en que se conservará la información y supervisar la integridad de estos sobre todo ante casos de falla o reinicio del sistema.
+\subsubsection{Arquitectura de la aplicación}
+En definitiva la arquitectura del \textit{software} en la capa de aplicación queda descrita por el diagrama de la figura \ref{img:ch3:arch} que muestra el flujo de información entre los diferentes módulos que lo componen, así como sus dependencias, principales operaciones y su correspondencia con el patrón de diseño que inspira la arquitectura propuesta.
 
-
-
-La arquitectura de \textit{software} de la aplicación para la operación del satélite queda descrita por el diagrama de la figura \ref{img:ch3:arch} que describe el flujo de información entre los diferentes módulos que componen el \textit{software}, así como sus dependencias, principales operaciones y su correspondencia con el patrón de diseño que inspira la arquitectura propuesta.
-
-\figura{img/arch_general.pdf}{width=\textwidth}{Arquitectura de \textit{software} para el control del satélite}{img:ch3:arch}{!h}
+\figura{img/arch_general.pdf}{width=\textwidth}{Arquitectura de \textit{software} para el control del satélite}{img:ch3:arch}{!ht}
 
 %TODO: Flujo de ejecución de la aplicación.
 
-\section{Diseño}
-
-Dado los requerimientos operacionales y no operacionales, así como la arquitectura de \textit{software} en todos sus niveles, se pasa validar el diseño propuesto para poder asegurar que el \textit{software} requerido y sus funcionalidades son posibles de implementar con esta solución. Para esto se vuelve a revisar los requerimientos operacionales y se propone una solución conceptual a través de la arquitectura de \textit{software} propuesta. Los resultados de este proceso para cada área se detallan en las tablas \ref{tab:chp3:analisis:comunicaciones}, \ref{tab:chp3:analisis:controlcentral}, \ref{tab:chp3:analisis:energia} y \ref{tab:chp3:analisis:toleranciafallos}.
+\section{Diseño de la solución}
+Dado los requerimientos operacionales y no operacionales, así como la arquitectura de \textit{software} en todos sus niveles, se pasa a validar el diseño propuesto para poder asegurar que el \textit{software} requerido y sus funcionalidades son posibles de implementar con esta solución. Para esto se vuelven a revisar los requerimientos operacionales y se propone una solución conceptual a través de la arquitectura de \textit{software} propuesta. Los resultados de este proceso para cada área se detallan en las tablas \ref{tab:chp3:analisis:comunicaciones}, \ref{tab:chp3:analisis:controlcentral}, \ref{tab:chp3:analisis:energia} y \ref{tab:chp3:analisis:toleranciafallos}.
 
 %·········· TABLA ··············
-\begin{table}[ht!] \caption{Análisis de la arquitectura, según requerimientos operacionales, para él área de comunicaciones}
+\begin{table}[hb!] \caption{Análisis de la arquitectura, según requerimientos operacionales, para él área de comunicaciones}
 \footnotesize
 \begin{tabularx}{\textwidth}{>{\raggedright}p{2.5cm} >{\raggedright}p{2.5cm} X}\hline
 \multicolumn{3}{c}{\textbf{Área de  comunicaciones}}\\\hline
 \textbf{Función} & \textbf{Módulo} & \textbf{Implementación} \\\hline
-Configuración inicial del transceiver & Listener (Deployment) & Al inicio del sistema se ejecutan comandos que configuran los parámetros adecuados. El sistema se duerme en su totalidad para respetar el tiempo de silencio radial.\\
 
-Procesamiento de telecomandos & Listener (Communications) & Se consulta periódicamente el estado del transceiver y cuando llega un telecomando se decodifica para generar los comados del sistema correspondientes\\
+Configuración inicial del \textit{transceiver} & Listener (Deployment) & Al inicio del sistema se ejecutan comandos que configuran los parámetros adecuados. El sistema se duerme en su totalidad para respetar el tiempo de silencio radial.\\\hline
 
-Protocolo de enlace & Listener (Communications) & Cuando se recibe un telecomando que inicia la sesión de comunicaciones con tierra se generan comandos que responden según el protocolo y cambian el estado del sistema para establecer comunicación.\\
+Procesamiento de telecomandos & Listener (Communications) & Se consulta periódicamente el estado del \textit{transceiver} y cuando llega un telecomando se decodifica para generar los comandos del sistema correspondientes\\\hline
 
-Envío de telemetría & NA & Se reciben telecomandos para envío de telemetría bajo demanda. Se genera el comando adecuado que lee el repositorio de datos y envía la información al subsistema de comunicaciones.\\
+Protocolo de enlace & Listener (Communications) & Cuando se recibe un telecomando o señal que inicia la sesión de comunicaciones con tierra se generan comandos que responden según el protocolo y se lleva a cabo la subida y descarga de datos.\\\hline
+
+Envío de telemetría & NA & Se reciben telecomandos para envío de telemetría bajo demanda. Se genera el comando adecuado que lee el repositorio de datos y envía la información al subsistema de comunicaciones.\\\hline
 
 Despliegue de antenas & Sistema de inicio & Durante el inicio se activa el sistema de despligue. Se revisa el estado del sensor externo (switch) y se reintenta hasta conseguir el despliegue.\\\hline
 \end{tabularx}\label{tab:chp3:analisis:comunicaciones}
@@ -391,20 +393,41 @@ Despliegue de antenas & Sistema de inicio & Durante el inicio se activa el siste
 \multicolumn{3}{c}{\textbf{Área de  control central}}\\\hline
 \textbf{Función} & \textbf{Módulo} & \textbf{Implementación} \\\hline
 
-Organizar Telemetría & Repositorio de datos & Se cuenta con un repositorio de datos que brinda acceso de forma ordenada a los diferentes tipos de datos. Existen comandos específicos que recogen la información y usan el repositorio de datos para guardarla.\\
+Organizar Telemetría & Repositorio de datos & Se cuenta con un repositorio de datos que brinda acceso de forma ordenada a los diferentes tipos de datos. Existen comandos específicos que recogen la información y usan el repositorio de datos para guardarla.\\\hline
 
-Plan de vuelo & Listener (FlightPlan) & El plan de vuelo consta de un itinerario con los comandos a ejecutar según la ubicación del satélite. Se puede configurar a través de comandos que modifiquen entradas específicas del itinerario.\\
+Plan de vuelo & Listener (FlightPlan) & El plan de vuelo consta de un itinerario con los comandos a ejecutar según la ubicación del satélite. Se puede configurar a través de comandos que modifiquen entradas específicas del itinerario.\\\hline
 
-Recoger información del estado del sistema & Listener (HouseKeeping) & De forma periódica se ejecutan comandos que revisan parámetros del sistema y actualizan variables en el repositorio de estados\\
+Recoger información del estado del sistema & Listener (HouseKeeping) & De forma periódica se ejecutan comandos que revisan parámetros del sistema y actualizan variables en el repositorio de estados\\\hline
 
-Tolerancia a fallos de \textit{software} & Dispatcher & Se lleva un registro de los comandos ejecutados y sus códigos de retorno. Se puede evitar le ejecución de comandos (o grupos de comandos) que están generando problemas en el sistema. (Lista negra). Se puede filtrar comandos desde ciertos \textit{listener}s.\\
+Tolerancia a fallos de \textit{software} & Dispatcher & Se lleva un registro de los comandos ejecutados y sus códigos de retorno. Se puede evitar le ejecución de comandos (o grupos de comandos) que están generando problemas en el sistema. (Lista negra). Se puede filtrar comandos desde ciertos \textit{listeners}.\\\hline
 
-Capacidad de debug & Listener (DebugConsole) & Se cuenta con una consola serial capaz de interpretar órdenes como comandos internos del sistema. Comandos se pueden ejecutar en modo debug para tener una salida con información relevante sobre la ejecución.\\
+Capacidad de \textit{debug} & Listener (DebugConsole) & Se cuenta con una consola serial capaz de interpretar órdenes como comandos internos del sistema. Comandos se pueden ejecutar en modo \textit{debug} para tener una salida con información relevante sobre la ejecución.\\\hline
 
 Inicialización del sistema & Listener (Deployment) & Inicialmente sólo existe un \textit{listener}, que genera los comandos para toda la secuencia de inicio, que implica configurar parámetros, repositorios, subsistemas, silencio radial, despligue de antenas y la activación del resto de los \textit{listener}s.\\\hline
 \end{tabularx}\label{tab:chp3:analisis:controlcentral}
 \end{table}
 %·····················
+
+\begin{table}[hb!] \caption{Análisis de la arquitectura, según requerimientos operacionales, para él área de tolerancia a fallos}
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright}p{2.5cm} >{\raggedright}p{2.5cm} X}\hline
+\multicolumn{3}{c}{\textbf{Área de tolerancia a fallos}}\\\hline
+\textbf{Función} & \textbf{Módulo} & \textbf{Implementación} \\\hline
+
+Estado de salud del sistema & Listener (HouseKeeping) & De forma periódica se generan comandos que revisen el estado del sistema y actualicen el repositorio de estados. Se pueden ejecutar comandos de re-configuración, pasar a modos de fallo, desactivar módulos o sub-sistemas.\\\hline
+
+Mucho tiempo sin conexión con tierra & Listener (Communications) & Si no se establece comunicación con tierra luego de N días el sistema pasa a modo de fallo de comunicaciones, permitiendo descargar telemetría básica de manera automática.\\\hline
+
+Problemas con despliegue de antenas & Listener (Deployment) & Se chequean sensores que indican si las antenas se han desplegado. Se generan comandos que intenten desplegar las antenas.\\\hline
+
+\textit{Watchdog} & Sistema Operativo & Se cuenta con un \textit{watchdog} en el microcontrolador cuyo contador se reiniciar periódicamente. Reinicia el sistema si la aplicación no responde.\\\hline
+
+Fallos de \textit{hardware} externo & NA & Se pueden generar comandos para que la EPS apague los buses de energía de los \textit{payloads} y \textit{hardware} externo\\\hline
+
+\textit{Watchdog} Externo & Listener (HouseKeeping) & Generar comandos periódicamente que reinicien el \textit{watchdog} externo, reiniciando el sistema ante fallas generales en el microcontrolador.\\\hline
+\end{tabularx}\label{tab:chp3:analisis:toleranciafallos}
+\end{table}
+%·······························
 
 \begin{table}[ht!] \caption{Análisis de la arquitectura, según requerimientos operacionales, para él área de energía órbita y payloads}
 \footnotesize
@@ -412,38 +435,18 @@ Inicialización del sistema & Listener (Deployment) & Inicialmente sólo existe un
 \multicolumn{3}{c}{\textbf{Área de energía, órbita y payloads}}\\\hline
 \textbf{Función} & \textbf{Módulo} & \textbf{Implementación} \\\hline
 
-Estimación de la carga de la batería & Listener (HouseKeeping) & De forma periódica se ejecuta comando que lee datos desde EPS y actualiza variables en el repositorio de estado del sistema.\\
+Estimación de la carga de la batería & Listener (HouseKeeping) & De forma periódica se ejecuta comando que lee datos desde EPS y actualiza variables en el repositorio de estado del sistema.\\\hline
 
-PowerBudget & Dispatcher & Antes de ejecutar un comando se chequea el estado de energía del sistema. Los comandos tienen niveles de energía aceptables y sólo se ejecuta si su nivel requerido es menor o igual al estado de carga actual.\\
+PowerBudget & Dispatcher & Antes de ejecutar un comando se chequea el estado de energía del sistema. Los comandos tienen niveles de energía aceptables y sólo se ejecuta si su nivel requerido es menor o igual al estado de carga actual.\\\hline
 
-Actualizar parámetros de orbita & NA & (1) La orbita se calcula en tierra y se actualiza el itinerario según las predicciones de órbita. (2) Se cuenta con un sibsistema GPS. Se ejecutan el itinerario según coordenadas espaciales.\\
+Actualizar parámetros de orbita & NA & (1) La orbita se calcula en tierra y se actualiza el itinerario según las predicciones de órbita. (2) Se cuenta con un GPS y se ejecuta el itinerario según localización.\\\hline
 
-Ejecución de comandos de Payloads & Listener (FlightPlan) & Comandos se generan según el itinerario del plan de vuelo\\\hline
+Ejecución de comandos de \textit{payloads} & Listener (FlightPlan) & Comandos se generan según el itinerario del plan de vuelo\\\hline
 \end{tabularx}
 \end{table}\label{tab:chp3:analisis:energia}
 %····················
 
-\begin{table}[ht!] \caption{Análisis de la arquitectura, según requerimientos operacionales, para él área de tolerancia a fallos}
-\footnotesize
-\begin{tabularx}{\textwidth}{>{\raggedright}p{2.5cm} >{\raggedright}p{2.5cm} X}\hline
-\multicolumn{3}{c}{\textbf{Área de tolerancia a fallos}}\\\hline
-\textbf{Función} & \textbf{Módulo} & \textbf{Implementación} \\\hline
-
-Estado de salud del sistema & Listener (HouseKeeping) & De forma periódica se generan comandos que revisen el estado del sistema y actualicen el repositorio de estados. Se pueden ejecutar comandos de reconfiguración, pasar a modos de fallo, desactivar módulos o subsistmas.\\
-
-Mucho tiempo sin conexión con tierra & Listener (Communications) & Si no se estable comunicación con tierra luego de N días el sistema pasa a modo de fallo de comunicaciones, permitiendo bajar telemtría básica de manera automática o reiniciar el sistema.\\
-
-Problemas con despliegue de antenas & Listener (Deployment) & Se chequean sensores que indica si las antenas se han desplegado. Se generan comandos que intenten desplegar las antenas.\\
-
-Watchdog & Sistema Operativo & Se cuenta con un watchdog en el microcontrolador, que se reseta periódicamente. Reinicia el sistema si la aplicación no responde.\\
-
-Fallos de \textit{hardware} externo & NA & Se pueden generar comandos para que la EPS apague los buses de energía de los payloads y \textit{hardware} externo\\
-
-Watchdog Externo & Listener (HouseKeeping) & Generar comandos periódicamente que reseteen el watchdog externo, reiniciando el sistema ante fallas generales en el microcontrolador.\\\hline
-\end{tabularx}\label{tab:chp3:analisis:toleranciafallos}
-\end{table}
-%·······························
-
+\vspace*{1cm}
 El resultado de este ejercicio revela los módulos que son necesarios en el diseño de la arquitectura de \textit{software} a nivel de aplicación, específicamente los \textit{listeners} que se deben implementar son:
 
 \begin{itemize}
@@ -451,9 +454,9 @@ El resultado de este ejercicio revela los módulos que son necesarios en el diseñ
 	
 	\item \textbf{FlightPlan:} Este \textit{listener} tiene a cargo el control del plan de vuelo del satélite, concebido como un itinerario de comandos a ejecutar en un determinado momento. Se presta atención al reloj del sistema o bien a la información entregada por un subsistema de posicionamiento, dependiendo de la implementación.
 	
-	\item \textbf{HouseKeeping:} Este \textit{listener} tiene por función la ejecución de comandos relacionados con el control del estado del sistema mismo. Estas son acciones que se ejecutan periódicamente durante todo el funcionamiento del sistema, a diferentes intervalos según se requiera, por lo tanto la variable de interés para este \textit{listener} es el conteo de ticks interno del sistema operativo.
+	\item \textbf{HouseKeeping:} Este \textit{listener} tiene por función la ejecución de comandos relacionados con el control del estado del sistema mismo. Son acciones que se ejecutan periódicamente durante todo el funcionamiento del sistema, a diferentes intervalos según se requiera, por lo tanto la variable de interés para este \textit{listener} es el conteo de \textit{ticks} interno del sistema operativo.
 	
-	\item \textbf{DebugConsole:} Este \textit{listener} tiene por función atender las órdenes entregadas a través de la consola serial y generar los comandos adecuados en un modo que desplieguen información útil sobre su ejecución. Si bien este módulo no tiene utilidad durante la misión, es de vital importancia para la etapa de desarrollo y previo al lanzamiento del satélite.
+	\item \textbf{DebugConsole:} Este \textit{listener} tiene por función atender las órdenes entregadas a través de la consola serial y generar una salida de depuración con información útil sobre su ejecución. Si bien este módulo no tiene utilidad durante la misión, es de vital importancia para la etapa de desarrollo y previo al lanzamiento del satélite.
 \end{itemize}
 
 El módulo \textit{dispatcher} contará con las siguientes características, que permiten cumplir con los requerimientos de tolerancia a fallos y control del estado del sistema:
@@ -475,10 +478,11 @@ La arquitectura se completa con los repositorios de datos, que según lo analizad
 	\item \textbf{Repositorio de comandos:} Este repositorio provee el acceso a todos los comandos disponibles en el sistema. Es usado tanto para construir el comando que se desea generar por parte de los \textit{listeners}, así como para determinar la función asociada al código que es recibido por el \textit{executer}.
 \end{itemize}
 
-Con esto, el resultado del diseño de la arquitectura de \textit{software} queda detallado en la figura \ref{img:ch3:dis:arch} que muestra los módulos participantes y el flujo de información en esta arquitectura:
+Con esto, el resultado del diseño de la arquitectura de \textit{software} queda detallado en la figura \ref{img:ch3:dis:arch} que muestra los módulos participantes y el flujo de información en la aplicación:
 
+%TODO: Corregir y/o traducir
 \figura{img/arch_suchai.pdf}{width=\textwidth}{Arquitectura de \textit{software} para el control del satélite}{img:ch3:dis:arch}{!h}
 
-Las capas inferiores en la arquitectura global no se ven afectados por los requerimientos operaciones, en cuanto su diseño e implementación es menos flexible y siempre necesaria para sostener la arquitectura de nivel de aplicación. En la capa de \textit{drivers} lo importante contar con la librerías de acceso a todos los dispositivos requeridos. La capa de sistema operativo actúa como caja negra en cuanto se utiliza una solución de terceros lo cual es ventajoso en cuanto la interfaz hacia el \textit{middelware} y hacia la capa de aplicación esté bien definida.
+Las capas inferiores en la arquitectura global no se ven afectados por los requerimientos operacionales, en cuanto su diseño e implementación es menos flexible y siempre necesaria para sostener la arquitectura de nivel de aplicación. En la capa de \textit{drivers} lo importante es contar con las librerías de acceso a todos los dispositivos requeridos. La capa de sistema operativo actúa como caja negra en cuanto se utiliza una solución de terceros lo cual es ventajoso  dado que es un apartado crítico y de altamente complejo y sus detalles escapan al alcance de este proyecto.
 
 %TODO: Consecuencias, ventajas y desventajas de aplicar este arquitectura
