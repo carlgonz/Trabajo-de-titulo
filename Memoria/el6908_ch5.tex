@@ -1,12 +1,14 @@
 \chapter{Pruebas y resultados}
+En este capítulo se detallan y discuten los resultados obtenidos luego de la implementación del sistema. Se analiza el funcionamiento del satélite con sus tres sistemas básicos integrados donde se realiza una revisión de cumplimiento de estándares y funcionalidades esperadas por el equipo que dirige el proyecto SUCHAI.
+Se realizan pruebas de rendimiento y estadisicas del uso de los recursos de \textit{hardware} para determinar si la solución es adecuada para la plataforma objetivo.
 
-En este capítulo se detallan y discuten los resultados obtenidos luego de la implementación del sistema. Se detalla una metodología para realizar las pruebas tanto a módulos aislados como del sistema integrando. Finalmente se analiza el funcionamiento del satélite con sus tres sistemas básicos integrados donde se realiza un checkeo de cumplimiento de estándares y funcionalidades esperadas por el equipo que dirige el proyecto SUCHAI.
+\section{Pruebas de rendimiento}
+%TODO: Estadisticas de codigo
+%TODO: Estadisticas de uso de memoria
+%TODO: Estadisticas de eso de procesador
 
-\section{Pruebas modulares}
-\subsection{Pruebas a Console}
-\subsection{Pruebas a Hauskeeping}
-\subsection{Pruebas a Dispatcher}
-\subsection{Pruebas a Executer}
+\section{Pruebas de arquitectura}
+%TODO Diagrama con la arquitectura y las salidas
 
 \section{Pruebas de integración}
 Con las pruebas de integración se busca determinar el cumplimiento de los requerimientos operacionales del proyecto, especialmente aquellas capacidades que dependen directamente de la implementación del software de vuelo. Para esto se han integrado los tres sub-sistemas básicos del satélite: computador a bordo, energía y comunicaciones.
@@ -53,9 +55,11 @@ El montaje de la prueba se muestra en la figura \ref{ch4:test:montaje} y consist
 \end{figure}
 %················································
 
-Del desarrollo de la prueba implica los siguientes pasos.
+Del desarrollo de la prueba consiste de los siguientes pasos.
 \begin{itemize}
     \item Configurar el software de vuelo y programar el computador a bordo.
+    \item Llevar al software de vuelo al estado de 'primer encedido'.
+    \item Comenzar el registro de la consola serial.
     \item Monitorear el cumplimiento del periodo de inactividad.
     \item Monitorear el correcto despliegue de antenas.
     \item Monitorear la correcta inicialización del software de vuelo.
@@ -79,7 +83,6 @@ Los resultados de la prueba se obtendrán en la forma de:
 \end{itemize}
 
 \subsection{Resultados}
-
 Los resultados serán analizados para cada requerimiento operacional correspondiente al software de vuelo producto del correspondiente análisis de las salidas generadas en la prueba de funcionamiento del satélite integrado.
 
 \subsubsection{Área de comunicaciones}
@@ -222,7 +225,6 @@ O0000V0000000XHX02000000000000000GBW00000000DK000024
 O0000V0000000XHX02000000000000000GBW00000000DK000025 
 O0000V0000000XHX02000000000026
 \end{verbatim}
-
 
 Lo cual claramente significa una falla en el sistema debido a que no se recibe el texto esperado. El análisis de esta falla se explica en detalle en la sección \ref{ch5:fallas:beacon} y se debe a un error del equipo de comunicaciones al configurar el nuevo texto del \textit{beacon}; se descarta errores en la estación terrena debido a que la secuencia decodificada tiene sentido lo que se observa en el contador que automáticamente el \textit{transcevier} agrega a al final de la secuencia y el cero siempre presente al inicio.
 

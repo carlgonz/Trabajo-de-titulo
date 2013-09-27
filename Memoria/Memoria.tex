@@ -18,6 +18,7 @@
 \usepackage{tabularx}
 \usepackage{listings} %Codigo
 \usepackage{xcolor}
+\usepackage{dirtree}
 
 \lstdefinestyle{customc}{
   belowcaptionskip=1\baselineskip,
@@ -87,21 +88,26 @@
 \maketitle
 
 \begin{abstract}
-Abstract
+Abstracto.
 \end{abstract}
 
 \begin{dedicatoria}
-Una dedicatoria corta.
+A la ciencia.
 \end{dedicatoria}
 
 \begin{thanks}
-Agradecimientos a todos.
+Nosotros no hubiesemos sido nada sin ustedes, sino por toda la gente que estuvo a nuestro alrededor desde el comienzo.\\
+Algunos siguen hasta hoy.\\
+
+Gracias... Totales.
 \end{thanks}
 
 \cleardoublepage
 \tableofcontents
+
 \cleardoublepage
 \listoftables
+
 \cleardoublepage
 \listoffigures
 
@@ -119,9 +125,10 @@ Agradecimientos a todos.
 \addcontentsline{toc}{chapter}{Bibliografía}
 \nocite{*}
 \bibliographystyle{plain}
-\bibliography{bibliografia}
+\bibliography{bibliografia.bib}
 
 \end{document}
+
 
 % %···················· FIGURE ····················
 % \begin{figure}[!h] 

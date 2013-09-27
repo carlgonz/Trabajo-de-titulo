@@ -45,7 +45,7 @@ Todo sistema embebido está formado fundamentalmente por un microcontrolador que 
 
 A continuación se describen las características específicas de los microcontroladores PIC24 que corresponde al dispositivo utilizado en este trabajo.
 
-\paragraph{Arquitectura.}
+\subsubsection{Arquitectura.}
 Poseen un juego de instrucciones \ac{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo excepto: divisiones; cambios de contexto; y acceso por tabla a memoria de programa\cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos\cite{PIC24F} lo que significa que el dispositivo posee una memoria de datos tipo \ac{RAM} separada de la memoria de datos (FLASH) pudiendo acceder de manera independiente e incluso simultáneamente a las instrucciones del programa y a los datos de éste alojados en \ac{RAM}. La arquitectura de la CPU la completa una \ac{ALU} con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones con capacidad para atender hasta 8 de ellas de manera simultánea lo que permite liberar al procesador de la espera de sucesos asíncronos ya que son notificados y atendidos de manera específica 
 en una rutina de atención de la interrupción.
 
@@ -57,7 +57,7 @@ en una rutina de atención de la interrupción.
 \end{figure}
 %··········································
 
-\paragraph{Periféricos.}
+\subsubsection{Periféricos.}\label{ch2:embedded:perif}
 La familia de microcontroladores PIC24F integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware} especialmente diseñado. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizados en aplicaciones que requieran: conversores análogo-digital; temporizadores; comunicación síncrona y asíncrona como RS232, SPI o I2C; USB o Ethernet; manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador por lo que su acceso y configuración se realizan mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librearías para acceder a estas funcionalidades a través de una API de más alto nivel además de una completa documentación de la arquitectura y funcionamiento de cada periférico.
 
 % ················ IMAGEN ·················
@@ -68,7 +68,7 @@ La familia de microcontroladores PIC24F integra en el mismo chip una serie de pe
 \end{figure}
 %··········································
 
-\paragraph{Desarrollo.}
+\subsubsection{Desarrollo.}
 Para el desarrollo de aplicaciones sobre este tipo de microcontroladores se requiere de al menos las siguientes herramientas:
 
 \begin{enumerate}
