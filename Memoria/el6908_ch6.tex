@@ -1,7 +1,61 @@
 \chapter{Conclusiones}
 
-Finalmente se realizan las conclusiones del trabajo realizado, entregando información útil que se obtiene luego de realizar la investigación durante todo el proceso. También se plantea el trabajo futuro y/o pendiente. Además se entregan las ramas o líneas de investigación a seguir en base al trabajo realizado.
-
 \section{Conclusiones generales}
-\section{Conclusiones específicas}
+Se ha seguido la linea planteada por lo requerimientos operacionales y no operacionales a lo largo del proceso de diseño y de pruebas produciendo una apropiada validación de la solución implementada. Esto enfatiza en la correcta decisión de definir adecuadamente los requerimientos del proyecto, como un trabajo conjunto del grupo de trabajo, antes de proveer cualquier idea de solución a priori.
+
+La arquitectura del software de vuelo está fuertemente basada en el concepto de patrones de diseño los cuales se han aplicado a lo largo de los diferentes niveles de abstracción del sistema satelital.
+
+Al definir globalmente la aplicación como una arquitectura de tres capas se ha logrado separar efectivamente los diferentes niveles de abstracción del sistema así como una forma de separar el trabajo desarrollado en etapas claramente definidas. Así durante el proceso de implementación el equipo pudo de manera temprana comenzar el trabajo de implementación de controladores y a probar gradualemente la plataforma mientras se iban definiendo las soluciones adecuadas para las capas superiores. En la misma linea se observa que esta separación ha permitido integrar de manera clara una solución de terceros como lo es el sistema operativo con los desarrollos específicos del proyecto lo que también es prueba de las características de modularidad, modificabilidad y reusabilidad presentes en la solución y que se han considerado con una importancia alta en el diseño.
+
+En la capa de sistema operativo se ha integrado con éxito una solución externa como lo es FreeRTOS que ha resultado ser una excelente opción para el proyecto al proveer una base sólida, estable y bien probada en uno de los aspectos críticos del sistema embebido. Lo anterior se suma a una gran simplicidad encontrada al momento de su implementación permitiendo obtener rápidamente un sistema funcional y de la misma manera extenderlo. Durante el desarrollo se encontró que FreeRTOS fue el módulo con la menor cantidad de fallas o problemas asociados y siempre que se presentaron dificultades se contó con la documentación adecuada para solucionarlos.
+
+En lo que se refiere a la capa de aplicación del software de vuelo el gran valor del proyecto es haber analizado y adaptado el patrón de diseño \textit{command pattern}. Según lo analizado en el proceso de diseño este patrón permite implementar todos los requerimientos operaciones lo cual se ha demostrado en las pruebas realizadas. En linea con la filosofía del uso de patrones de diseño se concluye que esta metodología de trabajo ha disminuído considerablemente los riesgos asociados al desarrollo de una aplicación por los siguientes motivos: los patrones de diseño son esquemas bien probados para resolver cierta clase de problemas; están claramente documentados; proveen un lenguaje común para entender la forma de funcionamiento del software facilitando los procesos de pruebas, verificación y modificación; y permiten de forma directa cumplir con los requerimientos no operacionales más importantes.
+
+Esta capa ha demostrado ser lo suficientemente general y flexible para que a partir de lo expuesto en la sección de implementación del sistema base, se implementaran la totalidad de las funcionalidades requeridas a través de los dos métodos propuestos: agregar \textit{listeners} y agregar comandos. 
+
+La base de la aplicación como un ejecutor de comandos brinda una forma homogenea de extenderla mediante la programación de nuevos comandos que implementan las funcionalidades deseadas. Esta es una forma segura de programar funcionalidades al satélite en cuanto el desarrollo de un nuevo comando es un proceso aislado del resto de la aplicación y no interfiere con el resto de las funcionalidades.
+
+Al agregar \textit{listeners} se ha incorporado inteligencia al \textit{software} de vuelo para permitir la generación de comandos de manera autónoma según diferentes estrategias de control así como bajo demanda bajo dos principales interfaces de comunicación: la consola de depuración por interfaz serial y el equipo de telecomunicación para operación desde tierra. Los \textit{listeners} considerados en este trabajo permiten implementar los requerimientos operacionales del poryecto en cuestión, sin embargo agregar nuevos también es una manera segura y práctica para cambiar el comportamiento del \textit{software} según los requisitos de la misión porque se puede agregar a la base actual sin modificarla funcionando en paralelo y se pueden desactivar facilmente.
+
+La arquitectura base del sistema ha sido licenciada según los términos de la GPL y su código puesto a disposición en repositorios públicos. De esta manera el trabajo desarrollado se transforma en un aporte a la comunidad de software libre esperando ser un aporte para futuros proyectos aeroespaciales o sistemas embebidos en general. El uso de una licencia GPL, a diferencia de otras licencias más permisivas, asegura que el código desarrollado se mantenga abierto en miras de la posibilidad de colaboración en la mejora y extensión de este trabajo.
+
+Se concluye entonces que los objetivos del trabajo se han cumplido satisfactoriamente en cuanto: 
+\begin{enumerate}
+    \item Se ha diseñado una arquitectura de \textit{software} clara que soluciona el problema planteado, la cual es independiente de la implementación y se basa en patrones de diseño para cumplir los parámetros de calidad buscados.
+    
+    \item Se han implementado controladores de \textit{hardware} para obtener la interfaz hacia los diferentes módulos que componen el satélite, siendo la base para implementar las funcionalidades de alto nivel de la aplicación. En específico se han realizado pruebas de funcionamiento que implican el uso de periféricos de comunicación UART, I2C y SPI propios del microcontrolador así como el control de periféricos externos como lo son el \textit{transceiver}, RTC y EPS.
+    
+    \item Se ha integrado un sistema operativo de tiempo real adecuado para su uso en sistemas embebidos como lo es FreeRTOS con excelentes resultados en su integración y funcionamiento.
+    
+    \item Se implementa y prueba la arquitectura básica del \textit{software} de vuelo a nivel de aplicación como una adaptación al patrón de diseño \textit{command pattern} lo que ha sido la base para extender al sistema con funcionalidades específicas de la misión.
+    
+    \item Se integran los sub-sistemas de comunicación y energía a través de la programación de \textit{listeners} y comandos para su operación. Se comprueba su funcionamiento a través de las pruebas de integración.
+    
+    \item Con el sistema integrado se realizan pruebas de funcionamiento según los lineamientos planteados por los requerimientos operacionales donde se ha puesto a prueba y verificado cada uno de ellos con resultados satisfactorios salvo por los relacionados con el sub-sitema de comunicaciones que ha presentado fallas a lo largo de todo el desarrollo del poryecto.
+    
+\end{enumerate}
+
+\section{Limitaciones}
+No obstante el cumplimiento de los objetivos generales y específicos planteados, la solución desarrollada presenta algunas limitaciones:
+
+\begin{itemize}
+    \item Al arquitectura de procesador de comandos provee una reducida re-alimentación de las acciones generadas por los \textit{listeners} limitando las estrategias de control que se pueden implementar en estos módulos. Generar esta re-alimentación ha requerido agregar una serie de variables de estado que permiten a los \textit{listeners} determinar si las acciones comandadas han surtido efecto o no. La desventaja radica en que las variables de estado representan en general la salud del sistema satelital y no necesariamente indicadores específicos del punto de ejecución de las operaciones de control que llevan a cabo los \textit{listeners}.
+    
+    \item El sistema de comunicaciones, incluyendo a nivel de \textit{software} de vuelo, no ha sido probado exhaustivamente debido a graves fallas en el \textit{transceiver} que hasta la fecha cuenta el proyecto.
+    
+    \item La implementación ha limitado la cantidad de argumentos que reciben los comandos a sólo uno. Como no pueden recibir muchos argumentos que cambien su funcionamiento estos debe ser bastante específicos aumentando la cantidad de comandos disponibles en el sistema con el consiguiente aumento de complejidad en el desarrollo y operación de la aplicación. Esta limitante se ha hecho patente sólo en una cantidad limitada de comandos relacionados con la escritura de datos en posiciones específicas de alguna memoria y se puede sortear mediante la inclusión de una variable de estado que represente el primer parámetro y dividiendo el comando en dos: uno que setea el parámetro a través del repositorio de estados y otro que lee la variable y ejecuta la funcionalidad requerida.    
+\end{itemize}
+
+
 \section{Trabajo futuro}
+El trabajo desarrollado es una de las primeras aproximaciones en la materia para el país, por lo tanto se desprenden una serie de trabajos futuros:
+
+\begin{itemize}
+    \item Agregar más funcionalidades en el área de tolerancia a fallos en el software del sistema, específicamente en torno al módulo \textit{dispatcher}, entre las que se incluyen el registro de actividades, registro de comandos fallidos y lista negra de comandos que producen error en el sistema.
+    
+    \item Implementar la arquitectura de \textit{thread pool} en el \textit{executer} para permitir la ejecución de múltiples comandos mejorando el fluidez del sistema.
+    
+    \item Portar el \textit{software} de vuelo, en especial la capa de controladores, a múltiples plataformas soportando una variedad de microcontroladores para hacer al proyecto más directo de aplicar en futuras misiones.
+    
+    \item Integrar un nuevo \textit{transceiver} al software de vuelo dado que la solución actual ha resultado totalmente insatisfactoria por su funcionamiento anómalo. Además se recomienda integrar el protocolo CSP (\textit{Cubesat Space Protocol}) en la capa de transporte entre tierra y el satélite e incluso entre sub-sistemas del mismo para avanzar en la unificación de las interfaces, protocoles y estándares en los proyectos aeroespaciales.
+\end{itemize}
