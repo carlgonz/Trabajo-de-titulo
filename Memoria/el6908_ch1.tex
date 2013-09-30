@@ -3,28 +3,56 @@
 % la importancia y fundamentos del trabajo realizado; objetivos generales y específicos; la metodología de trabajo; resultados y
 % conclusiones obtenidas. Todo a modo general considerando que es el último capítulo a escribir pues resume todo el trabajo 
 
-\chapter{Introducción}
+\chapter{Introducción}\label{ch1}
+Durante mucho tiempo el desarrollo de proyectos aeroespaciales ha estado limitado a esfuerzos de gobiernos de países de gran poderío económico o grandes corporaciones con objetivos militares o civiles como la observación de la tierra, comunicaciones a distancia o posicionamiento global. Con el reciente desarrollo de estándares para pequeños satélite como los Cubesat se abre la posibilidad de desarrollar proyectos aeroespaciales de menor riesgo y costos a gobiernos e instituciones educacionales en todo el mundo. 
 
-\section{Fundamentación y objetivos generales}
+El presente trabajo se enmarca en el desarrollo del proyecto SUCHAI consistente en la implementación, lanzamiento y operación  de un nano-satélite tipo Cubesat de 1U, siendo esta la primera aproximación en la materia para la universidad y para el país. Los fines de este proyecto son básicamente científicos y educacionales buscando abrir las posibilidades de desarrollar futura tecnología aeroespacial así como formar profesionales con la experiencia necesaria en este ámbito.
 
-Esta memoria se enmarca en el desarrollo del proyecto SUCHAI que consiste en la implementación, lanzamiento y operación de un pico-satélite Cubesat, siendo esta la primera aproximación en esta materia para la universidad y el país. Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de dar inteligencia y operatividad al satélite durante todo su tiempo de vida útil en el espacio. En el caso de un pico-satélite se tiene el desafío de dotar de todas la funcionalidades estándar de un satélite en un sistema computacional de recursos extremadamente limitados, estamos hablando de sistemas embebidos que utilizan microcontroladores de baja potencia y capacidad de cómputo como microcontroladores PIC24 o PIC18.
+El satélite del proyecto SUCHAI consta de tres sub-sistemas principales: computador a bordo, energía y comunicaciones. Además se debe considerar la posibilidad de integrar diferentes \textit{payloads} que desarrollan misiones específicas una vez que el satélite se encuentra operando en el espacio.
 
-El objetivo de este trabajo es el diseño, desarrollo e implementación del \textit{software} que gobierna el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de hardware hasta la aplicación final para el control de satélite. Esta arquitectura debe cumplir con requerimientos de calidad de \textit{software} como modularidad, expansibilidad y facilidad de mantenimiento estando adaptada en específico a sistemas embebidos que emplean microcontroladores de gama media.
+El computador a bordo del satélite debe ejecutar un programa que permita desarrollar todas las acciones que requiere la misión. Esta aplicación se denomina \textit{sotfware} de vuelo y su objetivo es controlar el satélite, ejecutar operaciones específicas de la misión durante el vuelo y permitir la comunicación con la estación terrena para la descarga de datos y subida de telecomandos. Se evita hablar de sistema operativo del satélite o \textit{software} de control debido a que estos conceptos se confunden en este contexto. El sistema operativo del satélite es una parte del software de vuelo consistente en una capa de servicios entre el \textit{hardware} y las aplicaciones en un sistema computacional; por otro lado la palabra control dentro de este ámbito se refiere a técnicas de control de lazo cerrado tipo PID, por ejemplo.
+
+El desarrollo del \textit{software} de vuelo se realiza siguiendo una metodología ordenada que consiste tres etapas: diseño, implementación y pruebas. La etapa de diseño consiste en generar los requerimientos del sistema y generar una arquitectura de \textit{software} que representa de manera conceptual la solución a implementar, en esta etapa se hace un uso extensivo del concepto de patrones de diseño para guiar la generación de la solución al problema planteado. Durante la implementación se toma la solución conceptual y se programa el \textit{software} utilizando las herramientas adecuadas a la plataforma; se guía la implementación del sistema base o arquitectura general incluyendo controladores de \textit{hardware}, sistema operativo y aplicación. Las pruebas se desarrollan sobre el sistema integrado en sus tres sub-sistemas básicos mediante la puesta en funcionamiento por un tiempo prolongado usando la técnica denominada \textit{hardware on the loop simulation} adecuada para probar sistemas embebidos complejos.
+
+El resultado de este trabajo es la base para obtener un vehículo espacial completamente funcional mediante la extensión del \textit{software} a través de comandos que se integran a la aplicación mediante diferentes módulos que implementan la inteligencia y estrategias de control requeridas.
+
+\section{Objetivos generales}
+Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de dar inteligencia y operatividad durante todo su tiempo de vida útil en el espacio. En el caso de un nano-satélite se tiene el desafío de dotar de todas la funcionalidades estándar de un satélite en un sistema computacional de recursos extremadamente limitados, estamos hablando de sistemas embebidos que utilizan microcontroladores de baja potencia y capacidad de cómputo como, por ejemplo, microcontroladores PIC18, PIC24 o PIC32.
+
+El objetivo general de este trabajo es el diseño, desarrollo e implementación del \textit{software} que gobierna el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de \textit{hardware} hasta la aplicación final para la operación durante su misión. Esta arquitectura debe cumplir con requerimientos de calidad de \textit{software} como modularidad, modificabilidad y facilidad de mantenimiento en general, estando adaptada en específico a sistemas embebidos.
 
 La implementación se llevará a cabo en específico para el satélite SUCHAI y busca proveer la funcionalidad básica de este sistema que incluye la interacción de un computador a bordo, un sistema de control de energía y un sistema de comunicaciones. De esta manera el \textit{software} de control se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
 
+El alcance de este proyecto consiste en la implementación de la base del sistema que controla el satélite e integra los sistemas de energía y comunicaciones resultando en un software que se graba y ejecuta en el computador a borde del satélite. El resultado de este trabajo permite la posterior integración física del vehículo satelital completo así como la adición de los \textit{payloads} específicos de la misión lo cual es abordado en detalle en la memoria titulada Requerimientos, Implementación y Verificación del Cubesat SUCHAI desarrollada por Tomás Opazo\cite{TOOPAZO}.
+
 \section{Objetivos específicos}
-Los objetivos específicos del proyecto se enumeran a continuación
+Los objetivos específicos del proyecto definen las tareas que se deben cumplir el objetivo general del proyecto y se enumeran a continuación:
 
 \begin{itemize}
- \item Diseñar una arquitectura de \textit{software} para el sistema de control del satélite
- \item Implementar controladores de hardware para el microcontrolador
- \item Implementar controladores de periféricos principales (Transceiver, EPS y RTC)
- \item Integrar un sistema operativo de tiempo real multitarea como sistema embebido 
- \item Implementar el flujo principal de la arquitectura del \textit{software} de control del satélite
- \item Integrar sistema de comunicaciones al \textit{software} de control
- \item Integrar sistema de energía al \textit{software} de control
- \item Pruebas del sistema integrado
+ \item Diseñar una arquitectura de \textit{software} de vuelo del satélite.
+ \item Implementar controladores de \textit{hardware} para el microcontrolador y sus periféricos.
+ \item Implementar controladores de los sub-sistemas principales: Transceiver y EPS.
+ \item Integrar un sistema operativo de tiempo real multitarea en el sistema embebido.
+ \item Implementar el flujo principal de la arquitectura del \textit{software} de control del satélite.
+ \item Integrar sistema de comunicaciones y energía al \textit{software} de vuelo.
+ \item Pruebas del sistema integrado verificando requerimientos funcionales.
 \end{itemize}
 
-El listado de objetivos presenta un orden temporal en la ejecución de estas tareas puesto que objetivo es dependiente del cumplimiento de los objetivos anteriores. El trabajo se puede considerar terminado cuando se ha probado la implementación e integración del \textit{software} con los módulos de comunicaciones y energía obteniendo un sistema satelital con las mínimas funcionalidades.
+El listado de objetivos presenta un orden temporal en la ejecución de estas tareas puesto que uno es dependiente del cumplimiento de los anteriores. El trabajo se puede considerar terminado cuando se ha probado la implementación e integración del \textit{software} con los módulos de comunicaciones y energía obteniendo un sistema satelital con las mínimas funcionalidades.
+
+\section{Estructura}
+El presente trabajo se estructura según un proceso de diseño, implementación y pruebas propio de un proyecto de desarrollo de software, en sus diferentes capítulos se presentará la siguiente información:
+
+\begin{itemize}
+    \item \textbf{Capítulo \ref{ch1}. Introducción:} Descripción del trabajo realizado, objetivos generales, específicos y alcances del proyecto.
+    
+    \item \textbf{Capítulo \ref{ch2}. Marco Teórico:} Revisión bibliográfica. Se explican los principales conceptos necesarios para contextualizar el trabajo desarrollado.
+    
+    \item \textbf{Capítulo \ref{ch3}. Diseño del \textit{software}:} Se definen los requerimientos operacionales y no operacionales del proyecto que guiaran el diseño. Se plantea una arquitectura de \textit{software} a diferentes niveles de abstracción basada en diferentes patrones de diseño para luego plantear el diseño final de la solución a implementar.
+    
+    \item \textbf{Capítulo \ref{ch4}. Implementación:} Se implementa la solución propuesta guiando paso a paso la generación de la plataforma base de la aplicación sobre la plataforma objetivo. Las particularidades del proyecto SUCHAI se detallan aparte como flujos que explican su implementación.
+    
+    \item \textbf{Capítulo \ref{ch5}. Pruebas:} Se realizan pruebas de integración sobre el sistema implementado para verificar cada uno de los requerimientos planteados en el capítulo \ref{ch3}.
+    
+    \item \textbf{Capítulo \ref{ch6}. Conclusiones:} Se concluye sobre los resultados obtenidos y el proceso de desarrollo del proyecto en sí. Se analizan las limitaciones de la solución y se plantean posibles mejoras como trabajos futuros.
+\end{itemize}

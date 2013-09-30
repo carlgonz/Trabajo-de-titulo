@@ -1,17 +1,65 @@
-\chapter{Pruebas y resultados}
+\chapter{Pruebas y resultados}\label{ch5}
 En este capítulo se detallan y discuten los resultados obtenidos luego de la implementación del sistema. Se analiza el funcionamiento del satélite con sus tres sistemas básicos integrados donde se realiza una revisión de cumplimiento de estándares y funcionalidades esperadas por el equipo que dirige el proyecto SUCHAI.
 Se realizan pruebas de rendimiento y estadisicas del uso de los recursos de \textit{hardware} para determinar si la solución es adecuada para la plataforma objetivo.
 
 \section{Pruebas de rendimiento}
-%TODO: Estadisticas de codigo
-%TODO: Estadisticas de uso de memoria
+\subsection{Estadísticas del programa}
+Mediante las herramientas que provee el IDE MPLABX se obtienen diferentes estadísticas sobre el código que se ha programado como una medida básica de la envergadura del proyecto lo cual se muestra en la tabla \ref{ch5:table:code_stats}.
+
+\begin{table}[h]\caption{Estadísticas del código}
+\centering
+\begin{tabular}{ll}
+\hline
+\textbf{Lineas de código} & 17475 \\
+\textit{\textbf{Commits}} & 986   \\
+\textit{\textbf{Tags}}    & 2     \\
+\textbf{Contribuyentes}   & 4     \\
+\textbf{Comandos}         & 107   \\ \hline
+\end{tabular}\label{ch5:table:code_stats}
+\end{table}
+
+\subsection{Estadísticas de uso de memoria}
+A continuación se detallan las estadísticas de uso de memoria de programa y datos que utiliza el \textit{software} al ser compilado y programado en el microcontrolador, los resultados se detallan en la tabla \ref{ch5:table:memoria}
+
+\begin{table}[h]\caption{Uso de memoria de la aplicación}
+\centering
+\begin{tabular}{llll}
+\hline
+\textbf{Memoria} & \textbf{Usada [bytes]} & \textbf{Total [bytes]} & \textbf{Porcentaje de uso}                   \\ \hline
+RAM              & 9688                   & 16384                  & 59\% \\
+FLASH            & 37566                  & 87548                  & 43\% \\ \hline
+\end{tabular}\label{ch5:table:memoria}
+\end{table}
+
+Lo anterior demuestra que la solución programada se ajusta a la disponibilidad de memoria de datos y de programa disponibles. A pesar de reducida cantidad de memoria de programa disponible aún queda más del 50\% libre para programar más comandos y nuevas funcionalidades. Lo más crítico es la memoria RAM que se encuentra utilizada en cerca del 60\% lo cual podría ver reducida la capacidad de agregar nuevos \textit{listeners}.
+
+Otro punto importante a considerar es la cantidad de memoria asignada al sistema operativo y la configuración de memoria de \textit{stack} que se ha asignado a las diferentes tareas. Si la memoria no es suficiente se pueden generar condiciones de \textit{stack overflow} que dejarían al sistema inestable o no funcional. La asignación de memoria de las tareas se realiza de manera experimental según los requerimientos de la aplicación\cite{FREERTOS_PIC24} y para comprobar que no existen problemas se realiza la tabla \ref{ch5:table:memoria_freertos} a partir de la salida de depuración que provee el entorno de desarrollo.
+
+\begin{table}[h]\caption{Uso de memoria del sistema operativo}
+\centering
+\begin{tabular}{lllll}
+\hline
+\multirow{2}{*}{\textbf{Tarea}} & \multirow{2}{*}{\textbf{Prioridad}} & \multicolumn{3}{c}{\textbf{Memoria [bytes]}}                                                                                \\ \cline{3-5} 
+                                &                                     & \multicolumn{1}{c}{\textbf{Asignada}} & \multicolumn{1}{c}{\textbf{Usada}} & \multicolumn{1}{c}{\textbf{Porcentaje de uso}} \\ \hline
+idle                            & 0                                   & 115                                   & 79                                 & 69\%                                            \\
+flightplan                      & 2                                   & 230                                   & 145                                & 63\%                                            \\
+communications                  & 2                                   & 230                                   & 125                                & 54\%                                            \\
+console                         & 2                                   & 230                                   & 91                                 & 39\%                                            \\
+housekeeping                    & 2                                   & 230                                   & 97                                 & 42\%                                            \\
+dispatcher                      & 3                                   & 230                                   & 109                                & 47\%                                            \\
+executer                        & 4                                   & 575                                   & 85                                 & 14\%                                            \\ \hline
+\end{tabular}\label{ch5:table:memoria_freertos}
+\end{table}
+
+La tabla demuestra que la asignación de memoria de las tareas es la correcta en cuanto ninguna está utilizando la totalidad de la memoria. La cantidad de memoria utilizada por una tarea es una variable dinámica que depende de las acciones concretas que esta ejecutando la aplicación por lo que siempre se debe dejar un margen de seguridad en la asignación. El caso mas crítico es el \textit{executer} debido a que ejecuta una variedad de comandos por lo tanto el dato mostrado en la tabla \ref{ch5:table:memoria_freertos} no es confiable y se debe asignar la mayor cantidad de memoria de \textit{stack} posible para evitar que algún comando cause \textit{stack overflow}.
+
 %TODO: Estadisticas de eso de procesador
 
-\section{Pruebas de arquitectura}
+%\section{Pruebas de arquitectura}
 %TODO Diagrama con la arquitectura y las salidas
 
 \section{Pruebas de integración}
-Con las pruebas de integración se busca determinar el cumplimiento de los requerimientos operacionales del proyecto, especialmente aquellas capacidades que dependen directamente de la implementación del software de vuelo. Para esto se han integrado los tres sub-sistemas básicos del satélite: computador a bordo, energía y comunicaciones.
+Con las pruebas de integración se busca determinar el cumplimiento de los requerimientos operacionales del proyecto, especialmente aquellas capacidades que dependen directamente de la implementación del software de vuelo. Para esto se han integrado los tres sub-sistemas básicos del satélite (computador a bordo, energía y comunicaciones) y el sistema se hace funcionar durante un tiempo prolongado simulando condiciones de operación nominales siguiendo la técnica denominada \textit{hardware in the loop simulation} común en las pruebas de sistemas embebidos complejos.
 
 \subsection{Configuración}
 
@@ -134,14 +182,14 @@ El despliegue de antenas está a cargo de la secuencia de inicio del software de 
 [2013-08-29 17:30:30.970832]     ANTENNA DEPLOYED SUCCESSFULLY [7 TRIES]
 \end{verbatim}
 
-En la figura \ref{ch5:result:antenna} se observan las antenas antes, durante y después del proceso de despliegue.
+En la figura \ref{ch5:result:antenna} se observan las antenas antes  y después del proceso de despliegue.
 
 %···················· FIGURE ····················
 \begin{figure}[ht!] \centering
 \subfloat[Previo al despliegue]{\includegraphics[width=0.45\textwidth]{img/test_deploy_pre.jpg}}
 \hspace{0.3cm}
 \subfloat[Antenas desplegadas]{\includegraphics[width=0.45\textwidth]{img/test_deploy_post.jpg}}
-\caption{Despliegue de antenas}\label{ch4:result:antenna}
+\caption{Despliegue de antenas}\label{ch5:result:antenna}
 \end{figure}
 %················································
 
