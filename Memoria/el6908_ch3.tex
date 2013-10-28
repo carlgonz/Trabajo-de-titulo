@@ -1,70 +1,66 @@
 \chapter{Diseño del \textit{software}}\label{ch3}
 
-En este capítulo se describe el proceso de diseño del \textit{software} de control para el satélite. El proceso de diseño considera en primera instancia los requerimientos operacionales de la misión; requerimientos no operacionales relacionados con la calidad del \textit{software}; y la plataforma de \textit{hardware} sobre la que se debe diseñar para tener claro las limitaciones y alcances de la solución. El diseño del la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de ésta y se centra en específico en la propuesta de una arquitectura a nivel de aplicación basada en un patrón de diseño. Finalmente se realiza un análisis de la solución para plantear una arquitectura final que permita implementar todas las funcionalidades detalladas en los requerimientos operacionales.
+En este capítulo se describe el proceso de diseño del \textit{software} de vuelo para el satélite. El proceso considera, en primera instancia, los requerimientos operacionales de la misión; requerimientos no operacionales, relacionados con la calidad del \textit{software}; y la plataforma de \textit{hardware} objetivo, para tener claro las limitaciones y alcances de la solución. El diseño de la aplicación se detalla en diferentes niveles, incluyendo una visión global sobre los componentes principales de esta y se centra, en específico, en la propuesta de una arquitectura de alto nivel basada en un patrón de diseño. Finalmente, se realiza un análisis de la solución, esto con la finalidad de plantear una arquitectura final que permita implementar las funcionalidades detalladas en los requerimientos operacionales.
 
 \section{Requerimientos}
 \subsection{Requerimientos operacionales}
-Los requerimientos operacionales se refieren a las funcionalidades que se espera que el computador a bordo del satélite SUCHAI deba realizar. Son los requisitos básicos que el sistema debe cumplir para considerar que se cuenta con un satélite capaz de llevar a cabo la misión del proyecto SUCHAI y son clasificados según el área de la misión que se ve afectada.
-
-La lista de requerimientos proviene de una serie de reuniones sostenidas con los integrantes de los diferentes grupos de trabajo según los lineamientos del jefe de proyecto.
+Se refieren a las funcionalidades que se espera que el computador a bordo del satélite SUCHAI deba realizar. Son los requisitos básicos que el sistema debe cumplir para considerar que se cuenta con un satélite capaz de llevar a cabo la misión. La lista de requerimientos proviene de una serie de reuniones sostenidas con los integrantes de los diferentes grupos de trabajo, todo de acuerdo con los lineamientos del jefe de proyecto.
 
 \subsubsection{Área de comunicaciones}
-\paragraph{Configuración inicial del \textit{transcevier}.}
-El satélite debe ser capaz de fijar las configuraciones iniciales del sistema de comunicaciones como encender el \textit{transcevier}, silenciar las comunicaciones durante determinado tiempo inmediatamente después del lanzamiento, configurar la frecuencia de transmisión a la asignada por la IARU y la potencia si el equipo lo permite, configurar y encender la baliza o \textit{beacon}, entre otros.
+\paragraph{Configuración inicial del \textit{transcevier}:}
+el satélite debe ser capaz de fijar, si lo permite, las configuraciones iniciales del sistema de comunicaciones, por ejemplo: encender el \textit{transcevier}, silenciar las comunicaciones durante determinado tiempo luego del lanzamiento, configurar la frecuencia de transmisión a la asignada por la IARU y la potencia si el equipo lo permite, configurar y encender la baliza o \textit{beacon}, entre otros.
 
-El sistema debe almacenar de manera permanente estas configuraciones iniciales, para reconfigurar el \textit{transcevier} en caso de reinicio o falla así como permitir una reconfiguración de parámetros durante el desarrollo de la misión.
+Se debe almacenar de manera permanente estas configuraciones iniciales, para así poder reconfigurar el \textit{transcevier} en caso de reinicio o falla, también para permitir un ajuste de parámetros durante el desarrollo de la misión.
 
-\paragraph{Despliegue de antenas.}
-El satélite, luego de transcurrido el tiempo de silencio radial obligatorio, debe desplegar las antenas de comunicaciones. Esto se realiza mediante la activación de un sistema eléctrico, que cuenta con retroalimentación para comprobar que las antenas fueron efectivamente desplegadas. Esta operación puede requerir sucesivos intentos, hasta que las antenas sean desplegadas.
+\paragraph{Despliegue de antenas:}
+el satélite, luego de transcurrido el tiempo de silencio radial obligatorio, debe desplegar las antenas de comunicaciones. Esto se realiza mediante la activación de un sistema eléctrico, que cuenta con retroalimentación para comprobar que las antenas fueron efectivamente desplegadas. Esta operación puede requerir sucesivos intentos hasta que las antenas sean desplegadas.
 
-\paragraph{Procesamiento de telecomandos.}
-El sistema de comunicaciones debe ser capaz de recibir telecomandos desde la estación terrena y el \textit{software} de control deberá recogerlos y ejecutar las acciones requeridas. Esto incluye la definición de un formato de telecomandos; la capacidad del sistema de analizar los comandos y sus argumentos dentro de un paquete de comunicaciones; y la posterior ejecución del comando recibido.
+\paragraph{Procesamiento de telecomandos:}
+el sistema de comunicaciones debe ser capaz de recibir telecomandos desde la estación terrena, y el \textit{software} de control deberá recogerlos para ejecutar las acciones requeridas. Esto incluye: la definición de un formato de telecomandos, la capacidad del sistema de analizar los comandos y sus argumentos dentro de un paquete de comunicaciones, y la posterior ejecución del comando recibido.
 
-\paragraph{Protocolo de enlace.}
-El satélite debe ser capaz de recibir y enviar datos a la estación terrena, para esto se requiere en primer lugar, que el satélite se pueda rastrear para lo cual se debe emitir una señal de baliza o \textit{beacon}; segundo, el satélite debe escuchar la estación terrena para determinar si se recibirán ordenes o se descargará información; y tercero, proceder con las operaciones de descarga y subida de datos.
+\paragraph{Protocolo de enlace:}
+el satélite debe ser capaz de recibir y enviar datos a la estación terrena. Para esto se requiere, en primer lugar, que se pueda rastrear mediante la transmisión de una señal de baliza o \textit{beacon}. Segundo, el satélite debe establecer comunicación con la estación terrena para determinar si se recibirán ordenes o si se descargará información. Y tercero, proceder con las operaciones de descarga y subida de datos.
 
-\paragraph{Envío de telemetría.}
-El satélite recolectará los datos requeridos por la misión, que incluyen información general sobre el estado del vehículo espacial y sus subsistemas así como los datos generados por \textit{payloads} abordo. El envío de telemetría puede ser automático cada vez que el satélite se enlace con la estación terrena o bajo demanda a través de telecomandos que indiquen el tipo de información que es requerida.
+\paragraph{Envío de telemetría:}
+el satélite recolectará los datos requeridos por la misión, los que incluyen información general sobre el estado de funcionamiento de todos los subsistemas, así como los datos generados por los \textit{payloads} abordo. El envío de telemetría puede ser automático cada vez que el satélite se enlace con la estación terrena, o bien bajo demanda a través de telecomandos que indiquen el tipo de información que es requerida.
 
 \subsubsection{Control central}
-\paragraph{Organizar telemetría.}
-Durante la misión se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para guardarlos y un sistema de organización de los diferentes datos con el objetivo de ser requeridos de manera selectiva para ser enviados como telemetría a la estación terrena.
+\paragraph{Organizar telemetría:}
+durante la misión se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para guardarlos, con un sistema de organización de los diferentes datos con el objetivo de ser requeridos de manera selectiva, para así poder ser enviados como telemetría a la estación terrena.
 
-\paragraph{Plan de vuelo.}
-El satélite debe ser capaz de recibir y ejecutar un plan de vuelo consistente en una serie de acciones a ejecutar en momentos determinados de tiempo. El plan de vuelo puede ser precargado en el satélite antes de ser lanzado así como ser actualizado mediante telecomandos. Esto provee flexibilidad en las tareas que se ejecutarán durante la misión, permitiendo controlar el uso de los diferentes recursos del satélite.
+\paragraph{Plan de vuelo:}
+se debe ser capaz de recibir y ejecutar un plan de vuelo, consistente en una serie de acciones a realizar en momentos determinados de tiempo. El plan de vuelo puede ser precargado en el satélite antes de ser lanzado, así como también debe ser actualizado mediante telecomandos. Esto provee flexibilidad en las tareas que se ejecutarán durante la misión, permitiendo controlar el uso de los diferentes recursos del satélite.
 
-\paragraph{Obtener el estado del sistema.}
-De manera autónoma el \textit{software} de control debe recolectar información básica sobre el estado del satélite en general. Esta información será usada para determinar la salud del sistema y tomar las acciones necesarias en vuelo o bien será descargada como telemetría para ser posteriormente analizada. Ejemplos de variables asociadas al estado del sistema son el nivel de carga de las baterías, la hora del reloj interno, el estado del dispositivo de comunicaciones, el estado del computador abordo, entre otras.
+\paragraph{Obtener el estado del sistema:}
+de manera autónoma, el \textit{software} de control debe recolectar información básica sobre el estado del satélite en general. Esta información será usada para determinar la salud del sistema y tomar las acciones necesarias en órbita, o bien será descargada como telemetría para ser posteriormente analizada. Ejemplos de variables asociadas al estado del sistema son: el nivel de carga de las baterías, la hora del reloj interno, el estado del dispositivo de comunicaciones, el estado del computador abordo, entre otras.
 
-\paragraph{Inicialización del sistema.}
-El \textit{software} control debe poseer un algoritmo de inicio del sistema en general, que considera la inicialización del \textit{software} con los parámetros adecuados a un estado adecuado, la inicialización de otros módulos o subsistemas así como las obligaciones de silencio radial durante el lanzamiento, despliegue de antenas, etc.
-
-El \textit{software} de control debe tener la capacidad de reiniciarse de manera segura manteniendo variables fundamentales y la consistencia con el estado anterior al reinicio 
+\paragraph{Inicialización del sistema:}
+el \textit{software} control debe poseer un algoritmo de inicio del sistema en general, que considera la configuración del \textit{software} con los parámetros adecuados, la inicialización de otros módulos o subsistemas, así como las obligaciones de silencio radial durante el lanzamiento, y el despliegue de antenas. Debe tener la capacidad de reiniciarse de manera segura manteniendo variables fundamentales y la consistencia con el estado anterior al reinicio 
 
 \subsubsection{Área de energía}
-\paragraph{Estimación de la carga de la batería.}
-El \textit{software} de control debe considerar un método de estimación de la carga de las baterías del satélite. Esta información debe estar a disposición como una variable para ser utilizado por el sub-sistema de control de energía utilizado por el satélite.
+\paragraph{Estimación de la carga de la batería:}
+el \textit{software} de control debe considerar un método de estimación de la carga de las baterías. Esta información debe estar a disposición como una variable, para poder ser utilizada por el subsistema de control de energía utilizado por el satélite.
 
-\paragraph{Presupuesto de energía.}
-Se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera de la capacidad energética disponible así como una manera de planificar el consumo de energía de la misión.
+\paragraph{Presupuesto de energía:}
+se debe considerar la cantidad de energía disponible en el satélite para ejecutar las acciones requeridas. Asimismo se debe tener claro el presupuesto energético de cada acción que se realiza en el satélite. El \textit{software} de control debe plantear una estrategia para evitar que se ejecuten acciones que estén fuera de la capacidad energética disponible así como una manera de planificar el consumo de energía de la misión.
 
 \subsubsection{Órbita}
-\paragraph{Actualizar parámetros de órbita.}
-Se debe contar con una estrategia de estimación y actualización de los parámetros de órbita del satélite con el objetivo de contar con la información necesaria para la ejecución de acciones dependientes de la posición real de satélite. Ejemplos de este tipo de acciones son la ejecución de un experimento, algún \textit{payload} o el enlace con una estación terrena para descargar datos de telemetría.
+\paragraph{Actualizar parámetros de órbita:}
+se debe contar con una estrategia de estimación y actualización de los parámetros de órbita del satélite. Esto con el objetivo de contar con la información necesaria para realizar acciones dependientes de la posición real de satélite. Ejemplos de este tipo de acciones son la ejecución de un experimento, algún \textit{payload} o el enlace con una estación terrena para descargar datos de telemetría.
 
 \subsubsection{\textit{Payloads}}
-\paragraph{Ejecución de comandos de \textit{payloads}.}
-El sistema de control debe tener la capacidad de controlar diferentes subsistemas asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo del satélite pueden variar de misión en misión e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el sistema de control debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
+\paragraph{Ejecución de comandos de \textit{payloads}:}
+el sistema debe tener la capacidad de controlar diferentes módulos asociados a \textit{payloads} del satélite. Se debe considerar que los \textit{payloads} abordo pueden variar de misión en misión, e incluso pueden ser descartados o agregados en etapas tardías del proyecto. Por eso el \textit{software} debe ser flexible en la capacidad de agregar o eliminar módulos que se relacionen con el control de \textit{payloads} sin afectar al resto de los sistemas.
 
 \subsubsection{Tolerancia a fallos}
-El sistema debe tener cierto grado de tolerancia a fallos de \textit{hardware} y \textit{software} que permitan mantener la misión operativa. Debido las adversas condiciones del medio espacial y la incapacidad de acceder directamente al dispositivo este debe ser capaz de:
+El sistema debe tener cierto grado de tolerancia a fallos de \textit{hardware} y \textit{software} que permitan mantener la misión operativa. Debido a las adversas condiciones del medio espacial y la incapacidad de acceder directamente al dispositivo, este debe ser capaz de:
 \begin{itemize}
-	\item Restablecer su funcionamiento normal luego de un reinicio, evitando la pérdida de información
-	\item Restablecer en la medida de lo posible, el funcionamiento del sistema ante fallas causadas por radiación.
-	\item Recuperarse ante fallas de \textit{software}
+	\item Restablecer su funcionamiento normal luego de un reinicio, evitando la pérdida de información.
+	\item Restablecer, en la medida de lo posible, el funcionamiento del sistema ante fallas causadas por radiación.
+	\item Recuperarse ante fallas de \textit{software}.
 	\item Establecer modos de funcionamiento a prueba de fallos.
 	\item Detectar y solucionar problemas al desplegar antenas.
-	\item Capacidad de \textit{debug} durante el desarrollo y previo al lanzamiento
+	\item Capacidad de \textit{debug} durante el desarrollo y previo al lanzamiento.
 \end{itemize}
 
 \subsection{Requerimientos no operacionales}
