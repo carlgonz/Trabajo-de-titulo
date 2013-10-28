@@ -45,7 +45,7 @@ Todo sistema embebido está formado fundamentalmente por un microcontrolador, que
 A continuación, se describen las características específicas de los microcontroladores PIC24 que corresponde al dispositivo utilizado en este trabajo.
 
 \subsubsection{Arquitectura.}
-Poseen un juego de instrucciones \ac{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \ac{RAM}, separada de la memoria de datos (FLASH) pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \ac{RAM}. La arquitectura de la CPU la completa una \ac{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
+Poseen un juego de instrucciones \ac{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \ac{RAM}, separada de la memoria de datos (FLASH) pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \ac{RAM}. La arquitectura de la CPU la completa una \ac{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la \textbf{figura \ref{pic_cpu}}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
 en una rutina de atención de la interrupción.
 
 % ················ IMAGEN ·················
@@ -57,7 +57,7 @@ en una rutina de atención de la interrupción.
 %··········································
 
 \subsubsection{Periféricos.}\label{ch2:embedded:perif}
-La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, SPI o I2C, USB o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
+La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, SPI o I2C, USB o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la \textbf{figura \ref{pic_perif}}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -87,7 +87,7 @@ Para grabar el \textit{software} desarrollado para estos dispositivos se debe ut
 
 % ============= SISTEMAS OPERATIVOS ==============
 \section{Sistemas operativos}\label{ch2:sistema_operativo}
-Un sistema operativo es la aplicación base de un sistema computacional, pues brinda servicios básicos al resto de las aplicaciones de uso general ejecutadas en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro. Por lo tanto se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto, el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware}, las cuales no están disponibles para la aplicación como se ilustra en la figura \ref{os}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
+Un sistema operativo es la aplicación base de un sistema computacional, pues brinda servicios básicos al resto de las aplicaciones de uso general ejecutadas en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro. Por lo tanto se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto, el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware}, las cuales no están disponibles para la aplicación como se ilustra en la \textbf{figura \ref{os}}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -140,7 +140,7 @@ Los servicios básicos que provee a través de su kernel son:
 \subsection{Sistemas operativos de tiempo real}
 Un sistema operativo de tiempo real, posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutará, en un determinado momento, se pueden cumplir los requerimientos estrictos de \textit{timing} \cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que, normalmente, requieren respuesta en tiempo real ante eventos no predecibles como las interrupciones.\\
 
-La figura \ref{rtos} muestra la forma de conseguir un sistema de tiempo real, mediante el uso de prioridades para las diferentes tareas. En este ejemplo, la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo, ante la presencia de ciertos eventos, el sistema debe responder de manera instantánea cambiando de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica. En tal caso se le asigna una alta prioridad para asegurar que el sistema operativo siempre ejecute esta tarea cuando corresponda.
+La \textbf{figura \ref{rtos}} muestra la forma de conseguir un sistema de tiempo real, mediante el uso de prioridades para las diferentes tareas. En este ejemplo, la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo, ante la presencia de ciertos eventos, el sistema debe responder de manera instantánea cambiando de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica. En tal caso se le asigna una alta prioridad para asegurar que el sistema operativo siempre ejecute esta tarea cuando corresponda.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -171,7 +171,7 @@ Entre sus principales características se encuentran \cite{FREERTOS_PIC24}:
 \end{itemize}
 
 \paragraph{Funcionamiento}
-Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función que se ejecuta de manera continua. Se puede encontrar en dos estados fundamentales: ``ejecutándose'' y ``no ejecutándose''. Cuando se está ejecutando, tiene el control del procesador y el código dentro de la función que la representa es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados ,como se observa en la figura \ref{task_state}: se inicia en un estado ``listo'', lo que indica que la tarea está en condiciones de ser seleccionada por el \textit{scheduler} y pasar a estar ``ejecutándose''. Estar ``bloqueado'' significa que la tarea no está disponible para ser procesada pues está en espera de algún evento, por ejemplo, la liberación de un \textit{mutex}. Por último el estado ``suspendido'' donde tampoco se puede ejecutar y el proceso debe explícitamente reanudarse para quedar en condiciones de ser ejecutada. La creación de tareas y el control de sus estados se realiza a través de la API de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar ellas.
+Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función que se ejecuta de manera continua. Se puede encontrar en dos estados fundamentales: ``ejecutándose'' y ``no ejecutándose''. Cuando se está ejecutando, tiene el control del procesador y el código dentro de la función que la representa es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados ,como se observa en la \textbf{figura \ref{task_state}}: se inicia en un estado ``listo'', lo que indica que la tarea está en condiciones de ser seleccionada por el \textit{scheduler} y pasar a estar ``ejecutándose''. Estar ``bloqueado'' significa que la tarea no está disponible para ser procesada pues está en espera de algún evento, por ejemplo, la liberación de un \textit{mutex}. Por último el estado ``suspendido'' donde tampoco se puede ejecutar y el proceso debe explícitamente reanudarse para quedar en condiciones de ser ejecutada. La creación de tareas y el control de sus estados se realiza a través de la API de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar ellas.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -181,7 +181,7 @@ Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas
 \end{figure}
 %··········································
 
-El \textit{scheduler} es la parte fundamental del kernel, que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multi-proceso, cuando en realidad solo una función puede ejecutarse a la vez, ya que se cuenta solo con un procesador. Como se detalla en la figura \ref{scheduler}, la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea, y una vez que se agota se debe guardar su estado y se procede a ejecutar otra. Así cada una de las tareas se procesa durante un breve momento, de manera cíclica, hasta que completa su trabajo; si el tiempo de proceso asignado a cada una es lo suficientemente pequeño, pareciera que muchas cosas ocurrieron simultáneamente. Una sola operación tomaría, en términos absolutos, un lapso menor en completarse si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar, en conjunto, tareas que toman mucho tiempo de proceso y otras relativamente cortas.
+El \textit{scheduler} es la parte fundamental del kernel, que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multi-proceso, cuando en realidad solo una función puede ejecutarse a la vez, ya que se cuenta solo con un procesador. Como se detalla en la \textbf{figura \ref{scheduler}}, la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea, y una vez que se agota se debe guardar su estado y se procede a ejecutar otra. Así cada una de las tareas se procesa durante un breve momento, de manera cíclica, hasta que completa su trabajo; si el tiempo de proceso asignado a cada una es lo suficientemente pequeño, pareciera que muchas cosas ocurrieron simultáneamente. Una sola operación tomaría, en términos absolutos, un lapso menor en completarse si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar, en conjunto, tareas que toman mucho tiempo de proceso y otras relativamente cortas.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
@@ -263,7 +263,7 @@ Los requerimientos no funcionales de un proyecto de \textit{software} se pueden 
 
 En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua ISO/IEC 9126, que plantea un modelo de calidad \textit{software} que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de una aplicación durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; definición de los objetivos del diseño del \textit{software}; determinar de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto está completo \cite{ISO25010}.
 
-A continuación, se definen los parámetros de calidad fijados en la norma ISO/IEC 25010 para productos de \textit{software}, así como un resumen a través de la figura \ref{img:ch2:iso25010}.
+A continuación, se definen los parámetros de calidad fijados en la norma ISO/IEC 25010 para productos de \textit{software}, así como un resumen a través de la \textbf{figura \ref{img:ch2:iso25010}}.
 
 \begin{itemize}
 \item \textbf{Idoneidad Funcional:} Grado en que un producto provee la funciones requeridas.
@@ -378,7 +378,7 @@ Este patrón de diseño divide una aplicación interactiva en tres componentes: el 
         \item \textbf{Controlador:} cada vista tiene asociada un controlador, que recibe la entrada del usuario, como presionar un botón o seleccionar una entrada de menú. El controlador solicita el servicio correspondiente al modelo, causando a la vez una actualización de la vista si es necesario.
     \end{itemize}
     
-    Para clarificar las relaciones entre los componentes del patrón se cuenta con el diagrama de la figura \ref{ch2:patterns:mvc:classes}. La esencia dinámica del esquema en ejecución se observa a través del diagrama de colaboración detallado en la figura \ref{ch2:patterns:mvc:collaboration}    
+    Para clarificar las relaciones entre los componentes del patrón se cuenta con el diagrama de la \textbf{figura \ref{ch2:patterns:mvc:classes}}. La esencia dinámica del esquema en ejecución se observa a través del diagrama de colaboración detallado en la \textbf{figura \ref{ch2:patterns:mvc:collaboration}}.
     
     \item \textbf{Consecuencias:} alguno de los beneficios que provee son: múltiples vistas para el mismo modelo, las cuales pueden estar sincronizadas dado que los cambios en el modelo se propagan a aquellas que lo comparten; vista y controlador intercambiable de manera independiente, permitiendo portar la aplicación a diferentes plataformas sin cambiar la funcionalidad. Por otro lado, los inconvenientes que genera son: aumento de complejidad, al necesitar adaptar cada módulo al controlador y sus funcionalidades; excesivo número de actualizaciones al propagar cambios del modelo a todas las vistas; alto acoplamiento entre la vista y el controlador -aún como elementos separados su diseño está muy relacionado-; acoplamiento entre el modelo y el conjunto vista-controlador, ya que cualquier cambio en la interfaz que se provee, tiene un efecto directo en el funcionamiento de este conjunto, que accede directamente a sus servicios.
     
@@ -413,7 +413,7 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
         \item \textbf{Proveedor o receptor:} provee la funcionalidad del comando en sí, ya que su lógica de ejecución incluye el llamado de uno o varios del los servicios entregados por este módulo, que puede ser representado, por ejemplo, como una librería.
     \end{itemize}
     
-    El diagrama de la figura \ref{ch2:patterns:command:classes} detalla las relaciones entre los diferentes módulos o clases del patrón. La dinámica de la arquitectura se rescata en en la figura \ref{ch2::patterns:command:collaboration} que corresponde a un esquema de colaboración entre los elementos de la estructura descrita.
+    El diagrama de la \textbf{figura \ref{ch2:patterns:command:classes}} detalla las relaciones entre los diferentes módulos o clases del patrón. La dinámica de la arquitectura se rescata en en la \textbf{figura \ref{ch2::patterns:command:collaboration}} que corresponde a un esquema de colaboración entre los elementos de la estructura descrita.
     
     \item \textbf{Consecuencias:} La aplicación de este patrón de diseño implica los siguientes beneficios:
     \begin{itemize}
@@ -440,7 +440,7 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
 %TODO: Agregar una descripcion breve
 
 \subsection{Satélites tipo Cubesat}
-A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo proveer acceso al espacio a pequeños \textit{payloads} en un corto periodo de desarrollo y a bajo costo. Para esto se desarrolla un nuevo estándar de vehículo espacial que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 [kg] como el mostrado en la figura \ref{img:ch2:cubesat} (a). El proyecto contempla tanto las especificaciones generales del satélite así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento, denominada P-POD que consiste en un compartimiento capaz de albergar tres Cubesat de 1U y desplegarlos mediante una sistema de resortes ante la señal generada por el vehículo de lanzamiento. La figura \ref{img:ch2:cubesat} (b) ilustra la estructura de un P-POD.
+A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo de facilitar el acceso al espacio a pequeños \textit{payloads}, en un corto periodo de desarrollo y a bajo costo. Para esto se crea un nuevo estándar de vehículo espacial, que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 kg. como el mostrado en la \textbf{figura \ref{img:ch2:cubesat} (a)}. Cuando se combinan se pueden conseguir Cubesat de 2 unidades (2U) o tres unidades (3U); un satélite compuesto por un solo cubo se denomina una unidad (1U). El proyecto contempla tanto las especificaciones generales del satélite, así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento. Este dispositivo se denominada P-POD y consiste en un compartimiento capaz de albergar hasta tres Cubesat de 1U y desplegarlos mediante un sistema de resortes cuando se requiera. La \textbf{figura \ref{img:ch2:cubesat} (b)} ilustra la estructura de un P-POD.
 
 %···················· FIGURE ····················
 \begin{figure}[ht!] \centering
@@ -450,23 +450,23 @@ A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una ini
 \end{figure}
 %···············································
 
-\paragraph{Estándar.} Las restricciones que fija el estándar Cubesat se detallan formalmente en las especificaciones de diseño desarrolladas por \textit{California Polytechnic State University} \cite{CUBESAT_CDS} y a continuación se resumen las principales consideraciones:
+\paragraph{Estándar.} Las restricciones que fija el estándar Cubesat se detallan formalmente en las especificaciones de diseño, desarrolladas por \textit{California Polytechnic State University} \cite{CUBESAT_CDS}. A continuación se resumen las principales consideraciones:
 \begin{itemize}
 	\item \textbf{Requerimientos generales}
 	\begin{itemize}
 		\item Todos los componentes deben estar fijos al satélite durante el lanzamiento, despliegue y operación. No se permite liberar elementos extras al espacio.
 		\item No se permite ningún tipo de elemento explosivo o pirotécnico.
-		\item La energía química almacenada no debe superar los 100 [Wh]
+		\item La energía química almacenada no debe superar los 100 Wh.
 	\end{itemize}
 
 	\item \textbf{Requerimientos Mecánicos}
 	\begin{itemize}
-		\item La configuración y dimensiones del satélite deben estar de acuerdo a la figura \ref{img:ch2:cds}
-		\item El cubo debe tener dimensiones de 100x100x113 [mm] en los ejes x,y,z respectivamente según la figura \ref{img:ch2:cds}
-		\item Los componentes no deben sobresalir más de 6.5 [mm] en dirección normal a cada cara.
+		\item La configuración y dimensiones del satélite deben estar de acuerdo a la \textbf{figura \ref{img:ch2:cds}}
+		\item El cubo debe tener dimensiones de 100x100x113 mm. en los ejes x, y, z respectivamente según la \textbf{figura \ref{img:ch2:cds}}.
+		\item Los componentes no deben sobresalir más de 6.5 mm. en dirección normal a cada cara.
 		\item Sólo los rieles exteriores de la estructura pueden tener contacto con el P-POD.
-		\item El satélite no debe superar los 1.33 [Kg] de masa.
-		\item La estructura externa debe estar construida en aluminio 7075 o 6061 anodizado en los rieles.
+		\item El satélite no debe superar los 1.33 Kg. de masa.
+		\item La estructura externa debe estar construida en aluminio 7075 o 6061, anodizado en los rieles.
 	\end{itemize}
 
 	 \item \textbf{Requerimientos Eléctricos}
@@ -478,26 +478,26 @@ A partir del año 1999 se comienza a desarrollar el proyecto Cubesat como una ini
 	 
 	 \item \textbf{Requerimientos de operación}
 	 \begin{itemize}
-	 	\item Cubesat con baterías deben ser capaces de recibir el comandos para apagar transmisiones según las regulaciones de la FCC.
-	 	\item Todos los mecanismos de despliegue del satélite no se deben activar antes de 30 minutos luego del despliegue desde el P-POD.
-	 	\item Transmisores de radio de potencia mayor a 1[mW] no debe transmitir antes de cumplirse 30 minutos luego del despliegue desde el P-POD.
-	 	\item Se debe contar con la licencia de uso de frecuencia de radio. Para frecuencias \textit{amateur} la coordinación se realiza a través de la \textit{International Amateur Radio Union} [IARU].
+	 	\item Cubesat con baterías deben ser capaces de recibir un comando para apagar transmisiones según las regulaciones de la FCC.
+	 	\item Todos los mecanismos de despliegue del satélite no se deben activar antes de 30 minutos luego del lanzamiento desde el P-POD.
+	 	\item Transmisores de radio de potencia mayor a 1 mW. no deben funcionar antes de cumplirse 30 minutos luego del despliegue desde el P-POD.
+	 	\item Se debe contar con la licencia de uso de frecuencia de radio. Para frecuencias \textit{amateur} la coordinación se realiza a través de la \textit{International Amateur Radio Union} (IARU).
 	 \end{itemize}
 
 \end{itemize}
 
-El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalmente, se pueden combinar hasta tres unidades para obtener Cubesat de 2U o 3U y así contar con mayor volumen para posicionar los componentes físicos del satélite y una mayor superficie para situar panales solares y así brindar mayor autonomía energética.
+El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalmente, se pueden combinar hasta tres unidades para obtener satélites de 2U o 3U. Esto permite contar con mayor volumen, para posicionar los componentes físicos del satélite y una mayor superficie para situar paneles solares y así brindar mayor autonomía energética.
 
-\figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño del estándar Cubesat}{img:ch2:cds}{!h}
+\figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño y dimensiones del estándar Cubesat de una unidad \cite{CUBESAT_CDS}.}{img:ch2:cds}{!h}
 
-\paragraph{Aplicaciones}
+\paragraph{Aplicaciones.}
 En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
 
-Desde el punto de vista educacional, dadas las características de rápido desarrollo y a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educaciones y gobiernos de todo el mundo, teniendo como antecedente que la mayoría de los proyectos de satélites Cubesat han sido desarrollados por estudiantes en universidades utilizando componentes comerciales o desarrollos propios. El valor educacional de un proyecto satelital de estas características incluye: el desarrollo de nueva tecnología aeroespacial, que puede ser probada a pequeña escala en ambientes realistas; la formación de profesionales entrenados en el área mediante la experiencia práctica que brinda la ejecución de este tipo proyectos; la aplicación de metodologías en la formación académica que incluyan el trabajo en equipos multidisciplinarios, entre otros.
+Desde el punto de vista educacional, dadas las características de rápida construcción a un costo comparativamente bajo, este tipo de tecnologías abre las posibilidades de investigación y desarrollo de proyectos en materia aeroespacial a instituciones educacionales y gobiernos de todo el mundo. A esto se suma como antecedente que la mayoría de los proyectos de satélites Cubesat, han sido ejecutados por estudiantes universitarios, utilizando componentes comerciales o desarrollos propios. El valor educacional de un proyecto satelital de estas características incluye: el desarrollo de nueva tecnología aeroespacial, que puede ser probada a pequeña escala en ambientes realistas; la formación de profesionales entrenados en el área, mediante la experiencia práctica que brinda la ejecución de este tipo proyectos; la aplicación de metodologías en la formación académica que incluyan el trabajo en equipos multidisciplinarios, grupos de alto desempeño, gestión, entre otros.
 
-Contando con una plataforma estándar de vehículo espacial se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico capaces de tomar diferentes datos en el espacio para su posterior análisis o uso en proyectos de investigación. Entre las aplicaciones más destacadas se encuentra la observación remota de la tierra mediante el uso de sensores para tomar datos sobre la ionosfera y termosfera, o el uso de cámaras fotográficas que provean imágenes para estudios posteriores. Este tipo de misiones y sus datos pueden llegar incluso a poner a prueba sistemas de predicción o alerta temprana de desastres \cite{BECERRA_DIAZ}.
+Contando con una plataforma estándar de vehículo espacial, se abre la posibilidad al desarrollo de diferentes \textit{payloads} de tipo científico, capaces de tomar diferentes datos en el espacio para su posterior análisis o uso en proyectos de investigación. Entre las aplicaciones más destacadas, se encuentra la observación remota de la tierra mediante el uso de sensores para tomar datos sobre la ionosfera y termosfera, o el uso de cámaras fotográficas que otorguen imágenes para estudios posteriores. Este tipo de misiones y sus datos, pueden llegar incluso a poner a prueba sistemas de predicción o alerta temprana de desastres \cite{BECERRA_DIAZ}.
 
-Iniciativas privadas o de propósito general tales como redes de comunicaciones de apoyo en caso de catástrofe, redes de comunicaciones privadas, monitoreo remoto de plantaciones y proyectos de exploración minera son algunas de las posibles aplicaciones capaces de ser desarrolladas como un proyecto aeroespacial tipo Cubesat.
+Iniciativas privadas o de propósito general, tales como redes de comunicaciones de apoyo en caso de catástrofe, redes de comunicaciones privadas, monitoreo remoto de plantaciones y proyectos de exploración minera, son algunas de las posibles aplicaciones capaces de ser desarrolladas como un proyecto aeroespacial tipo Cubesat.
 
 % ============= ANTECEDENTES GENERALES ==============
 % \section{Antecedentes generales}
@@ -506,16 +506,12 @@ Iniciativas privadas o de propósito general tales como redes de comunicaciones d
 
 % ============= ANTECEDENTES ESPECIFICOS =============
 \section{Proyecto SUCHAI}
-El proyecto SUCHAI (\textit{Satellite of University of Chile for Aerospace Investigation}) es el proyecto satelital desarrollado por el Departamento de Ingeniería Eléctrica de la Universidad de Chile con la participación de académicos, ingenieros y estudiantes. El proyecto consiste en el desarrollo, puesta en órbita y operación del primer satélite desarrollado netamente en el país.
+El proyecto satelital del Departamento de Ingeniería Eléctrica de la Universidad de Chile, con la participación de académicos, ingenieros y estudiantes, se denomina \textit{Satellite of University of Chile for Aerospace Investigation} (SUCHAI) y consiste en el desarrollo, puesta en órbita y operación del primer satélite creado netamente en el país.
 
 \figura{img/suchai_logo.png}{scale=0.3}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
 
-Se trata de un satélite tipo Cubesat de una unidad con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} a ser escuchado y decodificado por la estación terrena, ejecutar experimentos asociados a \textit{payloads} guardando estos datos y enviar como telemetría a la estación terrena la información de funcionamiento del satélite y los datos de los diferentes \textit{payloads}. Por otro lado, el ejecución del proyecto permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local que será la base para futuras misiones relacionadas. Además permitirá integrar a alumnos de pregrado en el desarrollo de un proyecto multidisciplinario que requiere proponer soluciones no triviales a un problema abierto.
+Se trata de un satélite tipo Cubesat de una unidad, con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} para ser escuchado y decodificado por la estación terrena, también ejecutar experimentos asociados a \textit{payloads} y enviar como telemetría la información de funcionamiento del satélite y los datos recolectados. Por otro lado, su ejecución permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local, que será la base para futuras misiones relacionadas. Además posibilitará la integración de alumnos de pregrado en equipos multidisciplinarios, que requieren proponer soluciones no triviales a un problema abierto.
 
-El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media para ejecutar el \textit{software} que controla la operación del satélite en vuelo; el sistema de comunicaciones compuesto por un transmisor y receptor de radio UHF así como antenas a desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares para proveer la energía eléctrica que permite operar al satélite así como también cargar baterías. Como carga útil se considera la integración de: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de la ionosfera tipo \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satellite SUCHAI en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
+El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio UHF, así como antenas para desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la \textbf{figura \ref{ch2:img:suchai_satellite}} se observa el satélite SUCHAI en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
 
 \figura{img/suchai_satellite.jpg}{width=\textwidth}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{!h}
-
-% \subsection{Investigaciones asociadas}
-% \paragraph{Lagmuir Probe}
-% \paragraph{Experimento de física} 

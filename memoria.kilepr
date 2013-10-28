@@ -129,10 +129,10 @@ order=1
 
 [item:Memoria/el6908_ch2.tex]
 archive=true
-column=402
+column=82
 encoding=ISO-8859-15
 highlight=LaTeX
-line=261
+line=434
 mode=LaTeX
 open=true
 order=1
@@ -406,10 +406,10 @@ JumpList=
 ViMarks=.,25,150,[,25,150,],25,150
 
 [view-settings,view=0,item:Memoria/el6908_ch2.tex]
-CursorColumn=402
-CursorLine=261
+CursorColumn=82
+CursorLine=434
 JumpList=
-ViMarks=.,193,241,[,193,241,],193,241
+ViMarks=.,428,152,[,428,152,],428,152
 
 [view-settings,view=0,item:Memoria/el6908_ch3.tex]
 CursorColumn=7
