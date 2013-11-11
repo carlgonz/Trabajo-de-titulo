@@ -325,48 +325,56 @@ Asimismo, en la estación terrena se recibe la señal proveniente del satélite, y 
 \figura[El \textit{software} debería mostrar el \textit{frame} descargado en formato hexadecimal, sin embago, lo identifica como inválido debido a serias fallas en el equipo]{img/test_telemetria.png}{width=0.8\textwidth}{Recepción de telemetría en la estación terrena}{ch5:result:telemetria}{hb!}
 
 \paragraph{Envío de telemetría.}
-El envío de telemetría es activado desde la estación terrena por alguno de los siguientes métodos dependiendo del modo de funcionamiento del software de vuelo:
+El envío de telemetría es activado desde la estación terrena, por alguno de los siguientes métodos, dependiendo del modo de funcionamiento del \textit{software} de vuelo:
 
 \begin{itemize}
-    \item \textbf{Modo normal:} la telemetría se descarga bajo demanda como resultado de la ejecución de un telecomando. Se pueden ejecutar telecomandos para descargar telemetría de manera selectiva
+    \item \textbf{Modo normal:} la telemetría se descarga bajo demanda, como resultado de la ejecución de un telecomando, lo que permite seleecionar el tipo de datos que se desea obtener.
     
-    \item \textbf{Modo de respaldo:} si no se reciben telecomandos durante un periodo de tiempo determinado (por ejemplo 24 horas) se asume una falla en el sistema de comunicaciones y se puede transmitir provocar una transmisión de telemetría sólo al recibir la señal de la portadora durante una cantidad de tiempo determinada (por ejemplo 10 segundos). No se puede seleccionar el tipo de telemetría a descargar sino que se envían todos los datos recolectados hasta el momento.
+    \item \textbf{Modo de respaldo:} si no se reciben telecomandos durante un periodo de tiempo determinado, por ejemplo 24 horas, se asume una falla en el sistema de comunicaciones. En este modo, para ordenar una transmisión de telemetría, basta con enviar la señal de la portadora durante una cantidad de tiempo determinada, por ejemplo, 10 segundos. No se puede seleccionar el tipo de telemetría a descargar, sino que se envían todos los datos recolectados hasta el momento.
 \end{itemize}
 
-Durante la prueba sólo estuvo disponible el modo de respaldo por lo que se transmite la portadora durante el tiempo especificado en la configuración del software, en este caso de 10 segundos. El satélite detecta la señal y el software realiza el conteo mientras está presente como se observa en el registro:
+Durante la prueba sólo estuvo disponible el modo de respaldo, por lo que se transmite la portadora durante el tiempo especificado en la configuración de la aplicación, en este caso, 10 segundos. El satélite detecta la señal y el \textit{software} determina si estuvo presente el tiempo necesario, como se detalla en el registro \ref{ch5:reg:rssi_2}.
 
-\begin{verbatim}
+\begin{lstlisting}[numbers=none,label=ch5:reg:rssi,caption=Descarga de telemetría en modo de respaldo]
+//Se detecta la portadora y se inicia el conteo 
 [19:37:55.076357] RSSI_CNT=2
 [19:37:57.480979] RSSI_CNT=4
 [19:37:59.055074] RSSI_CNT=6
 [19:38:01.055657] RSSI_CNT=8
 [19:38:03.063135] RSSI_CNT=10
 [19:38:05.055308] RSSI_CNT=12
+
+//Luego 12 segundos, se genera un comando para enviar TM
 [19:38:07.107302] com_doOnRSSI..
 [19:38:07.116383] [Dispatcher] Orig: 0x1102 | Cmd: 0x8003 | Param: 2
+
+//Primer frame de telemetría
 [19:38:07.191023] >> Sending START_WRITE_TM command... [OK]
 [19:38:08.990042] >>Sending START_SEND_TM command...
 [19:38:09.769988] >> Telemetry transmited [OK]
+
+//Segundo frame de telemetría
 [19:38:09.790260] >> Sending START_WRITE_TM command...[OK]
 [19:38:12.316259] >>Sending START_SEND_TM command...
 [19:38:13.104915] >> Telemetry transmited [OK]
 \end{verbatim}
 
-Esto provoca el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado registradas cada 20 minutos. En la estación terrena se reciben estos datos decodificados por el software del TNC y los resultados se detallan en la figura \ref{ch5:result:telemetria}
+De esta manera se induce el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado, registradas cada 20 minutos. En la estación terrena se reciben los datos decodificados por el TNC y los resultados se detallan en la figura \ref{ch5:result:telemetria}
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
 \figura{img/test_telemetria.png}{width=0.8\textwidth}{Recepción de telemetría en la estación terrena}{ch5:result:telemetria}{hb!}
 
-Se observa que a pesar de las fallas en el sistema de comunicaciones el software de vuelo puede ejecutar la descarga de telemetría operando en modo de respaldo. AL igual que el \textit{beacon} la señal es recibida pero por fallas en el equipo abordo de satélite los datos son recibidos correctamente y el software indica un error en la decodificación de los datos.
+Se observa que, a pesar de las fallas en el sistema de comunicaciones, el \textit{software} de vuelo puede efectuar la descarga de telemetría operando en modo de respaldo. AL igual que el \textit{beacon}, la señal es recibida, pero los datos no son decodificados correctamente y el programa indica este error.
 
+%TODO: REVISAR ACA
 \subsubsection{Control central}
 \paragraph{Organizar telemetría.}
 Durante la misión se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para mantener estos datos y un sistema de organización de los diferentes datos guardados con el objetivo de ser requeridos de manera selectiva para ser enviados como telemetría a la estación terrena.
 
 \paragraph{Plan de vuelo.}
-El plan de vuelo está a cargo del \textit{listener} \texttt{taskFlightPlan} que de manera periódica consulta la lista de comandos manejada por el repositorio de datos y determina el siguiente comando que se debe ejecutar.
+La ejecución del plan de vuelo está a cargo del \textit{listener} denominado \texttt{taskFlightPlan} el cual, de manera periódica, consulta la lista de comandos manejada por el repositorio de datos y determina el siguiente que se debe ejecutar.
 
-El plan de vuelo consiste en una lista de comandos a ejecutar y su parámetro durante 24 horas con espacio de 10 minutos entre cada uno aunque este parámetro es configurable. El módulo \texttt{taskFlightPlan} realiza un mapeo entre la hora actual del sistema y el indice que corresponde a leer desde el plan de vuelo. Se configura al inicio del sistema según sea necesario y para efectos de esta prueba se genera el itinerario de la tabla \ref{ch5:table:result:flightplan}:
+El plan de vuelo, consiste en una lista de comandos a realizar en un periodo de 24 horas, con espacio de 10 minutos entre cada uno (configurable). El módulo \texttt{taskFlightPlan} realiza una correspondencia entre la hora actual del sistema y el índice a leer desde el plan de vuelo. La lista de comandos se configura al inicio del sistema, según sea necesario, y para efectos de esta prueba se genera el itinerario mostrado en la tabla \ref{ch5:table:result:flightplan}.
 
 \begin{table}[ht!] \caption{Plan de vuelo}
 \centering
@@ -380,8 +388,9 @@ El plan de vuelo consiste en una lista de comandos a ejecutar y su parámetro dur
 \end{tabular} \label{ch5:table:flightplan}
 \end{table}
 
-El correcto funcionamiento de este módulo se comprueba a través de los registros de la consola, que cuentan con una estampa de tiempo para determinar la frecuencia y momento de ejecución de los comandos producidos por el plan de vuelo. A continuación se observa el resultado de la ejecución del comando \texttt{rtc\_print} proveniente del plan de vuelo:
+El correcto funcionamiento de este módulo, se comprueba a través de los registros de la consola, que cuentan con una estampa de tiempo, para determinar la frecuencia y momento de ejecución de los comandos producidos por el plan de vuelo. En el registro \ref{ch5:reg:fplan} se observa el resultado de ejecutar el comando \texttt{rtc\_print} desde el plan de vuelo.
 
+%TODO: PASAR LISTING
 \begin{verbatim}
 [17:40:06.811852] [Dispatcher] Orig: 0x1103 | Cmd: 0x7007 | Param: 0
 [17:40:06.837689] >>[29/8/13 - 17:40:14]
