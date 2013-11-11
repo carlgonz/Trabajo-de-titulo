@@ -25,7 +25,7 @@
   belowcaptionskip=1\baselineskip,
   breaklines=true,
   frame=tb,
-  xleftmargin=\parindent,
+  %xleftmargin=\parindent,
   language=C,
   showstringspaces=false,
   basicstyle=\footnotesize\ttfamily,
@@ -44,13 +44,13 @@
 % ========== COMANDOS PERSONALIZADOS =======
 
 % >>> figura 
-%[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-%Ej: \figura{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
-\newcommand{\figura}[5]
+%[1: Descripcion 2: ruta imagen, 3: medida, 4: caption, 5: label, 6: posicion]
+%Ej: \figura{descripcion larga}{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
+\newcommand{\figura}[6][ ]
 {
-   \begin{figure}[#5]
-     \centering \includegraphics[#2]{#1} 
-     \caption{#3}\label{#4}
+   \begin{figure}[#6]
+     \centering \includegraphics[#3]{#2} 
+     \caption[#4]{#4. #1}\label{#5}
    \end{figure}
 }
 
