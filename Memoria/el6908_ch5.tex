@@ -487,12 +487,11 @@ Es muy importante que ciertas variables mantengan su valor entre cada reinicio d
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
 \figura[El repositorio de estados mantiene el valor de las variables consistentes ante fallas o reinicios, como se observa en el indicador de antena desplegada y el contador de reinicios.]{img/plot_status_reset.png}{scale=0.7}{Variables de estado ante un reinicio}{ch5:figure:result:status_var_reset}{ht!}
 
-
 \paragraph{Inicio del sistema:}
 el inicio del sistema cuenta de dos etapas. En la primera, se inician funciones de bajo nivel como configuraciones de periféricos del procesador, puertos de entrada-salida, instanciar variables del sistema operativo e iniciarlo. De la correcta ejecución de esta etapa depende la posibilidad de contar con la salida para la consola serial, por lo que se comprueba su funcionamiento a través de la salida de depuración que se encuentra en el registro \ref{ch5:reg:init}.
 
 \begin{lstlisting}[numbers=none,label=ch5:reg:init,caption=Secuencia de inicio de bajo nivel]
-//Lo primero en configurarse es la salida serial
+//La salida serial es la primera en configurarse
 --------- SUCHAI BOOT SEQUENCE ---------
 
 //Configuraciones de perifericos
@@ -518,9 +517,11 @@ Starting FreeRTOS [->]
 >>[Deployment] Started
 \end{lstlisting}
 
-Desde este momento comienza la segunda etapa de inicialización implementada en \texttt{taskDeployment}. En este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo funcionando. Así, se procede al inicio de todas las funciones de la capa de aplicación del \textit{software} de vuelo, incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En este momento se ejecuta el periodo de inactividad, si corresponde, así como el despliegue de antenas. La salida por consola, que se muestra en el registro \ref{ch5:reg:init2}, es incremental a cada función que se realiza y demuestra la correcta ejecución de la secuencia de inicio.
+Desde este momento comienza la segunda etapa de inicialización, implementada en \texttt{taskDeployment}. En este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo se encuentra funcionando. Así, se procede al inicio de los servicios de la capa de aplicación, incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En este momento se ejecuta, si corresponde, el periodo de inactividad, así como el despliegue de antenas. 
 
-\begin{lstlisting}[numbers=none,label=ch5:reg:init,caption=Secuencia de inicio de bajo nivel]
+La salida por consola, que se muestra en el registro \ref{ch5:reg:init2}, es incremental a cada función ejecutada y demuestra la correcta operación de cada etapa de la secuencia de inicio. También se demuestra la capacidad del \textit{software} para recordar el estado anterior a su reinicio, siendo capaz de determinar si es la primera vez que se inicia y en tal caso, ejecutar el periodo de inactividad junto al despliegue de antenas.
+
+\begin{lstlisting}[numbers=none,label=ch5:reg:init2,caption=Secuencia de inicio de alto nivel]
 //Cada linea representa la correcta ejecución de la acción,
 //en caso de error se indicaría en la misma consola.
 [Deployment] INITIALIZING SUCHAI FLIGHT SOFTWARE
@@ -576,63 +577,70 @@ Setting beacon: SUCHAIATINGDOTUCHILEDOTCL-
 [Deployment] Deleting task
 \end{lstlisting}
 
-La salida anterior demuestra también la capacidad del software para recordar el estado anterior a su reinicio, ya que es capaz de determinar si es la primera vez que se inicia para proceder al periodo de inactividad y despliegue de antenas si corresponde.
+Al final de esta secuencia, se inician el resto de los \textit{listeners} que comienzan su ejecución en segundo plano. El éxito de la operación se logra al visualizar el \textit{prompt} de la consola serial, indicando que el satélite está preparado recibir comandos y registrar los sucesos del \textit{software} de vuelo, lo cual se muestra en el registro \ref{ch5:reg:prompt}
 
-Al final de esta secuencia se inician el resto de los \textit{listenrs} y comienzan su ejecución en segundo plano. El éxito de la operación de inicio se logra al visualizar el \textit{prompt} de la consola serial que está lista para recibir comandos y registrar los sucesos del software de vuelo:
-
-\begin{verbatim}
+\begin{lstlisting}[numbers=none,label=ch5:reg:prompt,caption=Pantalla de bienvenida de la consola serial del satélite]
 >>[Console] Started
-______________________________________________________________________________
+
+//La pantalla de bienvenida indica el fin de la secuencia de inicio
+__________________________________________________________________________
                      ___ _   _  ___ _  _   _   ___ 
                     / __| | | |/ __| || | /_\ |_ _|
                     \__ \ |_| | (__| __ |/ _ \ | | 
                     |___/\___/ \___|_||_/_/ \_\___|
-______________________________________________________________________________
+__________________________________________________________________________
 
+//Comienzan a funcionar los listeners
 >>[Comunications] Started
 >>[FlightPlan] Started
 >>[Houskeeping] Started
 
-\end{verbatim}
+>>
+\end{lstlisting}
 
 \subsubsection{Área de energía}
-\paragraph{Estimación de la carga de la batería.}
-La estimación de carga de baterías está a cargo del controlador de la EPS y su estimación se actualiza de manera periódica como parte de las tareas del \textit{listener} de \textit{taskHousekeeping} cada 20 segundos. El parámetro denominado SOC (\textit{State Of Charge}) es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la EPS. Esta variable es utilizada por el sistema para determinar si un comando se puede ejecutar o no. Las lecturas de los sensores del sistema de energía fueron registrados cada cinco minutos durante la prueba y su resultado se observa en la figura \ref{ch5:figure:result:eps_var}
+\paragraph{Estimación de la carga de la batería:}
+este función es parte del controlador de la EPS. La estimación se actualiza de manera periódica, como parte de las tareas del \textit{listener} \texttt{taskHousekeeping}, cada 20 segundos. El parámetro denominado \textit{state of charge} (SOC), es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la EPS. Esta variable es utilizada para determinar si un comando se puede ejecutar o debe ser rechazado. Durante la prueba se registraron los valores de corriente, voltaje y temperatura de la EPS así como el nivel de SOC calculado. La figura \ref{ch5:figure:result:soc} muestra los resultados obtenidos, así como la estimación del SOC a \textit{posteriori}, para comprobar la operación realizada en el computador a bordo.
+
+%, como observa en la figura \ref{ch5:figure:result:eps_var}.
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura{img/plot_eps_var.png}{scale=0.7}{Gráfico con variables de EPS}{ch5:figure:result:eps_var}{ht!}
-
-Se registraron además los valores de energía, voltaje y temperatura de la EPS así como el nivel de SOC calculado. La tabla \ref{ch5:figure:result:soc} muestra los resultados obtenidos, así como la estimación del SOC calculados a \textit{posteriori} para comprobar la operación realizada en el computador a bordo del satélite.
+% \figura{img/plot_eps_var.png}{scale=0.7}{Gráfico con variables de EPS}{ch5:figure:result:eps_var}{ht!}
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura{img/plot_soc.png}{width=0.95\textwidth}{Gráfico de estimación de SOC}{ch5:figure:result:soc}{ht!}
+\figura[El sistema de energía se comporta según lo esperado, según lo indicado por las variables de corriente y voltaje. Se observa una correspondencia entre la variable \textit{eps\_charging} y el voltaje de las baterías. El nivel de SOC estimado por el \textit{software} de vuelo corresponde a los calculados a \textit{posteriori}.]{img/plot_soc.png}{width=0.95\textwidth}{Gráfico con variables de EPS y estimación de SOC}{ch5:figure:result:soc}{ht!}
 
-\paragraph{Presupuesto de energía.}
-EL nivel de SOC como variable de estado indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \textit{Dispatcher} quien realiza una comparación entre la energía requerida por un comando y la energía disponible en ese momento.
+A partir de los datos del gráfico \ref{ch5:figure:result:soc}, se verifica el correcto funcionamiento del sistema de energía. Los valores de corriente leídos en la EPS son normales: al rededor de 30mA para el bus de 3.3V, al que se conecta el computador a bordo, y 50mA para el bus de 5.0V, donde se encuentra el \textit{transcevier}. Las baterías se cargan en cuanto se conecta el puerto USB, lo que es indicado por la variable \texttt{eps\_charging} y se refleja en el voltaje leído. También se verifica el requerimiento de estimar la carga presente en las baterías, a través de la variable \textit{eps\_soc} y contrastando estos datos con valores calculados a \textit{posteriori}, según los datos de voltaje y corriente. Cabe destacar que la diferencia en la estimación del SOC, observada en los registros de las 20:01 hrs. es normal, producto de una corrección según los datos de temperatura, realizada por el \textit{software} de vuelo.
 
-Durante la operación se lleva a cabo el test de SOC donde de manera artificial se cambian los requerimientos energéticos de una serie de comandos a niveles mayores al de la energía disponible y se intenta su ejecución. El comando correspondiente es el \texttt{0x8006} o \texttt{tcm\_set\_sysreq} que afecta a todos los comandos del grupo \texttt{TCM} que contiene funciones encargadas de generar telemetría y \textit{beacons} cambiando el nivel de energía que requieren al valor ingresado por el usuario. En la consola serial queda registrado la elevación de los requerimientos de energía de este grupo a 10 mientras que el SOC del sistema es 4:
+\paragraph{Presupuesto de energía:}
+el nivel de SOC, como variable de estado, indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \texttt{Dispatcher}, quien realiza una comparación entre la energía requerida por un comando y la disponible en ese momento.
 
-\begin{verbatim}
+Para verificar el requerimiento de contar con un presupuesto de energía, que guía las operaciones del satélite, se lleva a cabo el test de SOC. Para esto, de manera simulada, se cambian los requerimientos energéticos de una serie de comandos, a niveles mayores que la energía disponible, para luego intentar su ejecución. El comando correspondiente es el \texttt{0x8006} o \texttt{tcm\_set\_sysreq}, que cambia los requerimientos energéticos de todas las funciones del grupo \texttt{TCM}, encargadas de generar telemetría y \textit{beacons}. En el registro \ref{ch5:reg:test_soc} se observa la ejecución de este comando, cambiando los requerimientos a nivel 10, cuando se dispone de un SOC de 4. Así cuando se intenta ejecutar un comando del grupo \texttt{0x8000} estos son rechazados por el \textit{Dispatcher} evitando su ejecución.
+
+\begin{lstlisting}[numbers=none,label=ch5:reg:test_soc,caption=Registro de la prueba de nivel SOC bajo]
+//Se elevan los requerimientos del grupo TCM a un SOC de 10
 [20:17:59.701281] SOC= 4
 [20:18:10.788012] exe_cmd 0x8006 10
 [20:18:10.823338] [Console] Se genera comando: 0x8006
 [20:18:10.860289] [Dispatcher] Orig: 0x1101 | Cmd: 0x8006 | Param: 10
 [20:18:10.890811] [Dispatcher] CMD Result: 1
-\end{verbatim}
 
-Así cuando se intenta ejecutar un comando del grupo \texttt{0x8000} estos son rechazados por el \textit{Dispatcher} evitando su ejecución:
-
-\begin{verbatim}
+//Se intenta ejecutar un comando del grupo TCM
 [20:19:10.667124] exe_cmd 0x8000 0
 [20:19:10.825339] [Console] Se genera comando: 0x8000
+
+//El dispatcher rechaza el comando, por no cumplir los requeimientos de energía
 [20:19:10.864141] [Dispatcher] Command: 0x8000 | From: 0x1101 Refused because of SOC 
+
+//Otros comandos, con requerimientos de SOC bajos, se ejecutan normalmente
 [20:19:11.197873] [Dispatcher] Orig: 0x1102 | Cmd: 0x3007 | Param: 0
 [20:19:11.231369] [Dispatcher] CMD Result: 1
-\end{verbatim}
+\end{lstlisting}
 
-Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras algunas operaciones que demandan grandes cantidades de energía el nivel de SOC disminuya quedando bajo el umbral que requieren los comandos. Este es el caso de las transmisiones de telemetría y \textit{beacons} como se observa en el siguiente registro donde luego de dos envíos de telemetría el nivel de SOC baja a 3 causando que una posterior solicitud de descarga de datos sea rechazada:
+Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras algunas operaciones que demandan grandes cantidades de energía, el nivel de SOC disminuya, quedando bajo el umbral que requieren los comandos. Este es el caso de las transmisiones de telemetría y \textit{beacons}, como se observa en el registro \ref{ch5:reg:low_soc}, donde luego de dos envíos de telemetría el nivel de SOC baja a 3, causando que una posterior solicitud de descarga de datos sea rechazada.
 
-\begin{verbatim}
+\begin{lstlisting}[numbers=none,label=ch5:reg:low_soc,caption=Comando rechazado debido a un nivel de SOC bajo]
+//Se producen la transmisión de dos frames de telemetría sucesivos.
 [20:08:56.149539] com_doOnRSSI..
 [20:08:56.171706] [Dispatcher] Orig: 0x1102 | Cmd: 0x8003 | Param: 2
 [20:08:56.221945] >> Sending START_WRITE_TM command... 
@@ -643,10 +651,13 @@ Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras
 [20:09:01.352976] >> Sending START_SEND_TM command...
 [20:09:02.133597] >> Telemetry transmited [OK]
 
+//Las baterías se descargan y el nivel de SOC baja a 3.
 [20:09:02.414715] [Dispatcher] Orig: 0x1104 | Cmd: 0x5000 | Param: 0
 [20:09:02.429875] drp_updateAll_dat_CubesatVar()..
 [20:09:02.710113] SOC= 3
 
+//Una posterior solicitud de telemetría es rechazada, como es de esperar,
+//debido a que no hay energía suficiente para realizar la transmisión.
 [20:09:06.121742] RSSI_CNT=2
 [20:09:08.138337] RSSI_CNT=4
 [20:09:10.146584] RSSI_CNT=6
@@ -655,10 +666,10 @@ Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras
 [20:09:16.140583] RSSI_CNT=12
 [20:09:18.140335] com_doOnRSSI..
 [20:09:18.158957] [Dispatcher] Command: 0x8003 | From: 0x1102 Refused because of SOC 
-\end{verbatim}
+\end{lstlisting}
 
 
-La tabla \ref{ch5:table:test_soc} resume los resultados de la prueba de SOC.
+La tabla \ref{ch5:table:test_soc} resume los resultados de la prueba de SOC. Se observa que el control realizado por el módulo \texttt{Dispatcher} aplica efectivamente las indicaciones del presupuesto de energía planificado, el cual se expresa en el parámetro SOC y la cantidad de energía que requiere cada comando. Durante la prueba todos los comandos que requieren al menos el nivel de energía disponible fueron ejecutados mientras que aquellos con requerimientos superiores fueron rechazados, validando el requerimiento.
 
 \begin{table}[ht!] \caption{Resultados para test SOC}
 \centering
@@ -677,16 +688,14 @@ La tabla \ref{ch5:table:test_soc} resume los resultados de la prueba de SOC.
 \end{tabular} \label{ch5:table:test_soc}
 \end{table}
 
-Se observa que el control realizado por \texttt{Dispatcher} aplica efectivamente las indicaciones del presupuesto de energía planificado, el cual se expresa en el parámetro SOC y la cantidad de energía que requiere cada comando a ejecutar. Durante la prueba todos los comandos que requieren al menos el nivel de energía disponible fueron ejecutados mientras que aquellos con requerimientos superiores fueron rechazados.
-
-El \textit{power budget} se aplica a diferentes niveles dentro del sistema que representa el satélite, la parte que corresponde al software de vuelo tiene relación con la estimación de la cantidad de energía disponible en base a los parámetros de voltaje, corriente y temperatura que entrega la EPS así como evitar la ejecución de comandos que requieren más recursos energéticos que los disponible que es el ámbito que cubre esta prueba. El resto de la planificación energética queda por parte del equipo de operación del sistema en cuanto a determinar la cantidad de energía correcta para cada comando, la frecuencia de ejecución de aquellos de alto consumo como el envío de \textit{beacon} o la correcta programación del plan de vuelo.
+El \textit{power budget} se aplica a diferentes niveles dentro del sistema que representa el satélite. La parte que corresponde al \textit{software} de vuelo, tiene relación con la estimación de la cantidad de energía disponible en base a los parámetros que entrega la EPS, y con evitar la ejecución de comandos que requieren más recursos energéticos que los disponibles. El resto de la planificación energética queda por parte del equipo de operación del sistema, en lo que refiere a determinar la cantidad de energía correcta para cada comando, la frecuencia de ejecución de aquellos de alto consumo, como el envío de \textit{beacon}, o la correcta programación del plan de vuelo.
 
 \subsubsection{Órbita}
-\paragraph{Actualizar parámetros de órbita.}
-En esta versión del software de vuelo no se contemplan métodos de estimación de órbita y se relega esta requerimiento al operador del satélite. En tierra se puede realizar la propagación de órbita obtener una relación entre el plan de vuelo del satélite y su posición orbital para así programar las operaciones requeridas en momentos determinados.
+\paragraph{Actualizar parámetros de órbita:}
+en esta versión del \textit{software} de vuelo no se contemplan métodos de estimación de órbita y se relega este requerimiento al operador del satélite. En tierra, se puede realizar la propagación de órbita, para así obtener una relación entre el plan de vuelo del satélite y su posición orbital, programando las operaciones requeridas en determinados momentos.
 
 \subsubsection{\textit{Payloads}}
-\paragraph{Ejecución de comandos de \textit{payloads}}.
-En esta versión del software de vuelo y dada las características de los \textit{payloads} que van a bordo, la capacidad de ejecutar determinadas acciones de \textit{payloads} puede ser completamente programada a través del plan de vuelo si se proveen los comandos pertinentes a cada uno. No obstante, la integración a nivel de \textit{payloads} del satélite y sus resultados se puede encontrar en la memoria \textit{Proceso de diseño, arquitectura y testeo del nano-satelite SUCHAI} \cite{TOOPAZO}.
+\paragraph{Ejecución de comandos de \textit{payloads}}:
+en esta versión del \textit{software} de vuelo, dada las características de los \textit{payloads} que van a bordo, la capacidad de ejecutar determinadas acciones de \textit{payloads} puede ser completamente programada a través del plan de vuelo, si se proveen los comandos pertinentes a cada uno. No obstante, la integración a nivel de \textit{payloads} del satélite y sus resultados, se puede encontrar en la memoria \textit{Proceso de diseño, arquitectura y testeo del nano-satelite SUCHAI} \cite{TOOPAZO}.
 
 
