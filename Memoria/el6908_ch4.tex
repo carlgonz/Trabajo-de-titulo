@@ -347,9 +347,9 @@ Los comandos se han implementado como funciones que poseen una firma específica 
 typedef int (*cmdFunction)( void * );
 \end{lstlisting}
 
-%TODO: ACA VAMOS
-Para encapsular la información asociada a los comandos que llegan hasta el módulo \textit{executer} se crea una nueva estructura de datos definida como se muestra en el código \ref{ch4:code:ExeCmd}. La estructura contiene dos campos: el puntero a la función que implementa el comando según la definición del código \ref{ch4:code:cmdFunction} y su parámetro.
+Para encapsular la información asociada a los comandos que llegan hasta el módulo \textit{executer}, se crea una nueva estructura de datos definida como se muestra en el código \ref{ch4:code:ExeCmd}. La estructura contiene dos campos: el puntero a la función que implementa el comando según la definición del código \ref{ch4:code:cmdFunction} y su parámetro. Si solo se utilizara esta estructura para representar los comandos dentro del \textit{sfotware}, cada vez que se desee ejecutar uno, se debería agregar a mano el puntero a la función objetivo. Esto supone un inconveniente para los \textit{listeners}, quienes deberían conocer todas las funciones disponibles y agregar sus definiciones mediante la inclusión de todos los archivos de cabecera que fueran necesario. Como consecuencia, se obtendría un método poco práctico, que no posibilita la generación de comandos en serie ni de manera automatizada en la estación terrena.
 
+%TODO: CHECK FLOAT
 \begin{lstlisting}[float,label=ch4:code:ExeCmd,caption=Estructura de comandos para \textit{executer}]
 /**
  * Structure that represents a command passed to executer. Contains a 
@@ -362,16 +362,15 @@ typedef struct exec_command{
 }ExeCmd;
 \end{lstlisting}
 
-Con el objetivo de implementar una estrategia simple y flexible que permita tanto generar comandos así como determinar la función que se asocia a cada uno se ha definido una nueva estructura de datos que representa a los comandos que son generados por los \textit{listeners} cuya definición se detalla en el código \ref{ch4:code:DispCmd}. Si se utiliza la estructura definida en el código \ref{ch4:code:ExeCmd} significa que cada \textit{listener} debe conocer todos los comandos disponibles en el sistema y cada vez que se requiere generar uno se debe agregar de manera manual la función que corresponde en la estructura. Esto genera inconvenientes ya que al separar la definición de cada comando en diferentes archivos se debe realizar una serie de \textit{includes}, hace poco automatizado la generación de comandos en serie y no es una forma práctica de generarlos de manera remota.
-
-Por esta razón serán representados a través de un código numérico único, delegando al repositorio de comandos la responsabilidad de mapear entre los códigos y la función asociada. La estructura de datos que representa a los comandos que son enviados desde los \textit{listeners} hacia el \textit{dispatcher} contiene además ciertos meta datos que le permiten tomar decisiones sobre la ejecución de un comando basado en esta información extra. Dos campos de información son especialmente relevantes:
+Para evitar estos inconvenientes, los comandos serán representados a través de un código numérico único, delegando al repositorio de comandos la responsabilidad de asociar los códigos a la función correspondiente. Se requiere entonces una estructura de datos, que representa a los comandos enviados desde los \textit{listeners} hacia el \textit{dispatcher} y que contenga, además, ciertos meta datos que le permiten tomar decisiones sobre su ejecución. La definición de esta estructura se muestra en el código \ref{ch4:code:DispCmd}. Dos campos de información son especialmente relevantes:
 
 \begin{itemize}
-    \item \textbf{Origen del comando:} este campo contiene un código numérico que identifica el módulo que ha generado el comando, esto permite implementar el filtrado de comandos desde cierto módulo cuando, por ejemplo, no esté funcionando correctamente.
+    \item \textbf{Origen del comando:} este campo contiene un código numérico que identifica al módulo que ha generado el comando. Esto permite implementar el filtrado de comandos desde cierta unidad cuando, por ejemplo, no esté funcionando correctamente.
     
-    \item \textbf{Requerimiento de energía:} este campo indica el nivel de energía que requiere el comando para ejecutarse, así se pueden filtrar aquellos que requieran más de la energía estimada en el sistema.
+    \item \textbf{Requerimiento de energía:} este campo indica el nivel de energía que requiere el comando para ejecutarse, así se pueden filtrar aquellos que requieran más energía que la disponible.
 \end{itemize}
 
+%TODO: CHECK FLOAT
 \begin{lstlisting}[float,label=ch4:code:DispCmd,caption=Estructura de comandos para \textit{dispatcher}]
 /**
  * Structure that represent a command passed to dispatcher. Contains 
@@ -386,10 +385,11 @@ typedef struct ctrl_command{
 }DispCmd;
 \end{lstlisting}
 
-Todas estas definiciones son incluidas en un archivo de cabecera denominado \texttt{cmdIncludes.h} que homogeneiza el tratamiento de los comandos a lo largo de la aplicación.
+Todas estas definiciones son incluidas en un archivo de cabecera denominado \texttt{cmdIncludes.h}, que homogeneiza el tratamiento de los comandos a lo largo de la aplicación.
 
-La implementación de un comando en específico requiere la definición de una función que cumpla con la firma del código \ref{ch4:code:cmdFunction}, un ejemplo es el código \ref{ch4:code:get_rtos_memory} donde se implementa el comando \texttt{get\_rtos\_memory}; notar que este comando forma parte del archivo \texttt{cmdOBC.c}, por lo tanto cada función y definición incluye el prefijo \texttt{obc\_} como parte del estándar de nombres utilizado en el proyecto. Este comando que será utilizado como ejemplo es, sin embargo, una importante funcionalidad dentro del \textit{software} de vuelo que nos permitirá obtener información sobre el uso de memoria del sistema operativo. El objetivo es utilizar la función \texttt{xPortGetFreeHeapSize} de FreeRTOS que entrega la cantidad de memoria en \textit{bytes} disponible en el \textit{heap} \cite{FREERTOS_API} para desplegarla en consola. La convención indica que retornar un valor cero desde el comando significa error lo cual demuestra su conveniencia en este caso pues el comando puede retornar directamente la cantidad de memoria disponible.
+La implementación de un comando en específico requiere la definición de una función que cumpla con la firma del código \ref{ch4:code:cmdFunction}. Un ejemplo es el código \ref{ch4:code:get_rtos_memory}, donde se programa el comando \texttt{get\_rtos\_memory}. Cabe notar que este comando forma parte del archivo \texttt{cmdOBC.c}, por lo tanto, cada función y definición incluye el prefijo \texttt{obc\_} como parte del estándar de nombres utilizado en el proyecto. Este ejemplo es tiene una gran funcionalidad dentro del \textit{software} de vuelo, pues permite obtener información sobre el uso de memoria del sistema operativo. El objetivo es utilizar la función \texttt{xPortGetFreeHeapSize} de FreeRTOS, que entrega la cantidad de memoria en \textit{bytes} disponible en el \textit{heap} \cite{FREERTOS_API} para desplegarla en consola. La convención utilizada indica que retornar un valor cero desde el comando significa error, lo cual demuestra su conveniencia en este caso, pues el comando puede retornar directamente la cantidad de memoria disponible.
 
+%TODO: CHECK FLOAT
 \begin{lstlisting}[float,label=ch4:code:get_rtos_memory,caption=Ejemplo de comando]
 /**
  * Performs debug taks over current RTOS. Get rtos memory usage in bytes
