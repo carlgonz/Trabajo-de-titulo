@@ -283,7 +283,7 @@ Una vez programada la tarea se puede indicar al sistema operativo que la ejecute
 
 int main(void)
 {
-    /* Crating all task */
+    /* Creating all task */
     xTaskCreate(taskTest, (signed char*)"taskTest", configMINIMAL_STACK_SIZE, (void *)"T1 Running...", 1, NULL);
     xTaskCreate(taskTest, (signed char*)"taskTest", configMINIMAL_STACK_SIZE, (void *)"T2 Running...", 2, NULL);
 
@@ -313,31 +313,31 @@ Con esto concluye la integración del sistema operativo en el \textit{software} d
 %TODO: Hablar de la configuracion de prioridades
 
 \section{Aplicación}
-En la capa de aplicación se debe implementar la arquitectura de \textit{software} detallada en la figura \ref{img:ch3:dis:arch} que permite el cumplimiento de todos los requerimientos de operacionales del satélite. El proceso incluye interpretar el patrón de diseño que inspira la arquitectura base para ser implementado en un lenguaje \textit{procedural} como C. Se parte por implementar la arquitectura base del patrón de ejecutor de comandos para contar con un sistema base que sea general y bien probado sobre el cual agregar las funcionalidades específicas del proyecto. Las funciones propias de este proyecto satelital estarán implementadas en la capa de \textit{listeners} y la lista de comandos. Finalmente se detallará la implementación de los distintos módulos que competan los requerimientos del proyecto SUCHAI en específico.
+En la capa de aplicación se debe implementar la arquitectura de \textit{software} detallada en la figura \ref{img:ch3:dis:arch}, que permite el cumplimiento de todos los requerimientos operacionales del satélite. El proceso incluye interpretar el patrón de diseño que inspira la arquitectura, para ser implementado en un lenguaje procedural como C. Se parte por implementar el patrón de ejecutor de comandos, para contar con un sistema base que sea general y bien probado sobre el cual agregar las funcionalidades específicas del proyecto. Las funciones propias de esta misión estarán implementadas en la capa de \textit{listeners} y en los comandos programados.
 
 \subsection{Implementación del patrón de diseño}
-Cómo se describe en la sección \ref{ch2:sec:214} se debe implementar un patrón de diseño, específicamente \textit{Command Pattern} en un lenguaje procedural como C. El problema radica en la programación basada en patrones de diseño es una técnica utilizada principalmente en lenguajes de programación orientados a objetos y los patrones se describen según diagramas de colaboración entre objetos incluyendo técnicas como herencia o polimorfismo. No obstante, el diseño de una arquitectura de \textit{software} debe ser independiente del lenguaje de programación a utilizar, lo mismo se cumple en el diseño de una arquitectura basándose en patrones \cite{SYSTEM_PATTERNS}. Para sortear esta situación se procede a definir cómo se traduce cada elemento del patrón de diseño deseado a la plataforma objetivo.
+Cómo se describe en la sección \ref{ch2:sec:214}, se debe implementar un patrón de diseño, específicamente \textit{Command Pattern} en un lenguaje procedural como C. El problema radica en que la programación basada en patrones de diseño, es una técnica utilizada principalmente en lenguajes orientados a objetos,donde los patrones se describen según diagramas de colaboración entre objetos incluyendo técnicas como herencia o polimorfismo. No obstante, el diseño de una arquitectura de \textit{software} debe ser independiente del lenguaje de programación a utilizar, lo mismo se cumple en el diseño de una arquitectura basándose en patrones \cite{SYSTEM_PATTERNS}. Para superar esta situación, se procede especificar cómo se define cada elemento del patrón de diseño en la plataforma objetivo (ver figura \ref{img:ch3:arch}).
 
 \begin{itemize}
-    \item \textbf{Controladores o clientes:} Corresponderán a tareas del sistema operativo. Pueden ser tareas que se ejecuten de manera periódica o basadas en eventos. Los clientes estarán ejecutándose constantemente y según la inteligencia que tengan programada pueden responder a algún evento periódico o un estímulo externo para generar los comandos del sistema. Cada tarea posee su propio \texttt{stack} de memoria y se pueden comunicar con otras o utilizar recursos compartidos del sistema a través de estructuras de sincronización.
+    \item \textbf{Controladores o clientes:} corresponderán a tareas del sistema operativo que pueden ejecutarse de manera periódica o basadas en eventos. Los clientes estarán funcionando constantemente y según la inteligencia que tengan programada, pueden responder a algún evento periódico o un estímulo externo para generar los comandos. Cada tarea posee su propio \textit{stack} de memoria y se puede comunicar con otras o utilizar recursos compartidos, a través de estructuras de sincronización.
     
-    \item \textbf{Procesador de comandos o despachador:} Corresponde a una tarea del sistema operativo cuyo funcionamiento está basado en un evento, en específico, el arribo de un comando.
+    \item \textbf{Procesador de comandos o despachador:} corresponde a una tarea del sistema operativo cuyo funcionamiento está basado en eventos, en específico, el arribo de un comando.
     
-    \item \textbf{Ejecutador:} o \textit{executer} también es una tarea del sistema operativo que se encarga de realizar la llamada del comando, es decir, ejecutar la función. Su funcionamiento es basado en eventos según la llegada de un comando.
+    \item \textbf{Ejecutador:} o \textit{executer}, también es una tarea del sistema operativo que se encarga de realizar la llamada del comando, es decir, ejecutar la función correspondiente. Su ejecución es en base a eventos, en este caso, la llegada de un comando desde el despachador.
     
-    \item \textbf{Transferencia de comandos:} La transferencia de comandos se realiza a través de una cola de FreeRTOS, que es una estructura de sincronización que permite el intercambios de mensajes en un esquema productor-consumidor.
+    \item \textbf{Transferencia de comandos:} se realiza a través de una cola de FreeRTOS, que es una estructura de sincronización que permite el intercambios de mensajes en un esquema productor-consumidor.
     
-	\item \textbf{Comandos:} Los comandos están representados por un nuevo tipo definido en C. Este tipo hace referencia a una función con una firma específica. Siempre que una función cumpla la firma específica en el tipo definido podrá ser considerada un comando y ser ejecutada como tal. Para encapsular parámetros importante de un comando, que en el caso original serían variables de estado de un objeto, se crea una estructura en C.
+	\item \textbf{Comandos:} están representados por un nuevo tipo definido en C que hace referencia a una función con una firma específica. Toda función cumpla esta firma podrá ser considerada un comando y ejecutarse como tal. Se necesita una segunda estructura de C que represente al objeto comando, encapsulando la función a ejecutar y los metadatados asociados.
     
-    \item \textbf{Repositorios:} Los repositorios y proveedores de servicios se implementaran como librerías que acceden a funciones a las capas inferiores del sistema como \textit{drivers} a submódulos o dispositivos de entrada y salida.
+    \item \textbf{Repositorios:} Los repositorios o proveedores de servicios, se implementan en librerías. Se genera una API que da acceso a funciones de las capas inferiores del sistema, como \textit{drivers} para dispositivos de entrada y salida, manejo de memoria y almacenamiento persistente.
 \end{itemize}
 
 \subsection{Comandos}
-Los comandos se han implementado como funciones que poseen una firma específica que se convierte en un nuevo tipo de dato. En este caso la función debe retornar un entero y recibir un parámetro, como se detalla en el código \ref{ch4:code:cmdFunction}, lo que define dos aspectos fundamentales del \textit{software}:
+Los comandos se han implementado como funciones que poseen una firma específica y que se convierte en un nuevo tipo de dato. En este caso, la función debe retornar un entero y recibir sólo un parámetro, como se detalla en el código \ref{ch4:code:cmdFunction}, lo que define dos aspectos fundamentales del \textit{software}:
 \begin{itemize}
-    \item Todo comando debe retornar un valor que puede tomar un significado dentro de la aplicación, en este caso, se define que el comando ha terminado su ejecución de manera insatisfactoria si retorna un valor cero o bien un valor no cero para indicar un éxito en la operación; con esa convención se hace natural utilizar el llamado a las funciones dentro de una sentencia condicional que utilice directamente el valor retornado como condición. 
+    \item Todo comando debe retornar un valor que puede tomar un significado dentro de la aplicación, en este caso, se define que el comando ha terminado su ejecución de manera insatisfactoria si retorna un valor cero, al contrario, un valor no cero para indica el éxito de la operación. Con esa convención se hace natural utilizar el llamado a las funciones dentro de una sentencia condicional, que utilice directamente el valor retornado como condición. 
     
-    \item Por otro lado los comandos reciben un sólo parámetro, en principio de cualquier tipo, a través de un puntero de tipo \texttt{void}. Esto tiene una serie de consecuencias: por un lado se hace flexible la llamada a la función ya que diferentes comandos podrían recibir diferentes tipos de datos siempre que se dereferencien adecuadamente; también hace eficiente la llamada a la función pues no se requiere realizar una copia del parámetro en la llamada ya que pasan por referencia; la desventaja es natural al uso de punteros, pues este debe seguir siendo válidos en el momento la ejecución del comando para evitar dereferenciar un puntero nulo o corromper algún sector de memoria.
+    \item Los comandos reciben un sólo parámetro, en principio de cualquier tipo, a través de un puntero \textit{void}. Esto tiene una serie de consecuencias. Por un lado se hace flexible la llamada a la función ya que los comandos podrían recibir diferentes tipos de datos, siempre que se desreferencien adecuadamente. También hace eficiente la llamada a la función, pues los parámetros no son copiados. La desventaja es natural al uso de punteros, pues este debe seguir siendo válido en el momento la ejecución del comando para evitar desreferenciar un puntero nulo o corromper algún sector de memoria.
 \end{itemize}
 
 \begin{lstlisting}[float,label=ch4:code:cmdFunction,caption=Prototipo de un comando]
@@ -347,6 +347,7 @@ Los comandos se han implementado como funciones que poseen una firma específica 
 typedef int (*cmdFunction)( void * );
 \end{lstlisting}
 
+%TODO: ACA VAMOS
 Para encapsular la información asociada a los comandos que llegan hasta el módulo \textit{executer} se crea una nueva estructura de datos definida como se muestra en el código \ref{ch4:code:ExeCmd}. La estructura contiene dos campos: el puntero a la función que implementa el comando según la definición del código \ref{ch4:code:cmdFunction} y su parámetro.
 
 \begin{lstlisting}[float,label=ch4:code:ExeCmd,caption=Estructura de comandos para \textit{executer}]
