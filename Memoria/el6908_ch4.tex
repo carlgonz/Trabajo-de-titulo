@@ -1,15 +1,16 @@
 \chapter{Implementación}\label{ch4}
 
-En este capítulo se describe el proceso de implementación la arquitectura para el \textit{software} de vuelo de un nano-satélite diseñada en el capítulo \ref{ch3}. El proceso de implementación se concentrará en completar los requerimientos mínimos del sistema para alcanzar cierta generalidad que convierta al presente trabajo en la base de futuras misiones satelitales. En este sentido se evitará la discusión de detalles de implementación específicos de la misión del proyecto SUCHAI, para lo cual se puede tomar como referencia el trabajo desarrollado en torno al diseño e integración del proyecto\cite{TOOPAZO}. En la misma línea, al presentar en primer lugar la implementación del núcleo de la aplicación como base de la característica de reusabilidad, se demuestra la capacidad de modificabilidad del sistema al agregar de manera incremental nuevas funcionalidades que completen los requerimientos esperados.
+En este capítulo, se describe el proceso de implementación de la arquitectura de \textit{software} diseñada en el capítulo \ref{ch3}. EL objetivo es completar los requerimientos mínimos del sistema, para alcanzar cierta generalidad que convierta al presente trabajo en la base de futuras misiones satelitales. Para ahondar en los detalles específicos de la misión del proyecto SUCHAI, se puede tomar como referencia el trabajo desarrollado en torno al diseño e integración del satélite \cite{TOOPAZO}. Al presentar en primer lugar la implementación del núcleo de la aplicación, como base de la característica de reusabilidad, se demuestra la capacidad de modificabilidad de la solución, al agregar de manera incremental nuevas funcionalidades que completen los requerimientos esperados.
 
-El proceso de implementación consta de tres etapas principales, que se alinean con la visión global del \textit{software} en forma de arquitectura de tres capas. En primer lugar se detallan los \textit{drivers} que se requieren implementar para esta plataforma de \textit{hardware} específica, definiendo el tipo de arquitectura utilizada para guiar la implementación. En segundo lugar se detalla la forma de integrar el sistema operativo para luego montar la aplicación final la que se implementará módulo a módulo hasta lograr un sistema funcional.
+El proceso consta de tres etapas principales, que se alinean con la visión global del \textit{software} como una arquitectura de tres capas. Primero se detallan los \textit{drivers} que se requieren implementar para esta plataforma, definiendo el tipo de arquitectura utilizada para guiar la implementación. En segundo lugar se detalla la forma de integrar el sistema operativo FreeRTOS. Y tercero, se procede montar la aplicación final la que se implementará módulo a módulo hasta lograr un sistema funcional.
 
 \section{Ambiente de desarrollo}
 La implementación del proyecto comienza por la definición del entorno y herramientas de desarrollo disponibles, pues son elementos esenciales que definen las posibilidades, limitaciones y marco de trabajo durante todo el proceso. El ambiente de desarrollo incluye los siguientes elementos: computadores, sistema operativo, control de versiones, el ambiente de desarrollo integrado o IDE, compilador, programador del microcontrolador y tarjeta de desarrollo.
 
-\paragraph{Computadores.} En general para el desarrollo de \textit{software} no se tienen requerimientos de \textit{hardware} elevados, considerando que bastaría con ejecutar un procesador de texto, una aplicación de linea de comandos para compilar y la disponibilidad de al menos un puerto USB para utilizar el programador del microcontrolador. La aplicación más demandante en recursos es el IDE cuyos requerimientos recomendados de \textit{hardware} se encuentran en la tabla \ref{ch4:table:hardware_req}.
+\subsection{Computadores} 
+En general, para el desarrollo de \textit{software} no se tienen requerimientos de \textit{hardware} elevados, considerando que bastaría con ejecutar un procesador de texto, una aplicación de línea de comandos para compilar y la disponibilidad de al menos un puerto USB para utilizar el programador del microcontrolador. La aplicación más demandante en recursos es el IDE, cuyos requerimientos recomendados de \textit{hardware} se encuentran en la tabla \ref{ch4:table:hardware_req}.
 
-\begin{table}[ht!] \caption{Requerimientos de \textit{hardware} recomendados para desarrollo\cite{MPLAB}.}
+\begin{table}[ht!] \caption{Requerimientos de \textit{hardware} recomendados para desarrollo \cite{MPLAB}.}
 \centering
 \begin{tabular}{ll}\hline
 \textbf{Procesador} & Intel Pentium 4 @ 2.6 GHz o equivalente\\
@@ -18,26 +19,28 @@ La implementación del proyecto comienza por la definición del entorno y herramie
 \end{tabular} \label{ch4:table:hardware_req}
 \end{table}
 
-\paragraph{Sistema Operativo.} En principio no existen restricciones sobre el sistema operativo a utilizar dado que las principales herramientas como el IDE y el compilador son multiplataforma. Sin embargo el presente trabajo se ha desarrollado sobre plataformas GNU/Linux por su flexibilidad, libertad de distribución, disponibilidad de herramientas y estabilidad. Las principales distribuciones de Linux utilizadas fueron Kubuntu 12.04 LTS amd64 y LinuxMint 14 amd64.
+En principio no existen restricciones sobre el sistema operativo a utilizar, dado que las principales herramientas como el IDE y el compilador son multiplataforma. Sin embargo, el presente trabajo se ha desarrollado sobre plataformas GNU/Linux por su flexibilidad, libertad de distribución, disponibilidad de herramientas y estabilidad. Las principales distribuciones de Linux utilizadas fueron Kubuntu 12.04 LTS amd64 y LinuxMint 14 amd64.
 
-\paragraph{Control de versiones.} Un sistema adecuado de control de cambios es fundamental en el desarrollo de un proyecto de \textit{software}, incluyendo el desarrollo de una aplicación para sistemas embebidos. Un sistema de control de versiones permite no sólo mantener un registro de los cambios incrementales del código, si no también revertir estos cambios, abrir ramas paralelas de desarrollo y el trabajo colaborativo entre un equipo de programadores. En este proyecto se utilizó el \textit{software} Subversion con un servidor propio dedicado netamente a proveer el servicio de almacenamiento remoto del código junto al control de versiones. Subversion permite mantener un repositorio remoto y hacer copias de trabajo locales en el equipo de cada desarrollador (\textit{checkout}). Los programadores realizan cambios sobre el código y suben las modificaciones al servidor como una nueva versión (\textit{commit}), estos cambios se ven reflejados cuando el resto del equipo sincroniza sus copias de trabajo con el servidor remoto (\textit{update}). Existe una amplia gama de \textit{software} de control de versiones, si bien Subversion es una herramienta adecuada, existen herramientas mas avanzadas y flexibles como Git que posee como principal característica ser un sistema distribuido donde cada copia local actúa como un repositorio en si mismo haciéndolo más robusto. Si no se cuenta con servidores propios, se pueden utilizar servicio de almacenamiento de repositorios en línea, como GitHub, que se integra con Git y es gratuito para repositorios públicos.
+\subsection{Control de versiones} 
+Un sistema adecuado de control de cambios es fundamental en el desarrollo de un proyecto de \textit{software}, incluyendo el desarrollo de sistemas embebidos. Esto permite no sólo mantener un registro de los cambios del código, si no también revertirlos, abrir ramas paralelas, controlar las versiones estables y el trabajo colaborativo entre un equipo de programadores. En este proyecto se utilizó el \textit{software} Subversion, con un servidor propio, dedicado netamente a proveer el servicio de almacenamiento del código, junto al control de versiones. Subversion permite mantener un repositorio remoto y hacer copias de trabajo locales en el equipo de cada desarrollador (\textit{checkout}). Los programadores realizan cambios sobre el código y suben las modificaciones al servidor como una nueva versión (\textit{commit}). Estos cambios se ven reflejados cuando el resto del equipo sincroniza sus copias de trabajo con el servidor (\textit{update}). Si bien Subversion es una herramienta adecuada, existen herramientas mas avanzadas y flexibles como Git, que se característica por ser un sistema distribuido, donde cada copia local actúa como un repositorio en si mismo, haciéndolo más robusto. Si no se cuenta con servidores propios, se pueden utilizar servicio de almacenamiento en línea, como GitHub, que se integra con Git y es gratuito para repositorios públicos.
 
-\paragraph{IDE.}\label{ch4:para:ide} El ambiente de desarrollo integrado o IDE es la aplicación fundamental del proceso, un buen ambiente de desarrollo proveerá las herramientas adecuadas para el desarrollo organizado y consistente del \textit{software} integrando el editor de texto, servicio de control de versiones, integración con el compilador, integración con el programador, sistema de \textit{debug}, sistema de documentación entre otros. En el caso de este proyecto se utiliza el entorno de desarrollo integrado de Microchip MPLAB X que se caracteriza por ser un entorno multiplataforma, basado en el proyecto de código libre NetBeans. Este IDE integra un avanzado editor de texto, con funcionalidades de control de cambios locales, múltiples configuraciones para un mismo proyecto, integración con múltiples compiladores, acceso directo a la programación y depuración del dispositivo, todo desde la misma aplicación centralizando el proceso de desarrollo en un ambiente adecuado.
+\subsection{IDE}\label{ch4:para:ide} 
+El ambiente de desarrollo integrado o IDE es la aplicación fundamental en el proceso. Un buen ambiente de producción proveerá las herramientas adecuadas para el desarrollo organizado y consistente del \textit{software}, integrando el editor de texto, servicio de control de versiones, integración con el compilador y con el programador, herramienta de \textit{debug}, sistema de documentación, entre otros. En este proyecto se utiliza el IDE de Microchip denominado MPLABX, que se caracteriza por ser un entorno multiplataforma, basado en el proyecto de código libre NetBeans. Integra un avanzado editor de texto, con funcionalidades de control de cambios, múltiples configuraciones para un mismo proyecto, integración con múltiples compiladores, acceso directo a la programación y depuración del dispositivo, todo desde la misma aplicación, centralizando el proceso de desarrollo en un ambiente adecuado, como se muestra en la figura \ref{ch4:img:mplabx}.
 
-\figura{img/mplabx.png}{width=\textwidth}{Entorno de desarrollo integrado MPLABX}{img:ch4:mplabx}{!h}
+\figura{img/mplabx.png}{width=\textwidth}{Entorno de desarrollo integrado MPLABX}{ch4:img:mplabx}{!h}
 
-\paragraph{Compilador.} El compilador es específico a cada microcontrolador para el cual se desea programar. En este caso corresponde al compilador Microchip XC16 en su versión 1.1, adecuado para la familia de microcontroladores PIC24.
+\subsection{Compilador y programador}
+El compilador es específico a cada microcontrolador que se desee programar. En este caso, corresponde al compilador Microchip XC16 en su versión 1.1, adecuado para la familia de microcontroladores PIC24. El programador utilizado es el Microchip ICD3, indicado para ambientes de producción.
 
-\paragraph{Programador.} El programador utilizado en este caso corresponde al Microchip ICD3, adecuado para ambientes de producción.
+\subsection{Tarjeta de desarrollo}
+Permite realizar las pruebas sobre el sistema embebido funcionando y es fundamental para el desarrollo de la aplicación, debido a que el producto final no se puede ejecutar en el mismo computador, sino que en el \textit{hardware} objetivo que corresponda. En este caso se utiliza la plataforma de desarrollo que provee el Cubesat Kit de Pumpkin \cite{CUBESAT_DB}. Esta tarjeta permite montar un módulo de procesador con un PIC24F256GA110 en un bus PC104, al cual se conectan todos los componentes del satélite. Cuenta además con un \textit{slot} de memoria SD, un reloj de tiempo real y un conversor RS232 a USB para fines de \textit{debug} (ver figura \ref{img:ch4:cubesat_db}). Es eléctricamente idéntica a la placa madre que se utilizará en el satélite, por lo tanto es la herramienta adecuada para realizar todo el trabajo de programación y pruebas del \textit{software}. Se debe hacer hincapié en lo fundamental de esta herramienta en el proceso de desarrollo de un sistema embebido, debido a que la aplicación compilada es específica para el dispositivo objetivo, las herramientas de simulación de microcontroladores no son suficientes para probar las reales condiciones de ejecución del \textit{software}, y porque el ciclo de desarrollo se completa con la solución y ajuste de problemas observados durante la ejecución de la aplicación en su sistema objetivo, de manera dinámica, como resultado de respuestas a entradas no deterministas.
 
-\paragraph{Tarjeta de desarrollo.} Permite realizar las pruebas sobre el sistema embebido funcionando y es fundamental para el desarrollo de la aplicación del sistema embebido debido a que la aplicación final no se puede ejecutar en el mismo computador, sino que en la plataforma objetivo que corresponda. En este caso se utiliza la plataforma de desarrollo que provee el Cubesat Kit de Pumpkins\cite{CUBESAT_DB}. Esta tarjeta permite montar un módulo de procesador con un PIC24F256GA110\cite{PIC24FJ256GA110} y un bus PC104 al cual se conectan todos los componentes del satélite. Cuenta además con un \textit{slot} de memoria SD, un reloj de tiempo real y un conversor RS232 a USB para fines de \textit{debug} (ver figura \ref{img:ch4:cubesat_db}). Es eléctricamente idéntica al la placa madre que se utilizará en el satélite por lo tanto es la herramienta adecuada para realizar todo el trabajo de programación y pruebas del \textit{software}. Se debe hacer hincapié en lo fundamental de esta herramienta en el proceso de desarrollo de un sistema embebido debido a que: la aplicación compilada es específica para el dispositivo objetivo; las herramientas de simulación de microcontroladores no son suficientes para rpobar las reales condiciones de ejecución del \textit{software}; y porque el ciclo de desarrollo se completa con la solución y ajuste de problemas observados durante la ejecución de la aplicación en su sistema objetivo y de manera dinámica como resultado de respuestas a entradas no deterministas.
-
-\figura{img/cubesat_db.jpg}{scale=0.5}{Tarjeta de desarrollo para Cubesat Kit de Pumpkins}{img:ch4:cubesat_db}{!h}
+\figura[Es eléctricamente igual a la placa madre del computador abordo del satélite. Permite conecta un módulo de procesador al bus PC104, cuenta con un conector de memoria SD, conversor RS232 a USB, alimentación y protección de sobre corriente.]{img/cubesat_db.jpg}{scale=0.5}{Tarjeta de desarrollo para Cubesat Kit de Pumpkins}{img:ch4:cubesat_db}{!h}
 
 \section{Organización del proyecto}
 
 \subsection{Directorios}
-Con el objetivo de mantener un orden lógico a lo largo del desarrollo del \textit{software} se debe dar una estructura lógica a los diferentes archivos fuentes que lo componen. Así se organiza un árbol de directorio que permita encontrar de manera sencilla cada archivo fuente según su función en el sistema. La organización de los directorios sigue la arquitectura de capas a nivel global de la aplicación quedando de la siguiente manera:\\
+Con el objetivo de mantener un orden a lo largo del desarrollo del \textit{software}, se debe dar una estructura lógica a los diferentes archivos fuentes que lo componen. Así, se organiza un árbol de directorios que permita encontrar, de manera sencilla, cada archivo fuente según su función en el sistema. La organización de los directorios sigue la arquitectura de capas de la aplicación, quedando de la siguiente manera:\\
 
 \dirtree{%
 .1 main/.
@@ -56,15 +59,15 @@ Con el objetivo de mantener un orden lógico a lo largo del desarrollo del \texti
 }
 
 \vspace*{0.5cm}
-Los desarrollos deben seguir esta estructura al momento de agregar archivo con código fuente al sistema. En la tabla \ref{ch4:table:directory} se detalla la funcionalidad de cada directorio.
+Los desarrolladores deben seguir esta estructura al momento de agregar un archivo con código fuente al proyecto. En la tabla \ref{ch4:table:directory} se detalla la funcionalidad de cada directorio.
 
 \begin{table}[ht!] \caption{Organización de directorios del proyecto}
 \centering
 \begin{tabularx}{\textwidth}{lX}\hline
 \textbf{Directorio} & \textbf{Descripción}\\\hline
-\texttt{main} & Directorio principal, contiene el archivo main.c y archivos de configuración globales\\
+\texttt{main} & Directorio principal, contiene el archivo main.c y archivos de configuración globales.\\
 \texttt{include} & Dentro de cada directorio de fuentes, se agrega un directorio \textit{include} que contiene las cabeceras de cada archivo fuente en el nivel superior.\\
-\texttt{Drivers} & Contiene las fuentes para los \textit{drivers} del sistema como el computador a bordo, el sistema de comunicaciones y el sistema de energía.\\
+\texttt{Drivers} & Contiene las fuentes para los \textit{drivers} del sistema, como el computador a bordo, el sistema de comunicaciones y el sistema de energía.\\
 \texttt{FreeRTOS} & Carpeta con el nombre del sistema operativo. Contiene los archivos fuentes, cabeceras y librerías del sistema operativo según su organización particular.\\
 \texttt{Payloads} & Comandos y \textit{drivers} relacionados con \textit{payloads}. Se encuentra en un directorio aparte pues acá se concentrarán la mayoría del \textit{software} específico de la misión.\\
 \texttt{Payloads/Cmd} & Implementación de comandos del sistema relacionados con \textit{payloads}.\\
@@ -75,8 +78,8 @@ Los desarrollos deben seguir esta estructura al momento de agregar archivo con c
 \end{tabularx} \label{ch4:table:directory}
 \end{table}
 
-\subsection{IDE}
-Esta estructura de directorios creada es la base para configurar adecuadamente los archivos con las fuentes del proyecto en el IDE, en este caso MPLAB X. Para la correcta construcción de \textit{software} en el IDE se deben ajustar las configuraciones del compilador según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion} donde los parámetros no mencionados mantienen su configuración por defecto. Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se detallan en la figura \ref{ch4:xc16:config}.
+\subsection{Configuración del IDE}
+La estructura de directorios creada, es la base para configurar adecuadamente los archivos con las fuentes del proyecto en el IDE, en este caso MPLAB X. Para la correcta compilación del \textit{software}, en el IDE se deben ajustar las configuraciones del compilador, según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion}, donde los parámetros no mencionados mantienen su configuración por defecto. %Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se detallan en la figura \ref{ch4:xc16:config}.
 
 \begin{table}[ht!] \caption{Configuración del compilador XC16}
 \centering
@@ -107,27 +110,26 @@ Additional warnings & Seleccionada & Permite un nivel mayor de advertencias en t
 \end{tabularx} \label{ch4:table:xc16:configuracion}
 \end{table}
 
-%···················· FIGURE ····················
-\begin{figure}[hb!] \centering
-\subfloat[]{\includegraphics[width=0.48\textwidth]{img/xc16_config_mem.png}}
-% \subfloat[]{\includegraphics[width=0.3\textwidth]{img/xc16_config_opt.psng}}
-\hspace{0.3cm}
-\subfloat[]{\includegraphics[width=0.48\textwidth]{img/xc16_config_prep.png}}
-\caption{Diálogo de configuración del compilador XC16 en MPLABX}\label{ch4:xc16:config}
-\end{figure}
-%················································
+% %···················· FIGURE ····················
+% \begin{figure}[hb!] \centering
+% \subfloat[]{\includegraphics[width=0.48\textwidth]{img/xc16_config_mem.png}}
+% % \subfloat[]{\includegraphics[width=0.3\textwidth]{img/xc16_config_opt.psng}}
+% \hspace{0.3cm}
+% \subfloat[]{\includegraphics[width=0.48\textwidth]{img/xc16_config_prep.png}}
+% \caption{Diálogo de configuración del compilador XC16 en MPLABX}\label{ch4:xc16:config}
+% \end{figure}
+% %················································
 
-\subsection{Documentación}
-Parte fundamental para cumplir con los requerimientos no operaciones es la correcta documentación del código desarrollado. Documentar tiene dos propósitos principales: por un lado guiar la implementación de la arquitecutra para futuras modificaciiones; y por otro documentar el objetivo, parámetros y uso de cada comando implementado.\\
+\subsection{Sistema de documentación}
+Parte fundamental para cumplir con los requerimientos no operacionales, es la correcta documentación del código desarrollado. Esto tiene dos propósitos principales: por un lado, guiar la implementación de la arquitectura para futuras modificaciones, y por otro documentar el objetivo, parámetros y uso de cada comando.
 
-La principal problemática consiste en mantener varios documentos a la vez separando el proceso de programación de la documentación. Para evitar este problema, la documentación se realiza en el mismo código y es en el mismo momento en que se programa una nueva función, se crea un nueva definición o una nueva estructura de datos, en que se documenta el propósito del código.\\
+La principal problemática consiste en mantener varios archivos a la vez, separando el proceso de programación de la documentación. Para evitar este problema, la documentación se realiza en el mismo código y es en el mismo momento en que se programa. Cada vez que se agrega una función, se crea un definición o una estructura de datos, se describe el propósito del código.
 
-Con el objetivo de extraer esta información desde el código a un formato más adecuado para su presentación y para establecer una convención en la forma de documentar se utiliza el \textit{software} Doxygen. Al seguir un determinado formato en los comentario agregados al código Doxygen es capaz de extraer la documentación y generar documentos bien acabados en diferentes formatos como: documentos HTML, \LaTeX, RTF, entre otros.\\
+Con el objetivo de extraer esta información desde el código, a un formato más adecuado para su presentación y para establecer una convención en la forma de documentar, se utiliza el \textit{software} Doxygen. Al seguir un determinado formato en los comentarios agregados al código, Doxygen es capaz de extraerlos y generar documentos bien acabados en diferentes formatos como HTML, \LaTeX, RTF, entre otros.
 
-El formato definido por Doxygen se detalla en su página web (\url{www.doxygen.org}) y consiste en comentarios más una serie de directivas que guían el formato de salida. Por ejemplo, para documentar una función en C con dos parámetros se utiliza la sintaxis del código \ref{ch4:code:doxygen_test} y al ejecutar Doxygen para generar la salida como página web se obtendría el resultado de la figura \ref{ch4:img:doxygen}
+El formato definido por Doxygen se detalla en su página web (\url{www.doxygen.org}) y consiste en agregar a los comentarios una serie de directivas que guían el formato de salida. Por ejemplo, para documentar una función en C con dos parámetros, se utiliza la sintaxis del código \ref{ch4:code:doxygen_test}. Al ejecutar Doxygen, para generar la salida como página web, se obtendría el resultado de la figura \ref{ch4:img:doxygen}
 
-
-\begin{lstlisting}[float,label=ch4:code:doxygen_test,caption=Prueba de Doxygen]
+\begin{lstlisting}[label=ch4:code:doxygen_test,caption=Prueba de Doxygen]
 /**
  * Suma dos valores ingresados como parametros
  * @note Solo acepta valores enteros sin signo
@@ -145,23 +147,20 @@ int suma(unsigned int a, unsigned int b)
 \figura{img/doxygen.png}{width=\textwidth}{Documento HTML generado por Doxygen}{ch4:img:doxygen}{ht!}
 
 \section{Controladores de hardware}
-La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de \textit{hardware}. En este caso un módulo significa una librería que consiste en una serie de funciones escritas en lenguaje C las cuales acceden a funcionalidades específicas de cierto \textit{hardware} respetando sus protocolos o API. La librería consta entonces de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
+La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de \textit{hardware}. Un módulo, significa una librería que consiste en una serie de funciones escritas en lenguaje C, las cuales acceden a funcionalidades específicas de cierto \textit{hardware} respetando sus protocolos o API. La librería consta de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
 
-La hoja de datos de cada dispositivo de \textit{hardware} entrega la información necesaria para poder configurarlo y acceder a sus funciones. Se puede requerir de diferentes niveles de abstracción a la hora de implementar el controlador:
+La hoja de datos de cada dispositivo de \textit{hardware} entrega la información necesaria para poder configurarlo y acceder a sus funciones. Se pueden requerir diferentes niveles de abstracción a la hora de implementar un controlador:
 \begin{enumerate}
-    \item Programar en lenguaje ensamblador (\textit{assembler}). Se maneja directamente el juego de instrucciones del procesador (también conocido como lenguaje máquina) para configurar sus registros, manejar periféricos o ejecutar un programa general. Requiere de un compilador de \textit{assembler} para generar el ejecutable binario.
-    \item Utilizar un compilador en C. El compilador provee un nivel mayor de abstracción al permitir programar en un lenguaje de alto nivel y portable como C. Además provee librerías básicas para las funciones específicas de cada dispositivo.
-    \item Utilizar una librería externa. Un controlador de \textit{hardware} puede requerir los servicios de otro controlador para su funcionamiento. Es el caso típico de dispositivos que utilizan algún protocolo de comunicación (RS232, SPI, I2C) y su controlador consiste en implementar una API de llamadas sobre este protocolo.
+    \item Programar en lenguaje ensamblador (\textit{assembler}): se maneja directamente el juego de instrucciones del procesador (también conocido como lenguaje máquina) para configurar sus registros, manejar periféricos o ejecutar un programa general. Requiere de un compilador de \textit{assembler} para generar el binario.
+    \item Utilizar un compilador en C: el compilador provee un nivel mayor de abstracción al permitir programar en un lenguaje de alto nivel y portable como C. Además, posee librerías básicas para las funciones de cada dispositivo.
+    \item Utilizar una librería externa: un controlador de \textit{hardware} puede requerir los servicios de otro controlador para su funcionamiento. Es el caso típico de dispositivos que utilizan algún protocolo de comunicación (RS232, SPI, I2C) puessu controlador consiste en implementar una API de llamadas sobre este protocolo.
 \end{enumerate}
 
-En este caso se hará un uso extensivo de las librerías escritas en C que provee el compilador XC16 para construir \textit{drivers} más complejos a través de sus funciones base. Lo principal es implementar los \textit{drivers} de cada periféricos disponible en el microcontrolador pues serán los recursos que utilizarán los dispositivos externos que completan el sistema del satélite.
+En este caso se hará un uso extensivo de las librerías escritas en C, que provee el compilador XC16, para construir \textit{drivers} más complejos a través de sus funciones base. Lo principal es implementar los \textit{drivers} de cada periférico disponible en el microcontrolador, pues serán los recursos que utilizarán los dispositivos externos que completan el sistema del satélite. 
 
-\subsection{Microcontrolador}
+En la sección \ref{ch2:embedded:perif} se revisaron los periféricos disponibles en el PIC24F256GA110. De ellos, se requieren al menos los siguientes \textit{drivers} para soportar el resto de las funcionalidades: Timers, I2C, SPI y UART. En la tabla \ref{ch4:table:perif_list} se detalla la arquitectura que se utilizará en cada uno de ellos.
 
-\subsection{Periféricos}
-En la sección \ref{ch2:embedded:perif} se revisaron los periféricos disponibles en el PIC24F256GA110, de ellos al menos los siguientes drivers para soportar el resto de las funcionalidades de la aplicación: Timers, I2C, SPI y UART. En la tabla \ref{ch4:table:perif_list} se detalla la arquitectura que se utilizará en cada uno de ellos.
-
-\begin{table}[ht!] \caption{Drivers para periféricos del microcontrolador}
+\begin{table}[ht!] \caption{\textit{Drivers} para periféricos del microcontrolador}
 \centering
 \begin{tabular}{ll}\hline
 \textbf{Periférico} & \textbf{Arquitectura} \\\hline
@@ -180,7 +179,7 @@ UART Lectura & Cola de entrada de datos seriales\\\hline
 % \subsubsection{Implementación de un controlador asíncrono}
 
 \section{Sistema operativo}
-En la capa de sistema operativo se ha optado por utilizar FreeRTOS. Este sistema operativo está diseñado específicamente para sistema embebidos y provee la capacidad de implementar tareas que son módulos de \textit{software} que funcionan de manera concurrente y pueden compartir información a través de diferentes estructuras de sincronización. Soporta una gran variedad de microcontroladores a través de \textit{ports} y aplicaciones demo que se obtienen al descargar el \textit{software} desde la página web del proyecto (\url{www.freertos.org}). La estructura de software de este sistema operativo consta de cinco archivos fuentes en lenguaje C (sólo tres son necesarios para la utilidad básica), once archivos de cabecera y una capa portable dependiente del dispositivo sobre el cual se trabaja. Fuera de los demos y diferentes ports incluidos con la descarga el siguiente árbol de directorio se agrega a la carpeta del proyecto y en la configuración del proyecto en MPLABX:
+En la capa de sistema operativo se ha optado por utilizar FreeRTOS. Está diseñado específicamente para sistema embebidos y provee la capacidad de implementar tareas, que son módulos de \textit{\textit{software}} que funcionan de manera concurrente y pueden compartir información a través de diferentes estructuras de sincronización. Soporta una gran variedad de microcontroladores a través de \textit{ports} y aplicaciones demo, que se obtienen al descargarlo desde la página web del proyecto (\url{www.freertos.org}). La estructura de \textit{software} de este sistema operativo consta de cinco archivos fuentes en lenguaje C (sólo tres son necesarios para la utilidad básica), once archivos de cabecera y una capa portable dependiente del dispositivo sobre el cual se trabaja. Fuera de los demos y diferentes \textit{ports} incluidos con la descarga, el siguiente árbol de directorio se agrega a la carpeta del proyecto y en la configuración de MPLABX:
 
 \begin{verbatim}
 FreeRTOS/Source/tasks.c
@@ -204,11 +203,11 @@ Se requieren algunas configuraciones extra en el compilador para el correcto fun
 \multicolumn{3}{c}{\textbf{xc16-gcc}}\\%\hline
 \multicolumn{3}{c}{\textbf{Categoría: Optimizations}}\\\hline
 \textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
-Omit frame pointer & Seleccionada & Ver documentación de FreeRTOS\cite{FREERTOS_PIC24}.\\
+Omit frame pointer & Seleccionada & Ver documentación de FreeRTOS \cite{FREERTOS_PIC24}.\\
 \hline
 \multicolumn{3}{c}{\textbf{Categoría: Preprocessing and messages}}\\\hline
 \textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
-Define C macros & \texttt{MPLAB\_PIC24\_PORT} & Ver documentación de FreeRTOS\cite{FREERTOS_PIC24}.\\
+Define C macros & \texttt{MPLAB\_PIC24\_PORT} & Ver documentación de FreeRTOS \cite{FREERTOS_PIC24}.\\
 \hline
 
 \multicolumn{3}{c}{\textbf{xc16-as}}\\%\hline
@@ -220,7 +219,7 @@ ASM include dirs & \texttt{../FreeRTOS/Source/portable/ MPLAB/PIC24\_dsPIC/} & F
 \end{tabularx} \label{ch4:table:xc16:configuracion:freertos}
 \end{table}
 
-El primer paso para integrar el sistema operativo es crear el archivo de cabecera con su configuración llamado \texttt{FreeRTOSConfig.h}. El archivo se compone de una serie de \textit{defines} que cambian el comportamiento del sistema operativo y lo ajustan a las necesidades de la aplicación. Una plantilla con los posibles valores a configurar se encuentra en la página web de FreeRTOS: \url{http://www.freertos.org/a00110.html}. Un ejemplo de este archivo se detalla en el código \ref{ch4:code:FreeRTOSConfig.h}
+El primer paso para integrar el sistema operativo, es crear el archivo de cabecera con su configuración, llamado \texttt{FreeRTOSConfig.h}. El archivo se compone de una serie de \textit{defines}, que cambian el comportamiento de FreeRTOS y lo ajustan a las necesidades de la aplicación. Una plantilla con los posibles valores a configurar se encuentra en su página web: \url{http://www.freertos.org/a00110.html}. Un ejemplo de este archivo se detalla en el código \ref{ch4:code:FreeRTOSConfig.h}
 
 \begin{lstlisting}[float,label=ch4:code:FreeRTOSConfig.h, caption=FreeRTOSConfig.h]
 #ifndef FREERTOS_CONFIG_H
@@ -253,7 +252,7 @@ El primer paso para integrar el sistema operativo es crear el archivo de cabecer
 #endif /* FREERTOS_CONFIG_H */
 \end{lstlisting}
 
-En segundo lugar se deben crear las tareas que ejecutará el sistema. En FreeRTOS, una tarea es una función con una firma específica y que por lo general entrará en un ciclo infinito para mantener su ejecución en el tiempo. Toda tarea debe poseer la siguiente firma: \texttt{void taskName(void *)}, donde el nombre de la función varia de tarea en tarea, pero siempre debe retornar \textit{void} y recibir un puntero \textit{void} como parámetro. Un simple prototipo de tarea en FreeRTOS se detalla en el código \ref{ch4:code:taskTest}. La tarea se denomina \texttt{taskTest} y recibe a través de su parámetro una cadena de texto. La tarea entra en un ciclo e imprime de manera periódica el \textit{string} entregado como parámetro. Aunque la tarea está en un ciclo infinito, no se encuentra en una situación de \textit{busy waiting} dado que utiliza la función \texttt{vtaskDelay} que detiene la ejecución de la tarea durante un periodo de tiempo liberando los recursos del procesador; en este caso se dice que la tarea se encuentra dormida.
+En segundo lugar, se deben crear las tareas que ejecutará el sistema. En FreeRTOS, una tarea es una función con una firma específica y que por lo general, entrará en un ciclo infinito para mantener su ejecución en el tiempo. Deben poseer la siguiente firma: \texttt{void taskName(void *)}, donde el nombre de la función varia de tarea en tarea, pero siempre debe retornar \textit{void} y recibir un puntero \textit{void} como parámetro. Un simple prototipo se detalla en el código \ref{ch4:code:taskTest}. La tarea se denomina \texttt{taskTest} y recibe a través de su parámetro una cadena de texto, luego entra en un ciclo e imprime de manera periódica el \textit{string} entregado. Aunque está en un ciclo infinito, no se encuentra en una situación de \textit{busy waiting}, ya que utiliza la función \texttt{vtaskDelay}, que detiene su ejecución de durante un periodo de tiempo, liberando los recursos del procesador.
 
 \begin{lstlisting}[float,label=ch4:code:taskTest,caption=taskTest.c]
 #include taskTest.h
@@ -271,7 +270,7 @@ void taskTest(void *param)
 }
 \end{lstlisting}
 
-Una vez programada la tarea, se puede configurar el sistema para que la ejecute. Esto se realiza en el archivo \texttt{main.c} donde se realizan las configuraciones del \textit{hardware}, se cargan las configuraciones del sistema operativo contenida en el archivo \texttt{FreeRTOSConfig.h}, se crean las tareas y se inicia el sistema operativo. Para crear tareas se utiliza la función \texttt{xTaskCreate} indicando la función a ejecutar, un nombre, prioridad, memoria asignada y parámetros; para detalles referirse a la documentación de FreeRTOS\cite{FREERTOS_API}. El sistema operativo se inicia con la llamada a \texttt{vTaskStartScheduler()} y una vez alcanzado este punto, el control de los procesos a ejecutar queda en manos de FreeRTOS quien según su algoritmo de \texttt{scheduling} seleccionará la tarea que debe ejecutarse en cada instante. El llamado a la función \texttt{vTaskStartScheduler} no retorna a menos que se produzca un error en la ejecución del sistema operativo. El el código \ref{ch4:code:test:main.c} se ilustra la forma de iniciar FreeRTOS con dos tareas ejecutándose de manera simultanea, para mantener la generalidad no se incluyen configuraciones de \textit{hardware} específicas.
+Una vez programada la tarea se puede indicar al sistema operativo que la ejecute. Esto se realiza en el archivo \texttt{main.c}, donde se realizan las configuraciones del \textit{hardware}, se crean las tareas y se inicia el sistema operativo. Para crear tareas se utiliza la función \texttt{xTaskCreate}, indicando la función a ejecutar, un nombre, prioridad, memoria asignada y parámetros; para detalles referirse a la documentación \cite{FREERTOS_API}. El sistema operativo se inicia con la llamada a \texttt{vTaskStartScheduler()} y una vez alcanzado este punto, el control de los procesos queda en manos de FreeRTOS, quien según su algoritmo de \textit{scheduling}, seleccionará la tarea que debe ejecutarse en cada instante. El llamado a la función \texttt{vTaskStartScheduler} no retorna a menos que se produzca un error en la ejecución. El código \ref{ch4:code:test:main.c} ilustra la forma de iniciar FreeRTOS con dos tareas ejecutándose de manera simultanea. Para mantener la generalidad no se incluyen configuraciones de \textit{hardware} específicas.
 
 \begin{lstlisting}[float,label=ch4:code:test:main.c,caption=main.c]
 /* RTOS Includes */
@@ -297,8 +296,9 @@ int main(void)
 }
 \end{lstlisting}
 
-El resultado de ejecutar el programa anterior se puede visualizar a través de la consola serial conectada al sistema objetivo:
-\begin{verbatim}
+El resultado de ejecutar el programa anterior se puede visualizar a través de la consola serial conectada al sistema objetivo. El registro \ref{ch4:reg:freertos} se observa que la tarea de mayor prioridad es la primera en ejecutarse y por lo tanto imprime su mensaje en pantalla: \texttt{[taskTest] T2 Running...}. Luego pasa a estado suspendido y por lo tanto, la siguiente en orden de prioridad tiene acceso al procesador para ejecutarse, imprimir su mensaje: \texttt{[taskTest] T1 Running...} y pasar a estado suspendido. Cuando no hay alguna disponible, FreeRTOS ejecuta la tarea \texttt{Idle}, iniciada por defecto por el sistema operativo. Luego de 500 ms. la tarea de mayor prioridad despierta y toma el control del procesador repitiendo el ciclo anterior.
+
+\begin{lstlisting}[float,label=ch4:reg:freertos,caption=Prueba de ejecución de FreeRTOS con dos tareas]
 >>Starting FreeRTOS scheduler [->]
 [taskTest] T2 Running...
 [taskTest] T1 Running...
@@ -307,9 +307,7 @@ El resultado de ejecutar el programa anterior se puede visualizar a través de la
 [taskTest] T2 Running...
 \end{verbatim}
 
-Se observa que la tarea de mayor prioridad es la primera en ejecutarse y por lo tanto imprime su mensaje en pantalla: \texttt{[taskTest] T2 Running...}. Esta tarea ahora pasa a estado suspendido y por lo tanto la siguiente tarea en orden de prioridad tiene acceso al procesador para ejecutarse, imprimir su mensaje: \texttt{[taskTest] T1 Running...} y pasar a estado suspendido. Cuando ninguna tarea está disponible para ejecutarse FreeRTOS ejecuta la tarea \texttt{Idle} iniciada por defecto por el sistema operativo. Luego de 500[ms] la tarea de mayor prioridad despierta y toma el control del procesador repitiendo el ciclo anterior.
-
-Con esto concluye la integración del sistema operativo en el \textit{software} de vuelo y se demuestra el correcto funcionamiento de FreeRTOS. Ahora se cuenta con una nivel mayor de abstracción en la aplicación donde el sistema operativo tiene el control sobre los procesos que se ejecutan en el microcontrolador y la aplicación final se implementa en las diferentes tareas que se crean.
+Con esto concluye la integración del sistema operativo en el \textit{software} de vuelo y se demuestra el correcto funcionamiento de FreeRTOS. Ahora, se cuenta con un nivel mayor de abstracción, donde el sistema operativo tiene el control sobre los procesos que se ejecutan en el microcontrolador y la aplicación final se implementa en las diferentes tareas que se crean.
 
 %TODO: Hablar de la configuracion de memoria
 %TODO: Hablar de la configuracion de prioridades
@@ -318,7 +316,7 @@ Con esto concluye la integración del sistema operativo en el \textit{software} d
 En la capa de aplicación se debe implementar la arquitectura de \textit{software} detallada en la figura \ref{img:ch3:dis:arch} que permite el cumplimiento de todos los requerimientos de operacionales del satélite. El proceso incluye interpretar el patrón de diseño que inspira la arquitectura base para ser implementado en un lenguaje \textit{procedural} como C. Se parte por implementar la arquitectura base del patrón de ejecutor de comandos para contar con un sistema base que sea general y bien probado sobre el cual agregar las funcionalidades específicas del proyecto. Las funciones propias de este proyecto satelital estarán implementadas en la capa de \textit{listeners} y la lista de comandos. Finalmente se detallará la implementación de los distintos módulos que competan los requerimientos del proyecto SUCHAI en específico.
 
 \subsection{Implementación del patrón de diseño}
-Cómo se describe en la sección \ref{ch2:sec:214} se debe implementar un patrón de diseño, específicamente \textit{Command Pattern} en un lenguaje procedural como C. El problema radica en la programación basada en patrones de diseño es una técnica utilizada principalmente en lenguajes de programación orientados a objetos y los patrones se describen según diagramas de colaboración entre objetos incluyendo técnicas como herencia o polimorfismo. No obstante, el diseño de una arquitectura de \textit{software} debe ser independiente del lenguaje de programación a utilizar, lo mismo se cumple en el diseño de una arquitectura basándose en patrones\cite{SYSTEM_PATTERNS}. Para sortear esta situación se procede a definir cómo se traduce cada elemento del patrón de diseño deseado a la plataforma objetivo.
+Cómo se describe en la sección \ref{ch2:sec:214} se debe implementar un patrón de diseño, específicamente \textit{Command Pattern} en un lenguaje procedural como C. El problema radica en la programación basada en patrones de diseño es una técnica utilizada principalmente en lenguajes de programación orientados a objetos y los patrones se describen según diagramas de colaboración entre objetos incluyendo técnicas como herencia o polimorfismo. No obstante, el diseño de una arquitectura de \textit{software} debe ser independiente del lenguaje de programación a utilizar, lo mismo se cumple en el diseño de una arquitectura basándose en patrones \cite{SYSTEM_PATTERNS}. Para sortear esta situación se procede a definir cómo se traduce cada elemento del patrón de diseño deseado a la plataforma objetivo.
 
 \begin{itemize}
     \item \textbf{Controladores o clientes:} Corresponderán a tareas del sistema operativo. Pueden ser tareas que se ejecuten de manera periódica o basadas en eventos. Los clientes estarán ejecutándose constantemente y según la inteligencia que tengan programada pueden responder a algún evento periódico o un estímulo externo para generar los comandos del sistema. Cada tarea posee su propio \texttt{stack} de memoria y se pueden comunicar con otras o utilizar recursos compartidos del sistema a través de estructuras de sincronización.
@@ -389,7 +387,7 @@ typedef struct ctrl_command{
 
 Todas estas definiciones son incluidas en un archivo de cabecera denominado \texttt{cmdIncludes.h} que homogeneiza el tratamiento de los comandos a lo largo de la aplicación.
 
-La implementación de un comando en específico requiere la definición de una función que cumpla con la firma del código \ref{ch4:code:cmdFunction}, un ejemplo es el código \ref{ch4:code:get_rtos_memory} donde se implementa el comando \texttt{get\_rtos\_memory}; notar que este comando forma parte del archivo \texttt{cmdOBC.c}, por lo tanto cada función y definición incluye el prefijo \texttt{obc\_} como parte del estándar de nombres utilizado en el proyecto. Este comando que será utilizado como ejemplo es, sin embargo, una importante funcionalidad dentro del \textit{software} de vuelo que nos permitirá obtener información sobre el uso de memoria del sistema operativo. El objetivo es utilizar la función \texttt{xPortGetFreeHeapSize} de FreeRTOS que entrega la cantidad de memoria en \textit{bytes} disponible en el \textit{heap}\cite{FREERTOS_API} para desplegarla en consola. La convención indica que retornar un valor cero desde el comando significa error lo cual demuestra su conveniencia en este caso pues el comando puede retornar directamente la cantidad de memoria disponible.
+La implementación de un comando en específico requiere la definición de una función que cumpla con la firma del código \ref{ch4:code:cmdFunction}, un ejemplo es el código \ref{ch4:code:get_rtos_memory} donde se implementa el comando \texttt{get\_rtos\_memory}; notar que este comando forma parte del archivo \texttt{cmdOBC.c}, por lo tanto cada función y definición incluye el prefijo \texttt{obc\_} como parte del estándar de nombres utilizado en el proyecto. Este comando que será utilizado como ejemplo es, sin embargo, una importante funcionalidad dentro del \textit{software} de vuelo que nos permitirá obtener información sobre el uso de memoria del sistema operativo. El objetivo es utilizar la función \texttt{xPortGetFreeHeapSize} de FreeRTOS que entrega la cantidad de memoria en \textit{bytes} disponible en el \textit{heap} \cite{FREERTOS_API} para desplegarla en consola. La convención indica que retornar un valor cero desde el comando significa error lo cual demuestra su conveniencia en este caso pues el comando puede retornar directamente la cantidad de memoria disponible.
 
 \begin{lstlisting}[float,label=ch4:code:get_rtos_memory,caption=Ejemplo de comando]
 /**
@@ -563,7 +561,7 @@ Este repositorio almacena aquellas variables que contienen información sobre el 
 
 Las operaciones básicas que provee el repositorio son: leer una variable de estado, lo cual se realiza en la función \texttt{dat\_getCubesatVar}; escribir el valor de una variable de estado, lo cual se realiza en la función \texttt{dat\_setCubesatVar}; e inicializar el repositorio de estados ante un reinicio del sistema, a través de la función \texttt{dat\_onResetCubesatVar}. Estas funciones se encuentra implementadas en el código \ref{ch4:code:dataRepository.c}.
 
-Este repositorio es leído y escrito de manera concurrente por una serie de tareas por lo cual se puede generar una condición de \textit{data race}. Esto se hace mas evidente cuando se implementa en una memoria externa lo que puede resultar operaciones de lectura o escritura no atómicas, donde además se requiere utilizar recursos compartidos del sistema como periféricos de entrada y salida. Por esta razón se debe implementar una estructura de sincronización que provea la exclusión mutua entre las diferentes tareas que acceden a este repositorio. Esta situación se observa en el código \ref{ch4:code:dataRepository.c} cuando se usan las funciones \texttt{xSemaphoreTake} y \texttt{xSemaphoreGive} de FreeRTOS\cite{FREERTOS_API}.
+Este repositorio es leído y escrito de manera concurrente por una serie de tareas por lo cual se puede generar una condición de \textit{data race}. Esto se hace mas evidente cuando se implementa en una memoria externa lo que puede resultar operaciones de lectura o escritura no atómicas, donde además se requiere utilizar recursos compartidos del sistema como periféricos de entrada y salida. Por esta razón se debe implementar una estructura de sincronización que provea la exclusión mutua entre las diferentes tareas que acceden a este repositorio. Esta situación se observa en el código \ref{ch4:code:dataRepository.c} cuando se usan las funciones \texttt{xSemaphoreTake} y \texttt{xSemaphoreGive} de FreeRTOS \cite{FREERTOS_API}.
 
 \begin{lstlisting}[float,label=ch4:code:dataRepository.c,caption=dataRepository.c]
 #include "dataRepository.h"
@@ -643,7 +641,7 @@ En general cualquier tipo de memoria no volátil se puede utilizar para estos fin
 
 El primer método es el más simple en cuanto no requiere de controladores externos para su funcionamiento y la sincronización no es crítica. Por esto y para mantener la generalidad en el código del ejemplo \ref{ch4:code:dataRepository.c} se implementa este diseño en el repositorio de estados. Sin embargo, el no contar con un almacenamiento persistente de los datos es una limitación crítica ya que este módulo permite que el sistema de vuelo sea tolerante a reinicio inesperados volviendo a funcionar según sus últimos estados almacenados. Este método es factible de utilizar para pruebas o bien como un sistema de respaldo en caso de que una falla fuerce al sistema a trabajar con funcionalidades mínimas.
 
-El diseño implementado en el sistema de vuelo utilizado en el proyecto SUCHAI es el tercero de la lista, y cuenta con dos memorias EEPROM de 512 bytes comunicadas a través de un bus I2C exclusivo. Esto provee la suficiente funcionalidad para que el sistema mantenga consistencia en su funcionamiento ante reinicios y además entrega redundancia como medida de tolerancia a fallos\cite{TOOPAZO}.
+El diseño implementado en el sistema de vuelo utilizado en el proyecto SUCHAI es el tercero de la lista, y cuenta con dos memorias EEPROM de 512 bytes comunicadas a través de un bus I2C exclusivo. Esto provee la suficiente funcionalidad para que el sistema mantenga consistencia en su funcionamiento ante reinicios y además entrega redundancia como medida de tolerancia a fallos \cite{TOOPAZO}.
 
 %\subsection{Repositorio de datos}
 %TODO: Repositorio de datos
@@ -655,7 +653,7 @@ Una parte fundamental de este módulo es la cola de comandos. Los comandos genera
 
 \figura{img/producer-consumer.png}{width=0.8\textwidth}{Problema del productor-consumidor}{ch4:img:productor-consumidor}{!h}
 
-Sin embargo FreeRTOS provee una estructura de datos adecuada para esta tarea denominadas \textit{queues} que poseen las siguientes características\cite{FREERTOS_API}\cite{FREERTOS_PIC24}:
+Sin embargo FreeRTOS provee una estructura de datos adecuada para esta tarea denominadas \textit{queues} que poseen las siguientes características \cite{FREERTOS_API}\cite{FREERTOS_PIC24}:
 \begin{itemize}
     \item Las colas son creadas con un tamaño de elementos fijo.
     \item El tamaño de cada elemento también se fija en su creación.
@@ -780,7 +778,7 @@ void taskExecuter(void *param)
 \end{lstlisting}
 
 \subsection{Listeners}
-Los \textit{listeners} son los módulos encargados de implementar la lógica de generación de comandos dentro del sistema de vuelo. Existen una serie de \textit{listeners} bajo la lógica de que a cada uno le corresponde controlar un determinado subsistema del satélite. Estos módulos se implementan como tareas de FreeRTOS que se activan de manera periódica, ejecutando operaciones de control que tienen como salida comandos que son agregados a la cola del \textit{dispatcher}. La lógica de funcionamiento se detalla en el diagrama de la figura \ref{ch4:img:freertos:periodic-task}. FreeRTOS ofrece dos funciones que implementan la periodicidad en las ejecución de las tareas, mediante la técnica de suspender su funcionamiento por una cantidad determinada de \textit{ticks}: \texttt{vTaskDelay} y \texttt{vTaskDelayUntil}. Cada una de estas funciones cambia el estado de la tarea a suspendida, un estado dónde no utiliza ningún recurso del procesador y luego del tiempo especificado retoma su ejecución. La diferencia entre ambas funciones es que la primera siempre suspende la tarea durante un tiempo fijo, mientras que la segunda mantiene fijo el tiempo que transcurre entre ambas llamadas de \textit{delay}\cite{FREERTOS_API}. \texttt{vTaskDelayUntil} es más adecuada para tareas de tipo \textit{hard real-time} y es la utilizada en los \textit{listeners} para proveer una resolución de tiempo más precisa.
+Los \textit{listeners} son los módulos encargados de implementar la lógica de generación de comandos dentro del sistema de vuelo. Existen una serie de \textit{listeners} bajo la lógica de que a cada uno le corresponde controlar un determinado subsistema del satélite. Estos módulos se implementan como tareas de FreeRTOS que se activan de manera periódica, ejecutando operaciones de control que tienen como salida comandos que son agregados a la cola del \textit{dispatcher}. La lógica de funcionamiento se detalla en el diagrama de la figura \ref{ch4:img:freertos:periodic-task}. FreeRTOS ofrece dos funciones que implementan la periodicidad en las ejecución de las tareas, mediante la técnica de suspender su funcionamiento por una cantidad determinada de \textit{ticks}: \texttt{vTaskDelay} y \texttt{vTaskDelayUntil}. Cada una de estas funciones cambia el estado de la tarea a suspendida, un estado dónde no utiliza ningún recurso del procesador y luego del tiempo especificado retoma su ejecución. La diferencia entre ambas funciones es que la primera siempre suspende la tarea durante un tiempo fijo, mientras que la segunda mantiene fijo el tiempo que transcurre entre ambas llamadas de \textit{delay} \cite{FREERTOS_API}. \texttt{vTaskDelayUntil} es más adecuada para tareas de tipo \textit{hard real-time} y es la utilizada en los \textit{listeners} para proveer una resolución de tiempo más precisa.
 
 \figura{img/listeners-flow.png}{scale=0.45}{Diagrama de flujo para \textit{listeners}}{ch4:img:freertos:periodic-task}{!h}
 
@@ -966,7 +964,7 @@ Al igual que el caso de la consola serial, se requiere la implementación de un \
 \figura{img/communications-flow.png}{scale=0.4}{Diagrama de flujo para \textit{taskCommunications}}{ch4:img:communications-flow}{ht!}
 
 \subsection{Inicialización del sistema}
-El software de vuelo debe ser capaz de recuperarse adecuadamente a un reinicio del sistema inesperado, el cual se puede provocar por diferentes motivos como: falla en la ejecución de una instrucción en el microcontrolador; un reinicio provocado por el \textit{watchdog} si la aplicación se congela; la falta de energía en los buses de alimentación por falta de carga en las baterías; sobre corrientes; o por algún factor externo como radiación.
+El \textit{software} de vuelo debe ser capaz de recuperarse adecuadamente a un reinicio del sistema inesperado, el cual se puede provocar por diferentes motivos como: falla en la ejecución de una instrucción en el microcontrolador; un reinicio provocado por el \textit{watchdog} si la aplicación se congela; la falta de energía en los buses de alimentación por falta de carga en las baterías; sobre corrientes; o por algún factor externo como radiación.
 
 Parte de esta capacidad se implementa en el repositorio de estados que provee un almacenamiento no voltátil de las variables del sistema, pero además al inicio se debe asegurar que todos los sub-sistemas de \textit{hardware} y \textit{software} estén correctamente inicializados lo que incluye las operaciones de despliegue del satélite desde su vehículo lanzador. Estas operaciones incluyen:
 
