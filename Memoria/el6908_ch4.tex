@@ -721,25 +721,26 @@ void taskDispatcher(void *param)
 }
 \end{lstlisting}
 
-\subsection{Executer}
-Este módulo es el último eslabón en la cadena de acciones que involucran la ejecución de un comando y sus responsabilidades incluyen: recibir en una estructura la función que se requiere ejecutar junto a su parámetro; ejecutar la función y obtener su resultado; notificar el término y resultado de la operación al \textit{dispatcher}. Esta tarea es activada mediante eventos, en específico la llegada de un comando. El \textit{Executer} se debe comunicar con el \textit{Dispatcher} de dos maneras:
+\subsection{Implementación del \textit{executer}}
+Según lo detallado en el capítulo \ref{ch3}, este módulo es el último eslabón en la cadena de acciones que involucran la ejecución de un comando. Sus responsabilidades incluyen: recibir en una estructura la función que se requiere ejecutar junto a su parámetro; realizar el llamado a la función y obtener su resultado; y notificar el resultado de la operación al \textit{dispatcher}. Esta tarea es activada mediante eventos, en específico, la llegada de un comando. El \textit{executer} se debe comunicar con el \textit{dispatcher} de dos maneras:
 
 \begin{itemize}
-    \item El \textit{dispatcher} prepara un comando para el ejecutor y debe notificar la disponibilidad de este nuevo comando.
-    \item El ejecutor notifica el término de la operación y su resultado al \textit{dispatcher}.
+    \item El \textit{dispatcher} prepara un comando para el \textit{executer} y debe notificar la disponibilidad de este nuevo comando.
+    \item El \textit{executer} notifica el término de la operación y su resultado al \textit{dispatcher}.
 \end{itemize}
 
-Para la comunicación entre tareas involucrando el intercambio de mensajes se utiliza nuevamente la estructura \textit{Queue} de FreeRTOS. En este caso se tienen dos mensajes que entregar para sincronizar dos estados del proceso total, por lo tanto se implementan dos colas de largo igual a un elemento. Al ser las colas de largo uno, estas actúan como \textit{mutexes} bloqueando un proceso hasta que el otro haya completado sus operaciones.
+Para la comunicación entre tareas, involucrando el intercambio de mensajes, se utiliza nuevamente la estructura \textit{Queue} de FreeRTOS. En este caso se tienen dos mensajes que entregar para sincronizar dos estados del proceso total, por lo tanto, se implementan dos colas de largo igual a un elemento. Al ser las colas de un sola dato, estas actúan como \textit{mutexes}, bloqueando un proceso hasta que el otro haya completado sus operaciones.
 
-El flujo de operación del \textit{executer} o ejecutor se detalla en la figura \ref{ch4:img:executer-flow} y es bastante simple en cuánto cumple sus tres obligaciones de manera secuencial. Esta simplicidad, sin embargo, no revela la verdadera utilidad de este módulo: proveer un ambiente de ejecución exclusivo al comando. Por diseño sólo un módulo ejecutor existe en el sistema, por lo tanto, una vez aquí el comando toma el control del procesador, de todos los recursos de \textit{hardware} y \textit{software} para realizar su tarea. Además aprovecha la generalidad definida por la interfaz de los comandos, para permitir a este módulo ejecutar cualquier función que implemente la interfaz requerida.
+El flujo de operación del \textit{executer} se detalla en la figura \ref{ch4:img:executer-flow}, y es bastante simple, en cuánto cumple sus tres obligaciones de manera secuencial. Esta simplicidad, sin embargo, no revela la verdadera utilidad de este módulo: proveer un ambiente de ejecución exclusivo al comando. Por diseño, sólo un módulo ejecutor existe en el sistema, por lo que una vez alcanzado este punto, el comando toma el control exclusivo del procesador, de todos los recursos de \textit{hardware} y \textit{software}, para realizar su tarea. Además aprovecha la generalidad definida por la interfaz de los comandos para permitir la ejecución de cualquier función que implemente la firma requerida.
 
-\figura{img/executer-flow.png}{scale=0.3}{Diagrama de flujo para \textit{executer}}{ch4:img:executer-flow}{!h}
+%TODO: revisar tamaño
+\figura{img/executer-flow.png}{scale=0.35}{Diagrama de flujo para \textit{executer}}{ch4:img:executer-flow}{!h}
 
-El código \ref{ch4:code:taskExecuter.c} detalla la implementación de este módulo. Al momento de crear esta tarea se debe tener en cuenta las siguientes consideraciones:
+El código \ref{ch4:code:taskExecuter.c} detalla la implementación de este módulo. Al momento de crear esta tarea se deben tener en cuenta las siguientes consideraciones:
 \begin{itemize}
-    \item Entregar la mayor cantidad de memoria de \textit{stack} posible. Esta tarea realiza todas las funciones importantes para el sistema y cada función que se ejecuta en esta tarea utilizará la memoria de \textit{stack} que se le asigna. A diferencia del resto de las tareas, donde su uso de memoria es parejo en el tiempo, el \textit{executer} llama a diferentes funciones y algunas de ellas pueden requerir más memoria que otras. Como el objetivo es proveer el entorno de ejecución para un comando, se debe contar con la memoria suficiente de modo que ningún comando cause un \textit{stack overflow} lo cual se debe determinar de manera experimental utilizando las herramientas de depuración disponibles en el entorno de desarollo.
+    \item Entregar la mayor cantidad de memoria de \textit{stack} posible. Esta tarea realiza todas las funciones importantes para el sistema y cada función que se ejecuta utiliza la memoria de \textit{stack} que se le asigna. A diferencia del resto de las tareas, donde su uso de memoria es parejo en el tiempo, el \textit{executer} llama a diferentes funciones y algunas de ellas pueden requerir más memoria que otras. Como el objetivo es proveer el entorno de ejecución para un comando, se debe contar con la memoria suficiente de modo que ningún comando cause un \textit{stack overflow}, lo cual se debe determinar de manera experimental, utilizando las herramientas de depuración disponibles en el entorno de desarollo.
     
-    \item Asignar la prioridad más alta posible. De esta manera se consigue que el comando en ejecución no sea interrumpido por ningún otro proceso con lo cual se aseguran dos puntos: primero el comando se ejecuta en el menor tiempo posible; y segundo, se elimina la necesidad de brindar una sincronización excesiva de los recursos compartidos de \textit{hardware} asegurando el acceso exclusivo cada vez que se ejecuta un comando.
+    \item Asignar la prioridad más alta posible. De esta manera se consigue que el comando en ejecución no sea interrumpido por ningún otro proceso con lo cual se aseguran dos puntos: primero, el comando se ejecuta en el menor tiempo posible; segundo, se elimina la necesidad de brindar una sincronización excesiva de los recursos compartidos de \textit{hardware}, asegurando el acceso exclusivo.
 \end{itemize}
 
 
@@ -778,6 +779,7 @@ void taskExecuter(void *param)
 }
 \end{lstlisting}
 
+%TODO: ACA VAMOS
 \subsection{Listeners}
 Los \textit{listeners} son los módulos encargados de implementar la lógica de generación de comandos dentro del sistema de vuelo. Existen una serie de \textit{listeners} bajo la lógica de que a cada uno le corresponde controlar un determinado subsistema del satélite. Estos módulos se implementan como tareas de FreeRTOS que se activan de manera periódica, ejecutando operaciones de control que tienen como salida comandos que son agregados a la cola del \textit{dispatcher}. La lógica de funcionamiento se detalla en el diagrama de la figura \ref{ch4:img:freertos:periodic-task}. FreeRTOS ofrece dos funciones que implementan la periodicidad en las ejecución de las tareas, mediante la técnica de suspender su funcionamiento por una cantidad determinada de \textit{ticks}: \texttt{vTaskDelay} y \texttt{vTaskDelayUntil}. Cada una de estas funciones cambia el estado de la tarea a suspendida, un estado dónde no utiliza ningún recurso del procesador y luego del tiempo especificado retoma su ejecución. La diferencia entre ambas funciones es que la primera siempre suspende la tarea durante un tiempo fijo, mientras que la segunda mantiene fijo el tiempo que transcurre entre ambas llamadas de \textit{delay} \cite{FREERTOS_API}. \texttt{vTaskDelayUntil} es más adecuada para tareas de tipo \textit{hard real-time} y es la utilizada en los \textit{listeners} para proveer una resolución de tiempo más precisa.
 
