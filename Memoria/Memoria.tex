@@ -14,7 +14,15 @@
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{subfig}  %Subfloat
-\usepackage{acronym} %Acronimos
+%\usepackage[printonlyused,withpage]{acronym} %Acronimos
+
+\usepackage[acronym,xindy={language=spanish,codepage=utf8},nonumberlist,style=super]{glossaries}
+\makeglossaries
+\include{glosario}
+\GlsSetXdyLanguage{spanish} 
+\renewcommand*{\glsgroupskip}{}  
+\renewcommand*{\glsdescwidth}{7in}
+
 \usepackage{tabularx}
 \usepackage{listings} %Codigo
 \usepackage{xcolor}
@@ -45,11 +53,22 @@
 
 % >>> figura 
 %[1: Descripcion 2: ruta imagen, 3: medida, 4: caption, 5: label, 6: posicion]
-%Ej: \figura{descripcion larga}{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
+%Ej: \figura[descripcion larga]{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
 \newcommand{\figura}[6][ ]
 {
    \begin{figure}[#6]
      \centering \includegraphics[#3]{#2} 
+     \caption[#4]{#4. #1}\label{#5}
+   \end{figure}
+}
+
+% >>> figura con controrno
+%[1: Descripcion 2: ruta imagen, 3: medida, 4: caption, 5: label, 6: posicion]
+%Ej: \figura[descripcion larga]{portada.png}{width=10cm}{descripcion}{fig:portada}{H}
+\newcommand{\figurabox}[6][ ]
+{
+   \begin{figure}[#6]
+     \centering \fbox{\includegraphics[#3]{#2}}
      \caption[#4]{#4. #1}\label{#5}
    \end{figure}
 }
@@ -140,6 +159,11 @@ A todos, muchas gracias.
 \nocite{*}
 \bibliographystyle{plain}
 \bibliography{bibliografia.bib}
+
+% ============= APENDICES ==========
+\newpage
+% \printindex
+% \printglossary[type=\acronymtype] % prints just the list of acronyms
 
 \end{document}
 

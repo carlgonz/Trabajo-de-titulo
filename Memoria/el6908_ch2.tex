@@ -2,12 +2,17 @@
 % En este capítulo se hace una revisión bibliográfica del los conceptos fundamentales para el desarrollo del trabajo de título. 
 % Se puede considerar como una contextualización en cuanto sirve como base para comprender el trabajo realizado.
 
-\acrodef{RAM}{\textit{Random Access Memory}}
-\acrodef{RISC}{\textit{Reduced Instruction Set Computing}}
-\acrodef{ALU}{\textit{Arithmetic Logic Unit}}
-\acrodef{EULA}{\textit{End-User License Agreement}}
-\acrodef{GPL}{\textit{General Public License}}
-\acrodef{RTOS}{\textit{Real Time Operating System}}
+\newacronym{RAM}{RAM}{\textit{Random Access Memory}}
+\newacronym{RISC}{RISC}{\textit{Reduced Instruction Set Computing}}
+\newacronym{ALU}{ALU}{\textit{Arithmetic Logic Unit}}
+\newacronym{EULA}{EULA}{\textit{End-User License Agreement}}
+\newacronym{GPL}{GPL}{\textit{General Public License}}
+\newacronym{RTOS}{RTOS}{\textit{Real Time Operating System}}
+\newacronym{API}{API}{\textit{Application Programming Interface}}
+\newacronym{MVC}{MVC}{Modelo-Vista-Controlador}
+\newacronym{EPS}{EPS}{\textit{Energy Power System}}
+\newacronym{UHF}{UHF}{\textit{Ultra High Frequency}}
+\newacronym{IARU}{IARU}{\textit{International Amateur Radio Union}}
 
 \chapter{Marco teórico}\label{ch2}
 
@@ -45,26 +50,18 @@ Todo sistema embebido está formado fundamentalmente por un microcontrolador, que
 A continuación, se describen las características específicas de los microcontroladores PIC24 que corresponde al dispositivo utilizado en este trabajo.
 
 \subsubsection{Arquitectura.}
-Poseen un juego de instrucciones \ac{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \ac{RAM}, separada de la memoria de datos (FLASH) pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \ac{RAM}. La arquitectura de la CPU la completa una \ac{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la \textbf{figura \ref{pic_cpu}}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
+Poseen un juego de instrucciones \gls{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \gls{RAM}, separada de la memoria de datos, pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \gls{RAM}. La arquitectura de la CPU la completa una \gls{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
 en una rutina de atención de la interrupción.
 
 % ················ IMAGEN ·················
-\begin{figure}[ht!]
-\centering
-\fbox{\includegraphics[scale=0.5]{img/pic_cpu.png}}
-\caption{Arquitectura de la CPU del PIC24F}\label{pic_cpu}
-\end{figure}
+\figurabox[Fuente: PIC24F Family Reference Manual \cite{PIC24F}.]{img/pic_cpu.png}{scale=0.5}{Arquitectura de la CPU del PIC24F}{pic_cpu}{ht!}
 %··········································
 
 \subsubsection{Periféricos.}\label{ch2:embedded:perif}
-La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, SPI o I2C, USB o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la \textbf{figura \ref{pic_perif}}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
+La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, SPI o I2C, USB o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
 
 % ················ IMAGEN ·················
-\begin{figure}[ht!]
-\centering
-\fbox{\includegraphics[scale=0.5]{img/pic_perif.jpg}}
-\caption{Arquitectura del PIC24F}\label{pic_perif}
-\end{figure}
+\figurabox[Además de la CPU, el PIC24F consta de una serie de periféricos. Fuente: Microchip (\url{http://www.microchip.com/pagehandler/en-us/family/16bit/architecture/pic24f.html}.]{img/pic_perif.jpg}{scale=0.5}{Perifericos del PIC24F}{pic_perif}{ht!}
 %··········································
 
 \subsubsection{Desarrollo.}
@@ -87,14 +84,10 @@ Para grabar el \textit{software} desarrollado para estos dispositivos se debe ut
 
 % ============= SISTEMAS OPERATIVOS ==============
 \section{Sistemas operativos}\label{ch2:sistema_operativo}
-Un sistema operativo es la aplicación base de un sistema computacional, pues brinda servicios básicos al resto de las aplicaciones de uso general ejecutadas en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro. Por lo tanto se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto, el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware}, las cuales no están disponibles para la aplicación como se ilustra en la \textbf{figura \ref{os}}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
+Un sistema operativo es la aplicación base de un sistema computacional, pues brinda servicios básicos al resto de las aplicaciones de uso general ejecutadas en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro. Por lo tanto se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto, el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware}, las cuales no están disponibles para la aplicación como se ilustra en la figura \ref{os}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
 
 % ················ IMAGEN ·················
-\begin{figure}[ht!]
-\centering
-\fbox{\includegraphics[scale=0.5]{img/os.png}}
-\caption{Sistema operativo como capa de abstracción de \textit{hardware}}\label{os}
-\end{figure}
+\figurabox[Accede directamente al \textit{hardware} y provee servicios a la capa de aplicación.]{img/os.pdf}{scale=0.7}{Sistema operativo como capa de abstracción de \textit{hardware}}{os}{ht!}
 %··········································
 
 Los servicios básicos que provee a través de su kernel son:
@@ -129,10 +122,10 @@ Los servicios básicos que provee a través de su kernel son:
 % %TODO: REHACER LOS DIAGRAMAS
 % %···················· FIGURE ····················
 % \begin{figure}[ht!] \centering
-% \subfloat[Kernel monolítico]{\includegraphics[width=0.45\textwidth]{img/kernel_monolitico.jpg}}
+% \subfloat[Kernel monolítico]{\includegraphics[width=0.45\textwidth]{img/kernel_monolitico.jpg}
 % \hspace{0.01cm}
-% \subfloat[Micro kernel]{\includegraphics[width=0.45\textwidth]{img/kernel_micro.jpg}}\\
-% \subfloat[Kernel en capas]{\includegraphics[width=0.45\textwidth]{img/kernel_capas.jpg}}
+% \subfloat[Micro kernel]{\includegraphics[width=0.45\textwidth]{img/kernel_micro.jpg}\\
+% \subfloat[Kernel en capas]{\includegraphics[width=0.45\textwidth]{img/kernel_capas.jpg}
 % \caption{Arquitecturas de sistemas operativos}\label{ch2:img:kernel}
 % \end{figure}
 % %················································
@@ -140,18 +133,14 @@ Los servicios básicos que provee a través de su kernel son:
 \subsection{Sistemas operativos de tiempo real}
 Un sistema operativo de tiempo real, posee un \textit{scheduler} diseñado para proveer un flujo de ejecución determinista, pues solo sabiendo con exactitud la tarea que el sistema ejecutará, en un determinado momento, se pueden cumplir los requerimientos estrictos de \textit{timing} \cite{FREERTOS_PIC24}. Esto es un aspecto de especial interés en sistemas embebidos que, normalmente, requieren respuesta en tiempo real ante eventos no predecibles como las interrupciones.\\
 
-La \textbf{figura \ref{rtos}} muestra la forma de conseguir un sistema de tiempo real, mediante el uso de prioridades para las diferentes tareas. En este ejemplo, la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo, ante la presencia de ciertos eventos, el sistema debe responder de manera instantánea cambiando de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica. En tal caso se le asigna una alta prioridad para asegurar que el sistema operativo siempre ejecute esta tarea cuando corresponda.
+La figura \ref{rtos} muestra la forma de conseguir un sistema de tiempo real, mediante el uso de prioridades para las diferentes tareas. En este ejemplo, la mayor parte del tiempo el sistema está en estado \textit{idle}, sin código que ejecutar. Sin embargo, ante la presencia de ciertos eventos, el sistema debe responder de manera instantánea cambiando de contexto a la tarea correspondiente. Ciertas tareas pueden requerir un estricto \textit{timing} ejecutándose de manera periódica. En tal caso se le asigna una alta prioridad para asegurar que el sistema operativo siempre ejecute esta tarea cuando corresponda.
 
 % ················ IMAGEN ·················
-\begin{figure}[ht!]
-\centering
-\fbox{\includegraphics[scale=0.8]{img/rtos.png}}
-\caption{\textit{Real time scheduling}}\label{rtos}
-\end{figure}
+\figurabox[En un sistema operativo de tiempo real las interrupciones deben ser atendidas sin retrasos y las operaciones de cambio de contexto se realizan en un tiempo constante e independiente de la cantidad de tareas presentes.]{img/rtos.pdf}{scale=0.8}{\textit{Real time scheduling}}{rtos}{ht!}
 %··········································
 
 \subsubsection{FreeRTOS}
-FreeRTOS es un tipo de \ac{RTOS}, que está diseñado para ser lo suficientemente pequeño, en términos de consumo de memoria como, para ser utilizado en un microcontrolador \cite{FREERTOS_PIC24}. Como estos sistemas son realmente limitados, normalmente no existe la posibilidad de ejecutar un sistema operativo completo como GNU-Linux, sin embargo FreeRTOS provee un kernel capaz de manejar múltiples tareas con prioridades, comunicación entre tareas, \textit{timing} y primitivas de sincronización. Por su reducido tamaño no entrega funcionalidades de alto nivel como una consola de comandos, así como tampoco funcionalidades de bajo nivel, como controladores para el \textit{hardware} o periféricos. 
+FreeRTOS es un tipo de \gls{RTOS}, que está diseñado para ser lo suficientemente pequeño, en términos de consumo de memoria como, para ser utilizado en un microcontrolador \cite{FREERTOS_PIC24}. Como estos sistemas son realmente limitados, normalmente no existe la posibilidad de ejecutar un sistema operativo completo como GNU-Linux, sin embargo FreeRTOS provee un kernel capaz de manejar múltiples tareas con prioridades, comunicación entre tareas, \textit{timing} y primitivas de sincronización. Por su reducido tamaño no entrega funcionalidades de alto nivel como una consola de comandos, así como tampoco funcionalidades de bajo nivel, como controladores para el \textit{hardware} o periféricos. 
 
 Entre sus principales características se encuentran \cite{FREERTOS_PIC24}:
 
@@ -165,29 +154,30 @@ Entre sus principales características se encuentran \cite{FREERTOS_PIC24}:
 	\item Detección de \textit{stack overflow}
 	\item Soporte oficial a 33 arquitecturas de sistemas embebidos.
 	\item Estructura de código portable, escrito en C.
-	\item Licenciado bajo \ac{GPL} modificada que permite su uso comercial sin publicar código fuente.
+	\item Licenciado bajo \gls{GPL} modificada que permite su uso comercial sin publicar código fuente.
 	\item Gratuito
 	\item Amplia documentación, foros y asistencia técnica.
 \end{itemize}
 
 \paragraph{Funcionamiento}
-Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función que se ejecuta de manera continua. Se puede encontrar en dos estados fundamentales: ``ejecutándose'' y ``no ejecutándose''. Cuando se está ejecutando, tiene el control del procesador y el código dentro de la función que la representa es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados ,como se observa en la \textbf{figura \ref{task_state}}: se inicia en un estado ``listo'', lo que indica que la tarea está en condiciones de ser seleccionada por el \textit{scheduler} y pasar a estar ``ejecutándose''. Estar ``bloqueado'' significa que la tarea no está disponible para ser procesada pues está en espera de algún evento, por ejemplo, la liberación de un \textit{mutex}. Por último el estado ``suspendido'' donde tampoco se puede ejecutar y el proceso debe explícitamente reanudarse para quedar en condiciones de ser ejecutada. La creación de tareas y el control de sus estados se realiza a través de la API de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar ellas.
+Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función que se ejecuta de manera continua. Se puede encontrar en dos estados fundamentales: ``ejecutándose'' y ``no ejecutándose''. Cuando se está ejecutando, tiene el control del procesador y el código dentro de la función que la representa es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados ,como se observa en la figura \ref{task_state}: se inicia en un estado ``listo'', lo que indica que la tarea está en condiciones de ser seleccionada por el \textit{scheduler} y pasar a estar ``ejecutándose''. Estar ``bloqueado'' significa que la tarea no está disponible para ser procesada pues está en espera de algún evento, por ejemplo, la liberación de un \textit{mutex}. Por último el estado ``suspendido'' donde tampoco se puede ejecutar y el proceso debe explícitamente reanudarse para quedar en condiciones de ser ejecutada. La creación de tareas y el control de sus estados se realiza a través de la \gls{API} de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar ellas.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
 \centering
-\fbox{\includegraphics[scale=0.9]{img/task_state.png}}
-\caption{Tareas de FreeRTOS, diagrama de estados}\label{task_state}
+\fbox{\includegraphics[scale=1]{img/task_state.pdf}}
+\caption{Tareas de FreeRTOS, diagrama de estados.}\label{task_state}
 \end{figure}
+
 %··········································
 
-El \textit{scheduler} es la parte fundamental del kernel, que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multi-proceso, cuando en realidad solo una función puede ejecutarse a la vez, ya que se cuenta solo con un procesador. Como se detalla en la \textbf{figura \ref{scheduler}}, la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea, y una vez que se agota se debe guardar su estado y se procede a ejecutar otra. Así cada una de las tareas se procesa durante un breve momento, de manera cíclica, hasta que completa su trabajo; si el tiempo de proceso asignado a cada una es lo suficientemente pequeño, pareciera que muchas cosas ocurrieron simultáneamente. Una sola operación tomaría, en términos absolutos, un lapso menor en completarse si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar, en conjunto, tareas que toman mucho tiempo de proceso y otras relativamente cortas.
+El \textit{scheduler} es la parte fundamental del kernel, que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multi-proceso, cuando en realidad solo una función puede ejecutarse a la vez, ya que se cuenta solo con un procesador. Como se detalla en la figura \ref{scheduler}, la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea, y una vez que se agota se debe guardar su estado y se procede a ejecutar otra. Así cada una de las tareas se procesa durante un breve momento, de manera cíclica, hasta que completa su trabajo; si el tiempo de proceso asignado a cada una es lo suficientemente pequeño, pareciera que muchas cosas ocurrieron simultáneamente. Una sola operación tomaría, en términos absolutos, un lapso menor en completarse si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar, en conjunto, tareas que toman mucho tiempo de proceso y otras relativamente cortas.
 
 % ················ IMAGEN ·················
 \begin{figure}[ht!]
 \centering
-\fbox{\includegraphics[scale=0.9]{img/scheduler.png}}
-\caption{\textit{Scheduling} de tareas}\label{scheduler}
+\fbox{\includegraphics[scale=0.85]{img/scheduler.pdf}}
+\caption{\textit{Scheduling} de tareas.}\label{scheduler}
 \end{figure}
 %··········································
 
@@ -201,17 +191,17 @@ El algoritmo de \textit{scheduling} se basa en un sistema de prioridades donde l
 % Se entiende por licencia de \textit{software} a un contrato entre el desarrollador del \textit{software} y el usuario final para su utilización según una serie de términos o condiciones. La licencia puede ceder ciertos derechos al usuario final; controlar la cantidad de copias que puede utilizar; el ámbito geográfico y temporal para la utilización; o bien proteger al desarrollador frente a la utilización del programa informático que se licencia. Existen al menos tres tipos de licencias de \textit{software}:
 % 
 % \begin{itemize}
-% 	\item \textbf{Privativas:}  El \textit{software} es distribuido al usuario bajo un \ac{EULA} en que el propietario fija las condiciones de uso y se reserva la propiedad del programa informático. Generalmente impide el acceso al código fuente; la realización de ingeniería inversa; el uso del \textit{software} por más de un usuario; se entrega el derecho de uso por un tiempo definido y por lo general provee cierta asesoría técnica. Es común que se debe pagar por el uso de un programa bajo este tipo de licencia.
+% 	\item \textbf{Privativas:}  El \textit{software} es distribuido al usuario bajo un \gls{EULA} en que el propietario fija las condiciones de uso y se reserva la propiedad del programa informático. Generalmente impide el acceso al código fuente; la realización de ingeniería inversa; el uso del \textit{software} por más de un usuario; se entrega el derecho de uso por un tiempo definido y por lo general provee cierta asesoría técnica. Es común que se debe pagar por el uso de un programa bajo este tipo de licencia.
 % 	
-% 	\item \textbf{Libres:} Este tipo de licencias otorgan al receptor la libertad de usar, estudiar, compartir y modificar el \textit{software}. Existen varias licencias que cumplen con esta definición, por ejeplo: MIT, BSD, \ac{LGPL} y \ac{GPL}. Se dividen en dos tipos básicos licencias con \textit{copyleft} y sin \textit{copyleft}. Se habla de una licencia con \textit{copyleft} cuando esta indica que el \textit{software} derivado debe mantener la misma licencia original impidiendo la generación de \textit{software} privativo a partir de desarrollos libres, por ejemplo. Por lo general cumplir esta licencia requiere que se garantice el acceso al código fuente, de aquí el termino conocido como \textit{software} de código abierto. La mayoría del \textit{software} bajo estas licencias se distribuye de forma gratuita aunque su uso comercial no está necesariamente prohibido. No todo \textit{software} gratuito es necesariamente \textit{software} libre.
+% 	\item \textbf{Libres:} Este tipo de licencias otorgan al receptor la libertad de usar, estudiar, compartir y modificar el \textit{software}. Existen varias licencias que cumplen con esta definición, por ejeplo: MIT, BSD, \gls{LGPL} y \gls{GPL}. Se dividen en dos tipos básicos licencias con \textit{copyleft} y sin \textit{copyleft}. Se habla de una licencia con \textit{copyleft} cuando esta indica que el \textit{software} derivado debe mantener la misma licencia original impidiendo la generación de \textit{software} privativo a partir de desarrollos libres, por ejemplo. Por lo general cumplir esta licencia requiere que se garantice el acceso al código fuente, de aquí el termino conocido como \textit{software} de código abierto. La mayoría del \textit{software} bajo estas licencias se distribuye de forma gratuita aunque su uso comercial no está necesariamente prohibido. No todo \textit{software} gratuito es necesariamente \textit{software} libre.
 % 	
 % 	\item \textbf{Dominio Público:} Si un programa informático se distribuye sin ningún tipo de licencia, se dice que es de dominio público. No posee ningún tipo de restricción sobre su uso, así como ninguna responsabilidad sobre sus creadores.
 % \end{itemize}
 % 
 % La aplicación de licencias se rige según las normativas legales locales. En el caso de las licencias libres por lo general basta con distribuir el texto de la licencia junto con la aplicación y agregar un encabezado indicando el tipo de licencia que se utiliza. Para atribuir autoría se suele utilizar las definiciones de la Convención de Berna, que indica que todo lo que se escribe queda automáticamente sujeto a copyright desde el momento en que la obra es fijada en un soporte material \cite{GNU}. En Chile la legislación vigente al respecto es la Ley 17.336 de propiedad Intelectual.
 % 
-% \subsubsection{\ac{GPL}}
-% La \ac{GPL} es una licencia de \textit{software} creada en 1989 por la \textit{Free Software Foundation} que busca declarar que el \textit{software} así licenciado es \textit{software} libre y por lo tanto el usuario posee los siguientes derechos \cite{GPL}:
+% \subsubsection{\gls{GPL}}
+% La \gls{GPL} es una licencia de \textit{software} creada en 1989 por la \textit{Free Software Foundation} que busca declarar que el \textit{software} así licenciado es \textit{software} libre y por lo tanto el usuario posee los siguientes derechos \cite{GPL}:
 % \begin{itemize}
 % 	\item Libertad de usar el \textit{software} para cualquier propósito.
 % 	\item Libertad de modificar el \textit{software} para adaptarlo a las propias necesidades.
@@ -222,20 +212,20 @@ El algoritmo de \textit{scheduling} se basa en un sistema de prioridades donde l
 % Actualmente se encuentra en su versión 3.0 que a diferencia de versiones previas es una licencia con \textit{copyleft} y agrega cláusulas para proteger la libertad del usuario frente a nuevas prácticas en contra del \textit{software} libre, tales como \cite{GPL}:
 % \begin{itemize}
 % 	\item Tivoización: El término se refiere a la práctica de limitar los derechos de los usuarios que compran sistemas que funcionan con \textit{software} libre mediante mecanismos de \textit{hardware}, por ejemplo evitando la ejecución de versiones modificadas del \textit{software} embebido.
-% 	\item Leyes que prohíben \textit{software} libre: Se asegura de que ciertas leyes puedan limitar los derechos del usuario de un \textit{software} con licencia \ac{GPL}.
+% 	\item Leyes que prohíben \textit{software} libre: Se asegura de que ciertas leyes puedan limitar los derechos del usuario de un \textit{software} con licencia \gls{GPL}.
 % 	\item Uso malicioso de patentes: Evita el uso indiscriminado de patentes, como por ejemplo, intentar obtener beneficios patentado desarrollos de \textit{software} libre lo cual es una amenaza a la liberta de los usuarios.
 % \end{itemize}
 % 
-% \paragraph{Aplicación de la licencia} Para licenciar un proyecto de \textit{software} libre bajo la \ac{GPL} V3.0 se deben seguir los siguientes pasos \cite{GNU}:
+% \paragraph{Aplicación de la licencia} Para licenciar un proyecto de \textit{software} libre bajo la \gls{GPL} V3.0 se deben seguir los siguientes pasos \cite{GNU}:
 % \begin{enumerate}
 % 	\item Agregar un aviso informativo del \textit{copyright} al inicio de cada archivo con código fuente de la aplicación. Un ejemplo es la siguiente línea: \texttt{«Copyright 2012 Universidad de Chile»}
 % 	
-% 	\item Bajo el aviso de \textit{copyright} se agrega una autorización de copia indicando que el \textit{software} se distribuye bajo los términos de la licencia \ac{GPL}. Un ejemplo de este aviso se cita en un ejemplo posterior.
+% 	\item Bajo el aviso de \textit{copyright} se agrega una autorización de copia indicando que el \textit{software} se distribuye bajo los términos de la licencia \gls{GPL}. Un ejemplo de este aviso se cita en un ejemplo posterior.
 % 	
 % 	\item Se debe incluir junto al código fuente el texto completo de la licencia en un archivo llamado \texttt{LICENSE}. El texto de la licencia se puede obtener desde el siguiente enlace: \url{http://www.gnu.org/licenses/gpl.txt}.
 % \end{enumerate}
 % 
-% A continuación se detalla el encabezado que debería incluir cada fichero del proyecto de \textit{software} hipotético llamado \texttt{Foobar}  que es licenciado bajo \ac{GPL}.
+% A continuación se detalla el encabezado que debería incluir cada fichero del proyecto de \textit{software} hipotético llamado \texttt{Foobar}  que es licenciado bajo \gls{GPL}.
 % 
 % \begin{verbatim}
 %     Foobar - Description - «Copyright 2012 Universidad de Chile»
@@ -263,7 +253,7 @@ Los requerimientos no funcionales de un proyecto de \textit{software} se pueden 
 
 En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua ISO/IEC 9126, que plantea un modelo de calidad \textit{software} que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de una aplicación durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; definición de los objetivos del diseño del \textit{software}; determinar de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto está completo \cite{ISO25010}.
 
-A continuación, se definen los parámetros de calidad fijados en la norma ISO/IEC 25010 para productos de \textit{software}, así como un resumen a través de la \textbf{figura \ref{img:ch2:iso25010}}.
+A continuación, se definen los parámetros de calidad fijados en la norma ISO/IEC 25010 para productos de \textit{software}, así como un resumen a través de la figura \ref{img:ch2:iso25010}.
 
 \begin{itemize}
 \item \textbf{Idoneidad Funcional:} Grado en que un producto provee la funciones requeridas.
@@ -342,7 +332,7 @@ producto o sistema puede ser modificado por los mantenedores.
 Estos parámetros de calidad se definen también como requerimientos del proyecto, definiendo la importancia de cada apartado en el contexto de la aplicación final.
 
 %Figura - Esquema ISO25010
-\figura{img/ISO25010.jpg}{width=\textwidth}{ISO/IEC 25010, categorías y subcategorías.}{img:ch2:iso25010}{!h}
+\figura{img/ISO25010.pdf}{width=\textwidth}{ISO/IEC 25010, categorías y subcategorías}{img:ch2:iso25010}{!h}
 
 %Explicar como se aplica este modelo a un proyecto de \textit{software}
 
@@ -369,7 +359,7 @@ Este patrón de diseño divide una aplicación interactiva en tres componentes: el 
     
     El usuario sólo interactúa con el controlador, y los cambios realizados en el modelo deben ser propagados hacia la vista. Como cada vista comparte el modelo, los cambios se verán actualizados en cada una de ellas.
     
-    \item \textbf{Estructura:} los componentes que completan la estructura del patrón MVC se detallan a continuación:
+    \item \textbf{Estructura:} los componentes que completan la estructura del patrón \gls{MVC} se detallan a continuación:
     \begin{itemize}
         \item \textbf{Modelo:} encapsula la información y todas las funcionalidades de la aplicación, de manera independiente de su representación gráfica. Provee los métodos para realizar los procesos específicos de la aplicación así como para acceder a los datos de esta. A la vez implementa el mecanismo de propagación de los cambios hacia las diferentes vistas suscritas a este modelo.
         
@@ -378,15 +368,15 @@ Este patrón de diseño divide una aplicación interactiva en tres componentes: el 
         \item \textbf{Controlador:} cada vista tiene asociada un controlador, que recibe la entrada del usuario, como presionar un botón o seleccionar una entrada de menú. El controlador solicita el servicio correspondiente al modelo, causando a la vez una actualización de la vista si es necesario.
     \end{itemize}
     
-    Para clarificar las relaciones entre los componentes del patrón se cuenta con el diagrama de la \textbf{figura \ref{ch2:patterns:mvc:classes}}. La esencia dinámica del esquema en ejecución se observa a través del diagrama de colaboración detallado en la \textbf{figura \ref{ch2:patterns:mvc:collaboration}}.
+    Para clarificar las relaciones entre los componentes del patrón se cuenta con el diagrama de la figura \ref{ch2:patterns:mvc:classes}. La esencia dinámica del esquema en ejecución se observa a través del diagrama de colaboración detallado en la figura \ref{ch2:patterns:mvc:collaboration}.
     
     \item \textbf{Consecuencias:} alguno de los beneficios que provee son: múltiples vistas para el mismo modelo, las cuales pueden estar sincronizadas dado que los cambios en el modelo se propagan a aquellas que lo comparten; vista y controlador intercambiable de manera independiente, permitiendo portar la aplicación a diferentes plataformas sin cambiar la funcionalidad. Por otro lado, los inconvenientes que genera son: aumento de complejidad, al necesitar adaptar cada módulo al controlador y sus funcionalidades; excesivo número de actualizaciones al propagar cambios del modelo a todas las vistas; alto acoplamiento entre la vista y el controlador -aún como elementos separados su diseño está muy relacionado-; acoplamiento entre el modelo y el conjunto vista-controlador, ya que cualquier cambio en la interfaz que se provee, tiene un efecto directo en el funcionamiento de este conjunto, que accede directamente a sus servicios.
     
 \end{itemize}
 
-\figura{img/mvc_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño MVC.}{ch2:patterns:mvc:classes}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/mvc_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño MVC}{ch2:patterns:mvc:classes}{!h}
 
-\figura{img/mvc_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño MVC.}{ch2:patterns:mvc:collaboration}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/mvc_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño MVC}{ch2:patterns:mvc:collaboration}{!h}
 
 A partir del ejemplo, se observa que el proceso de creación de una aplicación parte por la búsqueda de patrones de diseño bien documentados y que solucionen un tipo de problema similar al que se tiene por objetivo. Comparar patrones de diseño cuando se tienen varios candidatos a solucionar el problema, también se hace sencillo dado que la forma de presentar cada patrón permite obtener sus principales características y posible implementación. Además una aplicación puede hacer uso de varios patrones de diseño, en diferentes niveles de su arquitectura para cumplir la totalidad de las especificaciones.
 
@@ -413,7 +403,7 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
         \item \textbf{Proveedor o receptor:} provee la funcionalidad del comando en sí, ya que su lógica de ejecución incluye el llamado de uno o varios del los servicios entregados por este módulo, que puede ser representado, por ejemplo, como una librería.
     \end{itemize}
     
-    El diagrama de la \textbf{figura \ref{ch2:patterns:command:classes}} detalla las relaciones entre los diferentes módulos o clases del patrón. La dinámica de la arquitectura se rescata en en la \textbf{figura \ref{ch2::patterns:command:collaboration}} que corresponde a un esquema de colaboración entre los elementos de la estructura descrita.
+    El diagrama de la figura \ref{ch2:patterns:command:classes} detalla las relaciones entre los diferentes módulos o clases del patrón. La dinámica de la arquitectura se rescata en en la figura \ref{ch2::patterns:command:collaboration} que corresponde a un esquema de colaboración entre los elementos de la estructura descrita.
     
     \item \textbf{Consecuencias:} La aplicación de este patrón de diseño implica los siguientes beneficios:
     \begin{itemize}
@@ -430,9 +420,9 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
     \end{itemize}
 \end{itemize}
 
-\figura{img/command_processor_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño procesador de comandos.}{ch2:patterns:command:classes}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/command_processor_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño procesador de comandos}{ch2:patterns:command:classes}{!h}
 
-\figura{img/command_processor_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño procesador de comandos.}{ch2::patterns:command:collaboration}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/command_processor_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño procesador de comandos}{ch2::patterns:command:collaboration}{!h}
 
 % ============= SATELITES ==============
 
@@ -440,13 +430,13 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
 %TODO: Agregar una descripcion breve
 
 \subsection{Satélites tipo Cubesat}
-A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo de facilitar el acceso al espacio a pequeños \textit{payloads}, en un corto periodo de desarrollo y a bajo costo. Para esto se crea un nuevo estándar de vehículo espacial, que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 kg. como el mostrado en la \textbf{figura \ref{img:ch2:cubesat} (a)}. Cuando se combinan se pueden conseguir Cubesat de 2 unidades (2U) o tres unidades (3U); un satélite compuesto por un solo cubo se denomina una unidad (1U). El proyecto contempla tanto las especificaciones generales del satélite, así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento. Este dispositivo se denominada P-POD y consiste en un compartimiento capaz de albergar hasta tres Cubesat de 1U y desplegarlos mediante un sistema de resortes cuando se requiera. La \textbf{figura \ref{img:ch2:cubesat} (b)} ilustra la estructura de un P-POD.
+A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo de facilitar el acceso al espacio a pequeños \textit{payloads}, en un corto periodo de desarrollo y a bajo costo. Para esto se crea un nuevo estándar de vehículo espacial, que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 kg. como el mostrado en la figura \ref{img:ch2:cubesat} (a). Cuando se combinan se pueden conseguir Cubesat de 2 unidades (2U) o tres unidades (3U); un satélite compuesto por un solo cubo se denomina una unidad (1U). El proyecto contempla tanto las especificaciones generales del satélite, así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento. Este dispositivo se denominada P-POD y consiste en un compartimiento capaz de albergar hasta tres Cubesat de 1U y desplegarlos mediante un sistema de resortes cuando se requiera. La figura \ref{img:ch2:cubesat} (b) ilustra la estructura de un P-POD.
 
 %···················· FIGURE ····················
 \begin{figure}[ht!] \centering
 \subfloat[Cubesat]{\includegraphics[scale=0.6]{img/cubesat.jpg}} \hspace{0.5cm}
 \subfloat[P-POD]{\includegraphics[scale=0.6]{img/ppod.jpg}}
-\caption{Satélite tipo Cubsat}\label{img:ch2:cubesat}
+\caption[Satélite tipo Cubesat]{Satélite tipo Cubesat. A la izquierda el satélite japonés OSCAR-66, lanzado el año 2008. A la derecha un P-POD, dispositivo desde el cual se despliega un Cubesat. Fuente: \url{http://cubesat.aero.cst.nihon-u.ac.jp/english/index.html}}\label{img:ch2:cubesat}
 \end{figure}
 %···············································
 
@@ -461,8 +451,8 @@ A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una in
 
 	\item \textbf{Requerimientos Mecánicos}
 	\begin{itemize}
-		\item La configuración y dimensiones del satélite deben estar de acuerdo a la \textbf{figura \ref{img:ch2:cds}}
-		\item El cubo debe tener dimensiones de 100x100x113 mm. en los ejes x, y, z respectivamente según la \textbf{figura \ref{img:ch2:cds}}.
+		\item La configuración y dimensiones del satélite deben estar de acuerdo a la figura \ref{img:ch2:cds}
+		\item El cubo debe tener dimensiones de 100x100x113 mm. en los ejes x, y, z respectivamente según la figura \ref{img:ch2:cds}.
 		\item Los componentes no deben sobresalir más de 6.5 mm. en dirección normal a cada cara.
 		\item Sólo los rieles exteriores de la estructura pueden tener contacto con el P-POD.
 		\item El satélite no debe superar los 1.33 Kg. de masa.
@@ -481,14 +471,14 @@ A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una in
 	 	\item Cubesat con baterías deben ser capaces de recibir un comando para apagar transmisiones según las regulaciones de la FCC.
 	 	\item Todos los mecanismos de despliegue del satélite no se deben activar antes de 30 minutos luego del lanzamiento desde el P-POD.
 	 	\item Transmisores de radio de potencia mayor a 1 mW. no deben funcionar antes de cumplirse 30 minutos luego del despliegue desde el P-POD.
-	 	\item Se debe contar con la licencia de uso de frecuencia de radio. Para frecuencias \textit{amateur} la coordinación se realiza a través de la \textit{International Amateur Radio Union} (IARU).
+	 	\item Se debe contar con la licencia de uso de frecuencia de radio. Para frecuencias \textit{amateur} la coordinación se realiza a través de la \gls{IARU}
 	 \end{itemize}
 
 \end{itemize}
 
 El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalmente, se pueden combinar hasta tres unidades para obtener satélites de 2U o 3U. Esto permite contar con mayor volumen, para posicionar los componentes físicos del satélite y una mayor superficie para situar paneles solares y así brindar mayor autonomía energética.
 
-\figura{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño y dimensiones del estándar Cubesat de una unidad \cite{CUBESAT_CDS}.}{img:ch2:cds}{!h}
+\figura[Fuente: \url{http://www.cubesat.org/index.php/documents/developers}.]{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño y dimensiones del estándar Cubesat de una unidad \cite{CUBESAT_CDS}}{img:ch2:cds}{!h}
 
 \paragraph{Aplicaciones.}
 En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
@@ -506,12 +496,12 @@ Iniciativas privadas o de propósito general, tales como redes de comunicaciones 
 
 % ============= ANTECEDENTES ESPECIFICOS =============
 \section{Proyecto SUCHAI}
-El proyecto satelital del Departamento de Ingeniería Eléctrica de la Universidad de Chile, con la participación de académicos, ingenieros y estudiantes, se denomina \textit{Satellite of University of Chile for Aerospace Investigation} (SUCHAI) y consiste en el desarrollo, puesta en órbita y operación del primer satélite creado netamente en el país.
+El proyecto satelital impulsado por la Facultad de Ciencias Físicas y Matemáticas de la Universidad de Chile, con la participación de académicos, ingenieros y estudiantes, se denomina \textit{Satellite of University of Chile for Aerospace Investigation} (SUCHAI) y consiste en el desarrollo, puesta en órbita y operación del primer satélite creado netamente en el país.
 
 \figura{img/suchai_logo.png}{scale=0.3}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
 
 Se trata de un satélite tipo Cubesat de una unidad, con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} para ser escuchado y decodificado por la estación terrena, también ejecutar experimentos asociados a \textit{payloads} y enviar como telemetría la información de funcionamiento del satélite y los datos recolectados. Por otro lado, su ejecución permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local, que será la base para futuras misiones relacionadas. Además posibilitará la integración de alumnos de pregrado en equipos multidisciplinarios, que requieren proponer soluciones no triviales a un problema abierto.
 
-El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio UHF, así como antenas para desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la \textbf{figura \ref{ch2:img:suchai_satellite}} se observa el satélite SUCHAI en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
+El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio \gls{UHF}, así como antenas para desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satélite \gls{SUCHAI} en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
 
 \figura{img/suchai_satellite.jpg}{width=\textwidth}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{!h}

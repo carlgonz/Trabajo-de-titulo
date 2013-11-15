@@ -3,12 +3,14 @@
 % la importancia y fundamentos del trabajo realizado; objetivos generales y específicos; la metodología de trabajo; resultados y
 % conclusiones obtenidas. Todo a modo general considerando que es el último capítulo a escribir pues resume todo el trabajo 
 
+\newacronym{SUCHAI}{SUCHAI}{\textit{Satellite of University of Chile for Aerospace Investigation}}
+
 \chapter{Introducción}\label{ch1}
 Durante mucho tiempo el desarrollo de proyectos aeroespaciales ha estado limitado a gobiernos de países con gran poderío económico o grandes corporaciones con objetivos tanto militares como civiles para la observación de la tierra, comunicaciones a distancia o posicionamiento global. Con el reciente desarrollo de estándares para pequeños satélites, como los Cubesat, se abre la posibilidad a gobiernos e instituciones educacionales en todo el mundo, de desarrollar proyectos aeroespaciales de menor riesgo y bajos costos.
 
-El presente trabajo se enmarca en el desarrollo del proyecto SUCHAI, el cual consistente en la implementación, lanzamiento y operación  de un nano-satélite tipo Cubesat de 1U, siendo la primera aproximación en la materia para la universidad y el país. Los fines de este proyecto son básicamente científicos y educacionales buscando abrir las posibilidades de desarrollar futura tecnología aeroespacial así como formar profesionales con la experiencia necesaria en este ámbito.
+El presente trabajo se enmarca en el desarrollo del proyecto \gls{SUCHAI}, el cual consistente en la implementación, lanzamiento y operación  de un nanosatélite tipo Cubesat de 1U, siendo la primera aproximación en la materia para la universidad y el país. Los fines de este proyecto son básicamente científicos y educacionales buscando abrir las posibilidades de desarrollar futura tecnología aeroespacial así como formar profesionales con la experiencia necesaria en este ámbito.
 
-El satélite del proyecto SUCHAI consta de tres subsistemas principales: computador a bordo, energía y comunicaciones. Además se debe considerar la posibilidad de integrar diferentes \textit{payloads} que desarrollan misiones específicas una vez que el satélite se encuentra operando en el espacio.
+El satélite del proyecto \gls{SUCHAI} consta de tres subsistemas principales: computador a bordo, energía y comunicaciones. Además se debe considerar la posibilidad de integrar diferentes \textit{payloads} que desarrollan misiones específicas una vez que el satélite se encuentra operando en el espacio.
 
 El computador a bordo del satélite debe ejecutar un programa que permita desarrollar todas las acciones que requiere la misión. Esta aplicación se denomina \textit{sotfware} de vuelo y su objetivo es controlar el satélite, ejecutar operaciones específicas durante el vuelo y permitir la comunicación con la estación terrena para la descarga de datos y subida de telecomandos, entre otras tareas fundamentales. Su desarrollo se realiza siguiendo una metodología ordenada que consta de tres etapas: diseño, implementación y pruebas. 
 
@@ -17,13 +19,13 @@ La etapa de diseño consiste en explicitar los requerimientos del sistema y gener
 El resultado de este trabajo es la base para obtener un vehículo espacial con las funciones fundamentales para su operación y así dejar establecido el flujo a seguir para agregar más subsistemas.
 
 \section{Objetivos generales}
-Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de dar inteligencia y operatividad durante todo su tiempo de vida útil en el espacio. En el caso de un nano-satélite se tiene el desafío de dotar con las funcionalidades estándar de un satélite de gran envergadura a un sistema con recursos de energía, cómputo y espacio extremadamente limitados como por ejemplo, microcontroladores PIC18, PIC24 o PIC32.
+Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de darle inteligencia y operatividad durante todo su tiempo de vida útil en el espacio. En el caso de un nanosatélite se tiene el desafío de dotar con las funcionalidades estándar de un satélite de gran envergadura a un sistema con recursos de energía, cómputo y espacio extremadamente limitados como por ejemplo, microcontroladores PIC18, PIC24 o PIC32.
 
 El objetivo general de este trabajo es el diseño, desarrollo e implementación del \textit{software} que controla el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de \textit{hardware} hasta la aplicación final para la operación durante la misión. Esta arquitectura debe cumplir, además, con requerimientos de calidad de \textit{software} como modularidad, modificabilidad y facilidad de mantenimiento en general, adaptándose en específico a sistemas embebidos.
 
-% La implementación realizará específicamente para el satélite SUCHAI, por lo que se busca proveer la funcionalidad básica a este sistema que incluye la interacción de un computador a bordo, un sistema de control de energía y un sistema de comunicaciones. De esta manera, el \textit{software} de vuelo se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
+% La implementación realizará específicamente para el satélite \gls{SUCHAI}, por lo que se busca proveer la funcionalidad básica a este sistema que incluye la interacción de un computador a bordo, un sistema de control d\gls{SUCHAI}e energía y un sistema de comunicaciones. De esta manera, el \textit{software} de vuelo se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
 
-La implementación realizará específicamente para el satélite SUCHAI, por lo que se busca proveer la base del sistema que lo controla, así como integrar los sistemas de energía y comunicaciones en un \textit{software} que se graba y ejecuta en el computador a bordo. El resultado de este trabajo permite la posterior integración física del vehículo satelital así como la adición de los \textit{payloads} específicos de la misión, lo cual es abordado en detalle en el trabajo de Tomás Opazo titulado Requerimientos, Implementación y Verificación del Cubesat SUCHAI\cite{TOOPAZO}.
+La implementación realizará específicamente para el satélite \gls{SUCHAI}, por lo que se busca proveer la base del sistema que lo controla, así como integrar los sistemas de energía y comunicaciones en un \textit{software} que se graba y ejecuta en el computador a bordo. El resultado de este trabajo permite la posterior integración física del vehículo satelital, así como la adición de los \textit{payloads} específicos de la misión, lo cual es abordado en detalle en el trabajo de Tomás Opazo titulado Requerimientos, Implementación y Verificación del Cubesat \gls{SUCHAI} \cite{TOOPAZO}.
 
 \section{Objetivos específicos}
 Los objetivos específicos del proyecto definen las tareas que permiten cumplir el objetivo general del proyecto y se enumeran a continuación:
@@ -50,7 +52,7 @@ El presente trabajo se estructura según un proceso de diseño, implementación y p
     
     \item \textbf{Capítulo \ref{ch3}. Diseño del \textit{software}:} Se definen los requerimientos operacionales y no operacionales del proyecto que guiarán el diseño. Se plantea una arquitectura de \textit{software} a diferentes niveles de abstracción basada en patrones de diseño para luego generar el diseño final de la solución a implementar.
     
-    \item \textbf{Capítulo \ref{ch4}. Implementación:} Se implementa la solución propuesta guiando paso a paso la generación de la plataforma base de la aplicación sobre la plataforma objetivo. Las particularidades del proyecto SUCHAI se detallan aparte como flujos que explican su implementación.
+    \item \textbf{Capítulo \ref{ch4}. Implementación:} Se implementa la solución propuesta guiando paso a paso la generación de la plataforma base de la aplicación sobre la plataforma objetivo. Las particularidades del proyecto \gls{SUCHAI} se detallan aparte como flujos que explican su implementación.
     
     \item \textbf{Capítulo \ref{ch5}. Pruebas:} Se realizan pruebas de integración sobre el sistema implementado para verificar cada uno de los requerimientos planteados en el capítulo \ref{ch3}.
     
