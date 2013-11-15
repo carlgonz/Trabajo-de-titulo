@@ -4,7 +4,7 @@
 \title{DISEÑO E IMPLEMENTACIÓN DEL SOFTWARE DE VUELO PARA UN NANO-SATÉLITE TIPO CUBESAT}
 
 \auspicio{\ }
-\date{SEPTIEMBRE 2013}
+\date{NOVIEMBRE 2013}
 \guia{MARCOS DÍAZ QUEZADA}
 \carrera{INGENIERO CIVIL ELÉCTRICO}
 \comision{CLAUDIO ESTÉVEZ MONTERO}{ALEX BECERRA SAAVEDRA}{\ }
@@ -88,9 +88,15 @@
 \frontmatter
 \maketitle
 
-% \begin{abstract}
-% Resumen.
-% \end{abstract}
+\begin{abstract}
+
+El estándar de nanosatélites Cubesat fue pensado para facilitar el desarrollo de pequeños proyectos espaciales con fines científicos y educacionales, a un bajo costo y en cortos periodos de tiempo. Siguiendo esta línea, la Facultad de Ciencias Físicas y Matemáticas de la Universidad de Chile ha impulsado el proyecto SUCHAI, que consiste en implementar, poner en órbita y operar el primer satélite desarrollado por una universidad del país. El computador a bordo de la aeronave, que consiste un sistema embebido de limitada capacidad de cómputo, escasa memoria y bajo consumo de energía, debe ejecutar el \textit{software} de vuelo que controlará sus operaciones una vez en órbita. El objetivo de este trabajo es el diseño e implementación de este \textit{software} para el satélite SUCHAI, como una solución confiable, flexible y extensible que sea la base para futuras misiones aeroespaciales.
+
+El diseño del \textit{software} consiste en una estructura de tres capas, que consigue dividir el problema convenientemente. La de más bajo nivel considera los controladores de \textit{hardware}, la capa intermedia alberga al sistema operativo, y la de nivel superior, contiene los detalles de la aplicación requerida específicamente para este sistema. Para la arquitectura de la capa de aplicación, se estudia y aplica el concepto de patrón de diseño, en específico, se realiza una adaptación de \textit{command pattern}. De esta manera, el satélite se concibe como un ejecutor de comandos genéricos y se obtiene una solución mantenible, modificable y extensible en el tiempo, mediante la programación de los comandos concretos que sean requeridos. La implementación se realiza sobre un PIC24F y considera controladores para los periféricos I2C, RS232 y SPI, así como para los subsistemas de radiocomunicaciones y energía. Se decide utilizar el sistema operativo FreeRTOS, como capa intermedia, lo que permite contar con el procesamiento concurrente de tareas, herramientas de temporización y sincronización. Se ha puesto especial énfasis en la implementación de la arquitectura planteada para la capa de aplicación, consiguiendo un \textit{software} capaz de ejecutar una serie de comandos, programados para cumplir los requerimientos operacionales del proyecto, lo cual representa el método principal para extender sus funcionalidades y adecuarse a futuras misiones.
+
+Para probar y verificar el sistema desarrollado, se ha utilizado la técnica denominada \textit{hardware on the loop simulation}. Se han obteniendo datos de funcionamiento, bajo condiciones de operación hipotéticas, a través del registro generado por la consola serial. Con esto se verifican los requerimientos operacionales de la misión, con resultados exitosos, obteniendo el sistema base y funcional del satélite. Como trabajo futuro, se utilizará este \textit{software} para integrar el resto de los sistemas del satélite SUCHAI, demostrando su capacidad de adaptación y extensión, en un paso previo a la prueba final: funcionar adecuadamente en el espacio exterior.
+
+\end{abstract}
 
 \begin{dedicatoria}
 A mis padres Carlos González Espeleta y Paula Cortés González por que les debo todo lo que soy, porque gracias a su gran esfuerzo y apoyo incondicional he podido llegar a estas instancias en la vida, los amo. A mis hermanas, siempre estaré con ustedes.
@@ -99,11 +105,15 @@ A Marcia, mi amor, por su invaluable apoyo, comprensión y dedicación. Junto a ti
 \end{dedicatoria}
 
 \begin{thanks}
-Nosotros no hubiesemos sido nada sin ustedes, sino por toda la gente que estuvo a nuestro alrededor desde el comienzo.\\
+A mi familia, por su incondicional apoyo y compresión a lo largo de todo este proceso. En especial a mis padres por su gran esfuerzo, por su confianza, por haber sembrado en mi, desde muy pequeño, la motivación para ser una gran profesional. Con su ejemplo, me han enseñado la lección más importante: el trabajo dedicado, el esfuerzo y la perseverancia son las claves para lograr las metas en la vida, la felicidad personal y la de quienes te rodean. Por siempre les estaré agradecido.
 
-Algunos siguen hasta hoy.\\
+A los miembros de mi comisión, por la confianza depositada en mí, su apoyo y aporte, que ha sido vital en mi formación como profesional. Al profesor Marcos Díaz, quien nos ha confiado el desarrollo de este proyecto que ha sido fundamental para mi desarrollo profesional y personal, por compartir su visión sobre el desarrollo y misión del ingeniero de la Universidad de Chile, por su constante motivación y disposición. A Alex Becerra, quien ha hecho posible el proyecto SUCHAI, siempre dispuesto a compartir el conocimiento, por la gran confianza depositada en mi y por su invaluable apoyo en el desarrollo de este trabajo.
 
-Gracias... Totales.
+A todos los miembros del proyecto SUCHAI, porque este trabajo integra, de manera directa o indirecta, el esfuerzo de todo el equipo, se agradece y reconoce la labor de cada uno. En especial a Tomás Opazo, cuya contribución al proyecto ha sido fundamental, por ser un gran compañero y amigo. A Francisco Reyes, quien desarrolló el \textit{software} del sistema de energía y la consola serial. Al equipo de comunicaciones: Felipe Troncoso, Sebastián Derteano y Camilo Rojas, grandes amigos. Al equipo de energía: Juan Carlos Piña, Pablo Bilbao y Francisco Reyes, grandes amigos y compañeros. Participar en este proyecto ha sido la mejor experiencia en mi formación universitaria, tanto por los desafíos que presentó, como por el excelente grupo humano que se formo entorno al laboratorio.
+
+A todos los miembros del laboratorio ALGES, por su compresión y apoyo durante en el desarrollo de la memoria. A Miguel Patiño, por su gran disposición y ayuda, siempre con una solución a la mano.
+
+A todos, muchas gracias.
 \end{thanks}
 
 \cleardoublepage

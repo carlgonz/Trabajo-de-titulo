@@ -54,7 +54,22 @@
 \renewenvironment{itemize}{\olditem\setlength{\parskip}{\smallskipamount}}{\oldenditem}
 
 %% Entornos nuevos
-\newenvironment{abstract}{\cleardoublepage\chapter*{Resumen}}{\vfill\null}
+\newenvironment{abstract}{%
+\begin{flushright}
+\small
+\begin{tabular}{l}
+RESUMEN DE LA MEMORIA PARA OPTAR \\
+AL TÍTULO DE \MakeUppercase\@carrera \\
+POR: \MakeUppercase\@author \\
+FECHA: \MakeUppercase\@date\\
+PROF. GUÍA: SR. \MakeUppercase\@guia \\
+\end{tabular}
+\end{flushright}
+\begin{center}
+\MakeUppercase\@title
+\end{center}
+}{\vfill\null}
+
 \newenvironment{dedicatoria}{\cleardoublepage\null\vspace{\stretch{1}}\begin{flushright}\itshape}{\end{flushright}\vspace{\stretch{2}}\null}
 \let\thanks\undefined
 \newenvironment{thanks}{\chapter*{Agradecimientos}}{\vfill\null}
