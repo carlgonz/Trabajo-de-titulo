@@ -11,8 +11,8 @@
    height="138.46378"
    version="1.2"
    id="svg2"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="driver_sincrono.svg">
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="driver_asincrono.svg">
   <metadata
      id="metadata414">
     <rdf:RDF>
@@ -34,8 +34,8 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1266"
-     inkscape:window-height="734"
+     inkscape:window-width="1920"
+     inkscape:window-height="1028"
      id="namedview412"
      showgrid="false"
      fit-margin-top="0.5"
@@ -44,13 +44,13 @@
      fit-margin-bottom="0.5"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="2"
-     inkscape:cx="148.15865"
-     inkscape:cy="82.938383"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="177.56588"
+     inkscape:cy="65.752228"
+     inkscape:window-x="-1"
+     inkscape:window-y="-15"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g4143"
+     inkscape:current-layer="g4021"
      inkscape:connector-spacing="7"
      units="cm">
     <sodipodi:guide
@@ -364,13 +364,13 @@
       </g>
       <text
          xml:space="preserve"
-         x="644.15436"
+         x="650.28687"
          y="409.60269"
          font-size="9"
          font-weight="400"
          font-style="normal"
          id="text176-8-8-0-1-6-5-5"
-         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Driver Module</text>
+         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans">Controlador</text>
       <g
          style="stroke:#000000;stroke-width:2.47647023;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
          transform="matrix(0.36581332,0,0,0.44573249,781.66896,363.38541)"
@@ -472,19 +472,19 @@
            sodipodi:linespacing="125%"
            id="text3178"
            y="447.47626"
-           x="850.44788"
+           x="845.5166"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
            xml:space="preserve"><tspan
              style="font-size:9px;text-align:center;text-anchor:middle;fill:#1a1a1a"
              y="447.47626"
-             x="850.44788"
+             x="845.5166"
              id="tspan3180"
-             sodipodi:role="line">Device</tspan><tspan
+             sodipodi:role="line">Dispositivo de</tspan><tspan
              style="font-size:9px;text-align:center;text-anchor:middle;fill:#1a1a1a"
              id="tspan3182"
              y="458.72626"
-             x="850.44788"
-             sodipodi:role="line">Hardware</tspan></text>
+             x="845.5166"
+             sodipodi:role="line">hardware</tspan></text>
       </g>
       <path
          style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:4, 1;stroke-dashoffset:0;marker-end:url(#Arrow2Mend)"
@@ -513,7 +513,7 @@
            id="tspan4867">IRQ</tspan></text>
       <text
          xml:space="preserve"
-         x="828.54993"
+         x="822.54993"
          y="439.29257"
          font-size="9"
          font-weight="400"
@@ -521,7 +521,7 @@
          id="text176-8-8-0-1-6-5-5-9-0-8"
          style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
            style="font-size:6px"
-           id="tspan4867-5">Data</tspan></text>
+           id="tspan4867-5">Datos</tspan></text>
       <path
          style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
          d="m 658.21542,381.69882 0,15.82152"
@@ -534,32 +534,6 @@
          inkscape:connector-curvature="0" />
       <text
          xml:space="preserve"
-         x="640.07941"
-         y="387.24448"
-         font-size="9"
-         font-weight="400"
-         font-style="normal"
-         id="text176-8-8-0-1-6-5-5-9-0-3"
-         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
-           style="font-size:6px"
-           id="tspan4867-7">Task</tspan><tspan
-           style="font-size:6px"
-           id="tspan4984" /></text>
-      <text
-         xml:space="preserve"
-         x="639.72595"
-         y="392.43909"
-         font-size="9"
-         font-weight="400"
-         font-style="normal"
-         id="text176-8-8-0-1-6-5-5-9-0-3-4"
-         style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
-           style="font-size:6px"
-           id="tspan4867-7-1">call</tspan><tspan
-           style="font-size:6px"
-           id="tspan4984-8" /></text>
-      <text
-         xml:space="preserve"
          x="670.36047"
          y="396.06454"
          font-size="9"
@@ -568,7 +542,7 @@
          id="text176-8-8-0-1-6-5-5-9-0-3-5"
          style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
            style="font-size:6px"
-           id="tspan4867-7-6">Result</tspan></text>
+           id="tspan4867-7-6">Resultado</tspan></text>
       <path
          style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow2Mstart);marker-end:url(#Arrow2Mend-6)"
          d="m 718.38486,415.94159 19.70278,0"
@@ -632,7 +606,7 @@
          sodipodi:nodetypes="cc" />
       <text
          xml:space="preserve"
-         x="738.33807"
+         x="735.85431"
          y="404.44922"
          font-size="9"
          font-weight="400"
@@ -640,7 +614,24 @@
          id="text176-8-8-0-1-6-5-5-9-0-8-2"
          style="font-size:9px;font-style:normal;font-weight:400;fill:#323232;fill-opacity:1;stroke:none;font-family:DejaVu Sans"><tspan
            style="font-size:6px"
-           id="tspan4867-5-0">Message queue</tspan></text>
+           id="tspan4867-5-0">Cola de mensajes</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:24.89896393px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="637.82257"
+         y="389.45914"
+         id="text3089"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3091"
+           x="638.81342"
+           y="389.45914"
+           style="font-size:6.22474098px;text-align:center;text-anchor:middle">Llamada </tspan><tspan
+           sodipodi:role="line"
+           x="637.82257"
+           y="397.24005"
+           id="tspan3093"
+           style="font-size:6.22474098px;text-align:center;text-anchor:middle">de la tarea</tspan></text>
     </g>
   </g>
 </svg>

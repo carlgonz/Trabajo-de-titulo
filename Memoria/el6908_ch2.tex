@@ -61,7 +61,7 @@ en una rutina de atención de la interrupción.
 La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, SPI o I2C, USB o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
 
 % ················ IMAGEN ·················
-\figurabox[Además de la CPU, el PIC24F consta de una serie de periféricos. Fuente: Microchip (\url{http://www.microchip.com/pagehandler/en-us/family/16bit/architecture/pic24f.html}.]{img/pic_perif.jpg}{scale=0.5}{Perifericos del PIC24F}{pic_perif}{ht!}
+\figurabox[Además de la CPU, el PIC24F consta de una serie de periféricos. Fuente: Microchip, \url{http://www.microchip.com/pagehandler/en-us/family/16bit/architecture/pic24f.html}.]{img/pic_perif.jpg}{scale=0.5}{Perifericos del PIC24F}{pic_perif}{ht!}
 %··········································
 
 \subsubsection{Desarrollo.}
@@ -163,7 +163,7 @@ Entre sus principales características se encuentran \cite{FREERTOS_PIC24}:
 Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas y el \textit{scheduler}. Una tarea es un hilo de procesamiento, normalmente una función que se ejecuta de manera continua. Se puede encontrar en dos estados fundamentales: ``ejecutándose'' y ``no ejecutándose''. Cuando se está ejecutando, tiene el control del procesador y el código dentro de la función que la representa es procesado. El estado ``no ejecutándose'' en realidad consta de tres sub-estados ,como se observa en la figura \ref{task_state}: se inicia en un estado ``listo'', lo que indica que la tarea está en condiciones de ser seleccionada por el \textit{scheduler} y pasar a estar ``ejecutándose''. Estar ``bloqueado'' significa que la tarea no está disponible para ser procesada pues está en espera de algún evento, por ejemplo, la liberación de un \textit{mutex}. Por último el estado ``suspendido'' donde tampoco se puede ejecutar y el proceso debe explícitamente reanudarse para quedar en condiciones de ser ejecutada. La creación de tareas y el control de sus estados se realiza a través de la \gls{API} de FreeRTOS que documenta claramente todas las posibles operaciones que se pueden realizar ellas.
 
 % ················ IMAGEN ·················
-\begin{figure}[ht!]
+\begin{figure}[hb!]
 \centering
 \fbox{\includegraphics[scale=1]{img/task_state.pdf}}
 \caption{Tareas de FreeRTOS, diagrama de estados.}\label{task_state}
@@ -174,7 +174,7 @@ Los conceptos fundamentales detrás del funcionamiento de FreeRTOS son las tareas
 El \textit{scheduler} es la parte fundamental del kernel, que controla la ejecución de las diferentes tareas disponibles. Su objetivo es generar la sensación de estar en un ambiente multi-proceso, cuando en realidad solo una función puede ejecutarse a la vez, ya que se cuenta solo con un procesador. Como se detalla en la figura \ref{scheduler}, la función del \textit{scheduler} es entregar una porción de tiempo de ejecución fijo a una tarea, y una vez que se agota se debe guardar su estado y se procede a ejecutar otra. Así cada una de las tareas se procesa durante un breve momento, de manera cíclica, hasta que completa su trabajo; si el tiempo de proceso asignado a cada una es lo suficientemente pequeño, pareciera que muchas cosas ocurrieron simultáneamente. Una sola operación tomaría, en términos absolutos, un lapso menor en completarse si no fuera interrumpida, pero se gana un sistema más fluido cuando se deben ejecutar, en conjunto, tareas que toman mucho tiempo de proceso y otras relativamente cortas.
 
 % ················ IMAGEN ·················
-\begin{figure}[ht!]
+\begin{figure}[hb!]
 \centering
 \fbox{\includegraphics[scale=0.85]{img/scheduler.pdf}}
 \caption{\textit{Scheduling} de tareas.}\label{scheduler}
@@ -374,9 +374,9 @@ Este patrón de diseño divide una aplicación interactiva en tres componentes: el 
     
 \end{itemize}
 
-\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/mvc_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño MVC}{ch2:patterns:mvc:classes}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/mvc_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño MVC}{ch2:patterns:mvc:classes}{!b}
 
-\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/mvc_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño MVC}{ch2:patterns:mvc:collaboration}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/mvc_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño MVC}{ch2:patterns:mvc:collaboration}{!t}
 
 A partir del ejemplo, se observa que el proceso de creación de una aplicación parte por la búsqueda de patrones de diseño bien documentados y que solucionen un tipo de problema similar al que se tiene por objetivo. Comparar patrones de diseño cuando se tienen varios candidatos a solucionar el problema, también se hace sencillo dado que la forma de presentar cada patrón permite obtener sus principales características y posible implementación. Además una aplicación puede hacer uso de varios patrones de diseño, en diferentes niveles de su arquitectura para cumplir la totalidad de las especificaciones.
 
@@ -420,9 +420,9 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
     \end{itemize}
 \end{itemize}
 
-\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/command_processor_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño procesador de comandos}{ch2:patterns:command:classes}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/command_processor_class.png}{width=0.8\textwidth}{Diagrama de clases del patrón de diseño procesador de comandos}{ch2:patterns:command:classes}{!b}
 
-\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/command_processor_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño procesador de comandos}{ch2::patterns:command:collaboration}{!h}
+\figura[Fuente: \textit{A System of Patterns. Pattern-Oriented Software Architecture} \cite{SYSTEM_PATTERNS}.]{img/command_processor_colab.png}{width=0.8\textwidth}{Esquema de colaboración del patrón de diseño procesador de comandos}{ch2::patterns:command:collaboration}{!ht}
 
 % ============= SATELITES ==============
 
@@ -433,7 +433,7 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
 A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una iniciativa entre \textit{California Polytechnic State University, San Luis Obispo} y \textit{Stanford University}. Con el objetivo de facilitar el acceso al espacio a pequeños \textit{payloads}, en un corto periodo de desarrollo y a bajo costo. Para esto se crea un nuevo estándar de vehículo espacial, que considera satélites de pequeñas dimensiones, acotados a un cubo de 10 [cm] de arista y un peso máximo de 1.3 kg. como el mostrado en la figura \ref{img:ch2:cubesat} (a). Cuando se combinan se pueden conseguir Cubesat de 2 unidades (2U) o tres unidades (3U); un satélite compuesto por un solo cubo se denomina una unidad (1U). El proyecto contempla tanto las especificaciones generales del satélite, así como una plataforma estándar para ser desplegados desde el vehículo de lanzamiento. Este dispositivo se denominada P-POD y consiste en un compartimiento capaz de albergar hasta tres Cubesat de 1U y desplegarlos mediante un sistema de resortes cuando se requiera. La figura \ref{img:ch2:cubesat} (b) ilustra la estructura de un P-POD.
 
 %···················· FIGURE ····················
-\begin{figure}[ht!] \centering
+\begin{figure}[t!] \centering
 \subfloat[Cubesat]{\includegraphics[scale=0.6]{img/cubesat.jpg}} \hspace{0.5cm}
 \subfloat[P-POD]{\includegraphics[scale=0.6]{img/ppod.jpg}}
 \caption[Satélite tipo Cubesat]{Satélite tipo Cubesat. A la izquierda el satélite japonés OSCAR-66, lanzado el año 2008. A la derecha un P-POD, dispositivo desde el cual se despliega un Cubesat. Fuente: \url{http://cubesat.aero.cst.nihon-u.ac.jp/english/index.html}}\label{img:ch2:cubesat}
@@ -480,6 +480,7 @@ El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalment
 
 \figura[Fuente: \url{http://www.cubesat.org/index.php/documents/developers}.]{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño y dimensiones del estándar Cubesat de una unidad \cite{CUBESAT_CDS}}{img:ch2:cds}{!h}
 
+\newpage
 \paragraph{Aplicaciones.}
 En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
 
@@ -498,10 +499,10 @@ Iniciativas privadas o de propósito general, tales como redes de comunicaciones 
 \section{Proyecto SUCHAI}
 El proyecto satelital impulsado por la Facultad de Ciencias Físicas y Matemáticas de la Universidad de Chile, con la participación de académicos, ingenieros y estudiantes, se denomina \textit{Satellite of University of Chile for Aerospace Investigation} (SUCHAI) y consiste en el desarrollo, puesta en órbita y operación del primer satélite creado netamente en el país.
 
-\figura{img/suchai_logo.png}{scale=0.3}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
+% \figura{img/suchai_logo.png}{scale=0.25}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
 
 Se trata de un satélite tipo Cubesat de una unidad, con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} para ser escuchado y decodificado por la estación terrena, también ejecutar experimentos asociados a \textit{payloads} y enviar como telemetría la información de funcionamiento del satélite y los datos recolectados. Por otro lado, su ejecución permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local, que será la base para futuras misiones relacionadas. Además posibilitará la integración de alumnos de pregrado en equipos multidisciplinarios, que requieren proponer soluciones no triviales a un problema abierto.
 
 El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio \gls{UHF}, así como antenas para desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satélite \gls{SUCHAI} en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
 
-\figura{img/suchai_satellite.jpg}{width=\textwidth}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{!h}
+\figura{img/suchai_satellite.jpg}{scale=0.6}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{b!}

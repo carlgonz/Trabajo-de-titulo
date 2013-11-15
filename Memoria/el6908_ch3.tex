@@ -77,12 +77,12 @@ como la comunidad de radio-aficionados. Por último en el caso de la portabilidad
 
 En definitiva, la \textbf{tabla \ref{tbl:ch2:req_no_func}} resume los requerimientos no funcionales del proyecto, asignándole una determinada prioridad o importancia a considerar en el diseño.
 
-\tabla{tablas/req_no_operacionales.pdf}{width=\textwidth}{Requerimientos no funcionales}{tbl:ch2:req_no_func}{!h}
+\tabla{tablas/req_no_operacionales.pdf}{width=\textwidth}{Requerimientos no funcionales}{tbl:ch2:req_no_func}{!hb}
 
 \subsection{Requerimientos mínimos}
 Para que el sistema desarrollado en el proyecto SUCHAI pueda considerarse como un satélite, el vehículo debe satisfacer al menos los requerimientos mínimos dispuestos en la tabla \ref{tbl:ch2:req_min}.
 
-\tabla{tablas/req_minimos.pdf}{scale=1.0}{Requerimientos mínimos}{tbl:ch2:req_min}{!h}
+\tabla{tablas/req_minimos.pdf}{scale=1.0}{Requerimientos mínimos}{tbl:ch2:req_min}{!hb}
 
 Dada la naturaleza iterativa de la metodología de trabajo, es importante considerar los requerimientos mínimos a la hora de la implementación de la arquitectura pues dará al sistema la simplicidad necesaria asegurando funcionalidad. La totalidad de los requerimientos operacionales se obtendrá a través de mejoras incrementales sobre los requerimientos mínimos ya mencionados.
 
@@ -103,6 +103,8 @@ Adicionalmente, se cuenta con los siguientes dispositivos para EPS y comunicacio
     \item \textit{Transceiver} Allspace AS-COM01
 \end{itemize}
 
+Por lo tanto, se cuenta con todo el \textit{hardware} básico para el funcionamiento del satélite y se considera fijo para el proceso de diseño del \textit{software} de vuelo.
+
 %Figura - CubesatKit 1U
 %···················· FIGURE ····················
 \begin{figure}[hb!] \centering
@@ -113,7 +115,7 @@ Adicionalmente, se cuenta con los siguientes dispositivos para EPS y comunicacio
 \end{figure}
 %················································
 
-Por lo tanto, se cuenta con todo el \textit{hardware} básico para el funcionamiento del satélite y se considera fijo para el proceso de diseño del \textit{software} de vuelo.
+
 
 \subsection{Computador a bordo}
 
@@ -125,7 +127,7 @@ Por lo tanto, se cuenta con todo el \textit{hardware} básico para el funcionamie
 	\caption[Dos módulos que componen el computador a bordo del satélite]{Dos módulos que componen el computador a bordo del satélite. Fuente: \url{http://www.cubesatkit.com/}.}\label{img:ch3:obc}
 \end{figure}
 
-El computador a bordo del satélite, está compuesto por una placa madre que contiene una interfaz PC104, a través de la cual se conectan el resto de los subsistemas, y por el módulo para el procesador que se integra directamente a la placa madre.
+El computador a bordo del satélite, está compuesto por una placa madre que contiene una interfaz PC104, a través de la cual se conectan el resto de los subsistemas, y por el módulo para el procesador que se integra directamente a la placa madre, como se muestra en la figura \ref{img:ch3:obc}.
 
 La placa, cuenta además con un reloj de tiempo real que se comunica por un bus I2C, el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo. Cuenta con un \textit{slot} de memoria SD, para albergar un medio de almacenamiento masivo de hasta 2 GB.; una interfaz USB 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador \cite{CUBESAT_MB}.
 
@@ -262,9 +264,9 @@ El sistema operativo es la capa de abstracción entre la aplicación y el \textit{
     \item Gestion de dispositivos de entrada y salida.
 \end{itemize}
 
-El diseño de un sistema operativo está fuera del alcance del proyecto, en cuanto existen una serie de alternativas ya disponibles para su uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante del microcontrolador utilizado.
+El diseño de un sistema operativo está fuera del alcance del proyecto, en cuanto existen una serie de alternativas ya disponibles para su uso. A continuación se analiza la arquitectura y servicios que proveen algunos de los sistemas operativos para sistemas embebidos recomendados por el fabricante del microcontrolador utilizado. En particular, nos interesan dos de ellos: Salvo RTOS, por ser parte del kit adquirido y es el recomendado por el fabricante del computador a bordo; y FreeRTOS por ser una solución ampliamente utilizada comercialmente en sistemas embebidos y además posee una licencia libre y es gratuito.
 
-\begin{table}[ht!] \caption{Comparación de sistemas operativos para sistemas embebidos}
+\begin{table}[hb!] \caption{Comparación de sistemas operativos para sistemas embebidos}
 \footnotesize
 \begin{tabularx}{\textwidth}{>{\raggedright}p{2cm} p{2cm} >{\raggedright}X >{\raggedright}p{2.5cm} X} \hline
 \textbf{Sistema Operativo} & \textbf{Kernel} & \textbf{Gestión de tareas} & \textbf{Gestión de memoria} & \textbf{Sincronización} \\\hline
@@ -278,8 +280,6 @@ embOS & Micro kernel & Preemptive con prioridades & No tiene & Semáforos, mensaj
 \hline
 \end{tabularx}\label{tab:chp3:so}
 \end{table}
-
-En particular, nos interesan dos de ellos: Salvo RTOS, por ser parte del kit adquirido y es el recomendado por el fabricante del computador a bordo; y FreeRTOS por ser una solución ampliamente utilizada comercialmente en sistemas embebidos y además posee una licencia libre y es gratuito.
 
 %TODO Comparar los sistemas operativos
 

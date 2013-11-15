@@ -650,8 +650,7 @@ Como se ha detallado en el capítulo \ref{ch3}, el \textit{dispatcher}, o procesa
 
 Una parte fundamental de este módulo es la cola de comandos, donde llegan los requerimientos realizados por los \textit{listeners} en espra a ser procesados. Al ser un recurso compartido, presenta el esquema típico del productor-consumidor, con múltiples productores y un único consumidor, por lo que el acceso concurrente debe estar sincronizado (ver figura \ref{ch4:img:productor-consumidor}). La solución a este tipo de esquemas es bien conocido y se logra mediante la utilización de semáforos o mutexes.
 
-%TODO: Traducir esquema
-\figura[Múltiples productores almacenan datos en una cola, la cual también es accedida por múltiples consumidores. Para evitar condiciones de \textit{data race} el acceso a los datos debe estar sincronizado.]{img/producer-consumer.png}{width=0.8\textwidth}{Problema del productor-consumidor}{ch4:img:productor-consumidor}{!h}
+\figura[Múltiples productores almacenan datos en una cola, la cual también es accedida por múltiples consumidores. Para evitar condiciones de \textit{data race} el acceso a los datos debe estar sincronizado.]{img/producer-consumer.pdf}{width=0.8\textwidth}{Problema del productor-consumidor}{ch4:img:productor-consumidor}{!h}
 
 Sin embargo, FreeRTOS provee una estructura de datos adecuada para esta tarea, denominada \textit{queue}, que poseen las siguientes características \cite{FREERTOS_API}\cite{FREERTOS_PIC24}:
 \begin{itemize}
@@ -665,8 +664,7 @@ Sin embargo, FreeRTOS provee una estructura de datos adecuada para esta tarea, d
 
 El flujo de trabajo cuando se utilizan colas en FreeRTOS se ilustra en la figura \ref{ch4:img:freertos-queue}.
 
-%TODO: Cambiar, describir mejor o buscar derechos de la imagen
-\figura{img/freertos-queue.png}{width=0.8\textwidth}{FreeRTOS Queue}{ch4:img:freertos-queue}{!h}
+\figura[Fuente: \url{http://www.freertos.org/Embedded-RTOS-Queues.html}]{img/freertos-queue.png}{width=0.8\textwidth}{FreeRTOS Queue}{ch4:img:freertos-queue}{!h}
 
 La implementación de este módulo corresponde al diagrama de flujo de la figura \ref{ch4:img:dispatcher-flow}. Las tres funcionalidades básicas del procesador de comandos son: recibir un comando y obtener sus meta datos; determinar si su ejecución es posible; y construir la estructura que se entregará al ejecutor. El código \ref{ch4:code:taskDispatcher.c} implementa este diagrama de flujo, agregando una tarea de FreeRTOS basada en eventos, pues despierta solamente cuándo existe algún comando disponible en la cola. La función \texttt{check\_if\_executable} contiene la lógica que decide si puede ejecutarse o no, en base a sus meta datos y el estado actual del sistema. Finalmente, se consulta al repositorio por la función asociada al código entregado y se construye la estructura de datos que representa un comando para el \textit{executer}, que contiene el puntero a la función y su parámetro. Como sólo existe un proceso que ejecuta los comandos, el \textit{dispatcher} debe esperar a que termine su ejecución antes recuperar uno nuevo. Esta comunicación también se logra a través de una cola, de un sólo elemento, donde el \textit{executer} envía el resultado que retornó el comando que acaba de ejecutar.
 
