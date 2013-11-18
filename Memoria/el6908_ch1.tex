@@ -21,7 +21,7 @@ El resultado de este trabajo es la base para obtener un vehículo espacial con la
 \section{Objetivos generales}
 Uno de los componentes fundamentales de un satélite es su computador abordo, sistema encargado de darle inteligencia y operatividad durante todo su tiempo de vida útil en el espacio. En el caso de un nanosatélite se tiene el desafío de dotar con las funcionalidades estándar de un satélite de gran envergadura a un sistema con recursos de energía, cómputo y espacio extremadamente limitados como por ejemplo, microcontroladores PIC18, PIC24 o PIC32.
 
-El objetivo general de este trabajo es el diseño, desarrollo e implementación del \textit{software} que controla el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que abarque desde controladores de \textit{hardware} hasta la aplicación final para la operación durante la misión. Esta arquitectura debe cumplir, además, con requerimientos de calidad de \textit{software} como modularidad, modificabilidad y facilidad de mantenimiento en general, adaptándose en específico a sistemas embebidos.
+El objetivo general de este trabajo es el diseño, desarrollo e implementación del \textit{software} que controla el computador a bordo del satélite. Se requiere diseñar una arquitectura de \textit{software} que considere tanto las particularidades del \textit{hardware}, como la aplicación en particular para la operación durante la misión. Esta arquitectura debe cumplir, además, con requerimientos de calidad de \textit{software} como modularidad, modificabilidad y facilidad de mantenimiento en general, adaptándose en específico a sistemas embebidos.
 
 % La implementación realizará específicamente para el satélite \gls{SUCHAI}, por lo que se busca proveer la funcionalidad básica a este sistema que incluye la interacción de un computador a bordo, un sistema de control d\gls{SUCHAI}e energía y un sistema de comunicaciones. De esta manera, el \textit{software} de vuelo se cuenta como un recurso más que será considerado y adaptado a la necesidades específicas del proyecto en la etapa de integración general de sistemas del satélite.
 
@@ -31,13 +31,13 @@ La implementación realizará específicamente para el satélite \gls{SUCHAI}, por l
 Los objetivos específicos del proyecto definen las tareas que permiten cumplir el objetivo general del proyecto y se enumeran a continuación:
 
 \begin{itemize}
- \item Diseñar una arquitectura de \textit{software} de vuelo del satélite.
- \item Implementar controladores de \textit{hardware} para el microcontrolador y sus periféricos.
- \item Implementar controladores de los subsistemas principales: \textit{transceiver} y EPS.
- \item Integrar un sistema operativo de tiempo real multitarea en el sistema embebido.
- \item Implementar el flujo principal de la arquitectura del \textit{software} de vuelo del satélite.
- \item Integrar sistema de comunicaciones y energía al \textit{software} de vuelo.
- \item Pruebas del sistema integrado verificando requerimientos funcionales.
+ \item Diseñar la arquitectura de \textit{software} de vuelo del satélite, que permita cumplir los requerimientos operacionales de la misión.
+ \item Implementar controladores de \textit{hardware} para el microcontrolador PIC24F y sus periféricos de comunicaciones I2C, UART y SPI, para poder integrar el resto de los subsistemas del satélite.
+%  \item Implementar controladores de los subsistemas principales: \textit{transceiver} y EPS.
+ \item Integrar un sistema operativo de tiempo real y multitarea en el sistema embebido.
+ \item Implementar la arquitectura diseñada para la aplicación que controla la operación del satélite.
+ \item Integrar el sistema de comunicaciones y energía al \textit{software} de vuelo, para contar con el sistema base de la misión satelital.
+ \item Pruebas del sistema integrado, para verificar el cumplimiento de los requerimientos funcionales.
 \end{itemize}
 
 El trabajo se puede considerar terminado cuando se ha probado la implementación e integración del \textit{software} con los módulos de comunicaciones y energía obteniendo un sistema satelital con las funcionalidades básicas.
