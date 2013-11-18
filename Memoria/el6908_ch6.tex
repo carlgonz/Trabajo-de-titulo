@@ -24,7 +24,7 @@ En relación a los objetivos planteados, se concluye lo siguiente:
 \begin{enumerate}
     \item Se ha diseñado una arquitectura de \textit{software} clara, que soluciona el problema planteado, la cual es independiente de la implementación y se basa en patrones de diseño para cumplir los parámetros de calidad buscados.
     
-    \item Se han implementado controladores de \textit{hardware} para obtener la interfaz hacia los diferentes módulos que componen el satélite, lo cual es la base de las funcionalidades de alto nivel de la aplicación. En específico, se han realizado pruebas de funcionamiento que implican el uso de periféricos de comunicación UART, I2C y SPI, propios del microcontrolador, así como el control de periféricos externos, como lo son el \textit{transceiver}, RTC y EPS.
+    \item Se han implementado controladores de \textit{hardware} para obtener la interfaz hacia los diferentes módulos que componen el satélite, lo cual es la base de las funcionalidades de alto nivel de la aplicación. En específico, se han realizado pruebas de funcionamiento que implican el uso de periféricos de comunicación \gls{UART}, \gls{I2C} y \gls{SPI}, propios del microcontrolador, así como el control de periféricos externos, como lo son el \textit{transceiver}, \gls{RTCC} y \gls{EPS}.
     
     \item Se ha integrado un sistema operativo de tiempo real, adecuado para su uso en sistemas embebidos como lo es FreeRTOS, con excelentes resultados en su funcionamiento.
     
@@ -58,5 +58,5 @@ El trabajo desarrollado es una de las primeras aproximaciones en la materia para
     
     \item Portar el \textit{software} de vuelo, en especial la capa de controladores, a múltiples plataformas. Esto permite soportar una variedad de microcontroladores, para hacer al proyecto más directo de aplicar en futuras misiones.
     
-    \item Integrar un nuevo \textit{transceiver} al \textit{software} de vuelo, dado que la solución actual ha resultado totalmente insatisfactoria por su funcionamiento anómalo. Además se recomienda integrar el protocolo CSP (\textit{Cubesat Space Protocol}) en la capa de transporte de las comunicaciones. Esto para avanzar en la estandarización de protocolos en los proyectos aeroespaciales. \cite{CSP_DOC}
+    \item Integrar un nuevo \textit{transceiver} al \textit{software} de vuelo, dado que la solución actual ha resultado totalmente insatisfactoria por su funcionamiento anómalo. Además se recomienda integrar el protocolo \gls{CSP} en la capa de transporte de las comunicaciones. Esto para avanzar en la estandarización de protocolos en los proyectos aeroespaciales. \cite{CSP_DOC}
 \end{itemize}

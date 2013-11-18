@@ -1,12 +1,12 @@
 \renewcommand{\lstlistingname}{Registro}
 
 \chapter{Pruebas y resultados}\label{ch5}
-En este capítulo se detallan y discuten los resultados obtenidos luego de la implementación del sistema. Se analiza el funcionamiento del satélite, con sus tres subsistemas básicos integrados, y se revisa el cumplimiento de las funcionalidades esperadas por el equipo del proyecto SUCHAI.
+En este capítulo se detallan y discuten los resultados obtenidos luego de la implementación del sistema. Se analiza el funcionamiento del satélite, con sus tres subsistemas básicos integrados, y se revisa el cumplimiento de las funcionalidades esperadas por el equipo del proyecto SUCHAI. Las pruebas se realizan sobre las versión 1.1 del \textit{software} de vuelo, el cual se encuentra disponible en los anexos.
 Se realizan pruebas de rendimiento y se obtienen estadísticas del uso de los recursos de \textit{hardware}, para así determinar si la solución es adecuada para la plataforma objetivo.
 
 \section{Pruebas de rendimiento}
 \subsection{Estadísticas del programa}
-Mediante las herramientas que provee el IDE MPLABX, se obtienen diferentes estadísticas sobre el código que se ha programado, para generar una medida básica de la envergadura del proyecto. Lo anterior se muestra en la tabla \ref{ch5:table:code_stats}.
+Mediante las herramientas que provee el \gls{IDE} MPLABX, se obtienen diferentes estadísticas sobre el código que se ha programado, para generar una medida básica de la envergadura del proyecto. Lo anterior se muestra en la tabla \ref{ch5:table:code_stats}.
 
 \begin{table}[h]\caption{Estadísticas del código}
 \centering
@@ -33,7 +33,7 @@ FLASH            & 37566                  & 87548                  & 43\% \\ \hl
 \end{tabular}\label{ch5:table:memoria}
 \end{table}
 
-Lo anterior, demuestra que la solución programada se ajusta a la cantidad de memoria de datos y de programa disponibles. A pesar de la reducida cantidad de memoria de programa disponible, aún queda más del 50\% libre para programar más comandos y nuevas funcionalidades. Lo más crítico es la memoria RAM, que se encuentra utilizada en cerca del 60\%, lo cual podría ver reducida la capacidad de agregar nuevos \textit{listeners}. Esto porque cada tarea del sistema operativo requiere reservar una cantidad de memoria para su funcionamiento.
+Lo anterior, demuestra que la solución programada se ajusta a la cantidad de memoria de datos y de programa disponibles. A pesar de la reducida cantidad de memoria de programa disponible, aún queda más del 50\% libre para programar más comandos y nuevas funcionalidades. Lo más crítico es la memoria \gls{RAM}, que se encuentra utilizada en cerca del 60\%, lo cual podría ver reducida la capacidad de agregar nuevos \textit{listeners}. Esto porque cada tarea del sistema operativo requiere reservar una cantidad de memoria para su funcionamiento.
 
 Otro punto importante a considerar, es la cantidad de memoria asignada al sistema operativo, y la configuración de memoria de \textit{stack} que se ha asignado a las diferentes tareas. Si la memoria no es suficiente, se pueden generar condiciones de \textit{stack overflow} que dejarían al sistema inestable o no funcional. La asignación de memoria para las tareas se realiza de manera experimental, según los requerimientos de la aplicación \cite{FREERTOS_PIC24}. Para comprobar que no existen problemas, se realiza la tabla \ref{ch5:table:memoria_freertos} a partir de la salida de depuración que provee el entorno de desarrollo.
 
@@ -56,17 +56,17 @@ executer                        & 4                                   & 575     
 La tabla muestra que la asignación de memoria de las tareas es la correcta, en cuanto ninguna está utilizando la totalidad del valor asignado. La cantidad de memoria utilizada por una tarea es una variable dinámica, que depende de las acciones concretas que esta ejecutando la aplicación, por lo que siempre se debe dejar un margen de seguridad en la asignación. El caso mas crítico es el \textit{executer}, debido a que ejecuta una variedad de comandos, por lo tanto, el dato mostrado en la tabla \ref{ch5:table:memoria_freertos} no es confiable y se debe asignar la mayor cantidad de memoria de \textit{stack} posible para evitar que algún comando cause \textit{stack overflow}.
 
 \subsection{Estadísticas de uso del procesador}
-Para evaluar si la solución implementada es adecuada, se debe considerar el porcentaje de uso del procesador, bajo condiciones de operación nominales. Este parámetro indica si la CPU se ve sobre cargada con la ejecución del \textit{software} o bien, si quedan recursos disponibles para agregar más funcionalidades.
+Para evaluar si la solución implementada es adecuada, se debe considerar el porcentaje de uso del procesador, bajo condiciones de operación nominales. Este parámetro indica si la \gls{CPU} se ve sobre cargada con la ejecución del \textit{software} o bien, si quedan recursos disponibles para agregar más funcionalidades.
 
 Para obtener estos resultados la técnica habitual es contabilizar el porcentaje de tiempo en que el sistema operativo no tiene tareas por ejecutar y, por lo tanto, se encuentra en estado \textit{idle}. Esto se logra generando una señal cada vez que se entra en este estado, en este caso, se imprime por consola serial el valor de una variable, como se detalla en la figura \ref{ch5:img:test:cpu_usage}
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[El registro cambia de 0 a 1 cada vez que se entra en estado idle. Si no hay tareas que ejecutar esto ocurre cada 100 ms, de otro modo se observan periodos más largos.]{img/plot_uso_cpu.png}{width=0.99\textwidth}{Registro de uso del procesador}{ch5:test:img:cpu_usage}{hb!}
+\figura[El registro cambia de 0 a 1 cada vez que se entra en estado idle. Si no hay tareas que ejecutar esto ocurre cada 100 ms, de otro modo se observan periodos más largos.]{img/plot_uso_cpu.png}{width=0.99\textwidth}{Registro de uso del procesador}{ch5:img:test:cpu_usage}{hb!}
 
 Con estos datos, se procede a determinar la cantidad de veces en que la transición de la variable toma 100 ms. (el periodo de los \textit{ticks} del sistema), lo que indica que el sistema operativo estuvo un ciclo completo sin tareas que ejecutar. Como se detalla en la figura \ref{ch5:img:result:cpu_usage} se obtiene un 91.8\% de disponibilidad. Esto significa que el procesador puede ejecutar sin problemas la solución implementada, dejando espacio para agregar más funcionalidades.
 
 %[0: descripcion, 1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[La solución no sobrecarga la CPU, dejando un 91.8\% de capacidad de cómputo para nuevas funcionalidades]{img/pie_uso_cpu.png}{width=0.7\textwidth}{Porcentaje de uso del procesador}{ch5:test:img:cpu_usage}{hb!}
+\figura[La solución no sobrecarga la \gls{CPU}, dejando un 91.8\% de capacidad de cómputo para nuevas funcionalidades]{img/pie_uso_cpu.png}{width=0.7\textwidth}{Porcentaje de uso del procesador}{ch5:img:result:cpu_usage}{hb!}
 
 
 %\section{Pruebas de arquitectura}
@@ -84,8 +84,8 @@ Las herramientas utilizadas para el desarrollo de la prueba consisten en:
         \item Caja limpia para albergar el satélite.
         \item Computador para registro de datos.
         \item Programador Microchip ICD3.
-        \item Cable USB para comunicación serial.
-        \item Equipo de radio portátil UHF.
+        \item Cable \gls{USB} para comunicación serial.
+        \item Equipo de radio portátil \gls{UHF}.
         \item Cámara de video para registro de la prueba.
         \item Multímetro.
     \end{itemize}
@@ -100,13 +100,13 @@ Las herramientas utilizadas para el desarrollo de la prueba consisten en:
     \item Satélite:
     \begin{itemize}
         \item Computador a bordo con placa madre CubesatKit rev. D y módulo de procesador CubesatKit D1 con PIC24F256GA110.
-        \item EPS CS-1UEPS2-NB ClydeSpace
+        \item \gls{EPS} CS-1UEPS2-NB ClydeSpace
         \item Transceptor AllSpace ASCOM-01 rev. 3
         \item Paneles solares.
     \end{itemize}
 \end{itemize}
 
-El montaje de la prueba, como se muestra en la figura \ref{ch4:test:montaje}, consiste en mantener el satélite dentro de la cámara limpia conectado, a través de un cable USB, al computador que registrará los resultados de la prueba y que envía comandos al \textit{software} de vuelo. Este cable también provee de alimentación al sistema de energía, para la carga de las baterías. Se utilizará un multímetro para monitorear su voltaje, además de los registros generados por el \textit{software}. La radio portátil se utiliza para una rápida verificación del funcionamiento del sistema de comunicaciones, pues permite detectar si se produce alguna transmisión durante el periodo de inactividad obligatorio. La estación terrena está configurada para escuchar el sistema de comunicaciones del satélite, con un programa para de decodificar su baliza y telemetría. El satélite, a través del \textit{software} de vuelo, funciona de manera autónoma y la interfaz de \textit{debug} sólo se utilizará para registrar información útil para la prueba.
+El montaje de la prueba, como se muestra en la figura \ref{ch4:test:montaje}, consiste en mantener el satélite dentro de la cámara limpia conectado, a través de un cable \gls{USB}, al computador que registrará los resultados de la prueba y que envía comandos al \textit{software} de vuelo. Este cable también provee de alimentación al sistema de energía, para la carga de las baterías. Se utilizará un multímetro para monitorear su voltaje, además de los registros generados por el \textit{software}. La radio portátil se utiliza para una rápida verificación del funcionamiento del sistema de comunicaciones, pues permite detectar si se produce alguna transmisión durante el periodo de inactividad obligatorio. La estación terrena está configurada para escuchar el sistema de comunicaciones del satélite, con un programa para de decodificar su baliza y telemetría. El satélite, a través del \textit{software} de vuelo, funciona de manera autónoma y la interfaz de \textit{debug} sólo se utilizará para registrar información útil para la prueba.
 
 %···················· FIGURE ····················
 \begin{figure}[ht!] \centering
@@ -127,7 +127,7 @@ El desarrollo de la prueba consiste en los siguientes pasos.
     \item Monitorear la correcta inicialización del \textit{software} de vuelo.
     \item Registrar los comandos ejecutados en el \textit{software} de vuelo.
     \item Registrar periódicamente el valor de las variables de estado.
-    \item Registrar periódicamente los registros de la EPS.
+    \item Registrar periódicamente los registros de la \gls{EPS}.
     \item Recibir el \textit{beacon} emitido en la estación terrena.
     \item Enviar una señal de radio para activar el envío de telemetría.
     \item Recibir la telemetría enviada en la estación terrena.
@@ -357,7 +357,7 @@ Durante la prueba sólo estuvo disponible el modo de respaldo, por lo que se tran
 [19:38:13.104915] >> Telemetry transmited [OK]
 \end{lstlisting}
 
-De esta manera se induce el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado, registradas cada 20 minutos. En la estación terrena se reciben los datos decodificados por el TNC y los resultados se detallan en la figura \ref{ch5:result:telemetria}. Se observa que, a pesar de las fallas en el sistema de comunicaciones, el \textit{software} de vuelo puede efectuar la descarga de telemetría operando en modo de respaldo. Al igual que el \textit{beacon}, la señal es recibida, pero los datos no son decodificados correctamente y el programa indica este error.
+De esta manera se induce el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado, registradas cada 20 minutos. En la estación terrena se reciben los datos decodificados por el \gls{TNC} y los resultados se detallan en la figura \ref{ch5:result:telemetria}. Se observa que, a pesar de las fallas en el sistema de comunicaciones, el \textit{software} de vuelo puede efectuar la descarga de telemetría operando en modo de respaldo. Al igual que el \textit{beacon}, la señal es recibida, pero los datos no son decodificados correctamente y el programa indica este error.
 
 \subsubsection{Control central}
 \paragraph{Organizar telemetría:}
@@ -470,9 +470,9 @@ en el módulo \texttt{taskHousekeeping}, las variables de estado son actualizadas
 
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[Arriba, variables relacionadas con el computador a bordo. Abajo, el valor de la intensidad de señal (RSSI) del \textit{transcevier}, los máximos coinciden con las transmisiones de \textit{beacon}.]{img/plot_status_var.png}{width=0.99\textwidth}{Gráfico con el valor de las variables de estado en el tiempo}{ch5:figure:result:status_var}{ht!}
+\figura[Arriba, variables relacionadas con el computador a bordo. Abajo, el valor del \gls{RSSI} del \textit{transcevier}, los máximos coinciden con las transmisiones de \textit{beacon}.]{img/plot_status_var.png}{width=0.99\textwidth}{Gráfico con el valor de las variables de estado en el tiempo}{ch5:figure:result:status_var}{ht!}
 
-El set de variables consideradas en el gráfico \ref{ch5:figure:result:status_var}, tiene por objetivo mostrar el funcionamiento del repositorio de estados, más que un análisis exhaustivo de sus valores instantáneos. Los resultados muestran cómo este repositorio permite mantener actualizado el estado de funcionamiento del satélite, retroalimentando al resto de los módulos de \textit{software} con esta información. Acá se almacenan variables con información instantánea, como el caso de los voltajes y corrientes en el sistema de energía, o el nivel RSSI presente el sistema de comunicaciones. Otras son modificadas de manera periódica como la hora actual del sistema o el tiempo total de operación. Algunas variables representan configuraciones del satélite y no varían, a menos que se instruya una modificación manual de ellas, como el caso de las potencias de transmisión de telemetría y \textit{beacon}.
+El set de variables consideradas en el gráfico \ref{ch5:figure:result:status_var}, tiene por objetivo mostrar el funcionamiento del repositorio de estados, más que un análisis exhaustivo de sus valores instantáneos. Los resultados muestran cómo este repositorio permite mantener actualizado el estado de funcionamiento del satélite, retroalimentando al resto de los módulos de \textit{software} con esta información. Acá se almacenan variables con información instantánea, como el caso de los voltajes y corrientes en el sistema de energía, o el nivel \gls{RSSI} presente el sistema de comunicaciones. Otras son modificadas de manera periódica como la hora actual del sistema o el tiempo total de operación. Algunas variables representan configuraciones del satélite y no varían, a menos que se instruya una modificación manual de ellas, como el caso de las potencias de transmisión de telemetría y \textit{beacon}.
 
 Es muy importante que ciertas variables mantengan su valor entre cada reinicio del sistema, para que el software de vuelo retome su estado de operación anterior a una falla o \textit{reset}. Esto se verifica en las pruebas de reinicio, revisando el valor de las siguientes variables: \texttt{ppc\_lastResetSource}, \texttt{ppc\_hoursAlive}, \texttt{ppc\_hoursWithoutReset}, \texttt{ppc\_resetCounter} y \texttt{dep\_ant\_deployed}. La información se resume en el gráfico de la figura \ref{ch5:figure:result:status_var_reset}. Se observa que ciertas variables se van actualizando con el tiempo, como el caso de las horas de funcionamiento y las horas sin reinicio. Las pruebas de \textit{reset} comienzan a las 19:44 hrs. lo cual se refleja en el valor de las variables \texttt{ppc\_hoursWithoutReset} y \texttt{ppc\_resetCounter}, que indican la cantidad de horas que el sistema ha funcionado sin reiniciarse y el contador de estos eventos, respectivamente. La prueba incluye reinicios generados por diferentes fuentes, como \textit{software}, \textit{hardware} y el \textit{watchdog}, las cuales se observan en la variable \texttt{ppc\_lastResetSource}. La prueba del buen funcionamiento del sistema, ante estos eventos, es que los valores de las variables de estado siguen siendo coherentes cada vez que el sistema se vuelve a iniciar, como se ve en el caso del indicador de antenas desplegadas (\texttt{dep\_ant\_deployed}), el contador de reinicios y la cantidad total de horas de funcionamiento.
 
@@ -593,7 +593,7 @@ __________________________________________________________________________
 
 \subsubsection{Área de energía}
 \paragraph{Estimación de la carga de la batería:}
-este función es parte del controlador de la EPS. La estimación se actualiza de manera periódica, como parte de las tareas del \textit{listener} \texttt{taskHousekeeping}, cada 20 segundos. El parámetro denominado \textit{state of charge} (SOC), es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la EPS. Esta variable es utilizada para determinar si un comando se puede ejecutar o debe ser rechazado. Durante la prueba se registraron los valores de corriente, voltaje y temperatura de la EPS así como el nivel de SOC calculado. La figura \ref{ch5:figure:result:soc} muestra los resultados obtenidos, así como la estimación del SOC a \textit{posteriori}, para comprobar la operación realizada en el computador a bordo.
+este función es parte del controlador de la \gls{EPS}. La estimación se actualiza de manera periódica, como parte de las tareas del \textit{listener} \texttt{taskHousekeeping}, cada 20 segundos. El parámetro denominado \gls{SOC}, es una variable de estado del sistema y se calcula a partir de los datos de consumo de energía, temperatura y voltaje que reporta la \gls{EPS}. Esta variable es utilizada para determinar si un comando se puede ejecutar o debe ser rechazado. Durante la prueba se registraron los valores de corriente, voltaje y temperatura de la \gls{EPS} así como el nivel de \gls{SOC} calculado. La figura \ref{ch5:figure:result:soc} muestra los resultados obtenidos, así como la estimación del \gls{SOC} a \textit{posteriori}, para comprobar la operación realizada en el computador a bordo.
 
 %, como observa en la figura \ref{ch5:figure:result:eps_var}.
 
@@ -601,14 +601,14 @@ este función es parte del controlador de la EPS. La estimación se actualiza de m
 % \figura{img/plot_eps_var.png}{scale=0.7}{Gráfico con variables de EPS}{ch5:figure:result:eps_var}{ht!}
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[El sistema de energía se comporta según lo esperado, según lo indicado por las variables de corriente y voltaje. Se observa una correspondencia entre la variable \textit{eps\_charging} y el voltaje de las baterías. El nivel de SOC estimado por el \textit{software} de vuelo corresponde a los calculados a \textit{posteriori}.]{img/plot_soc.png}{width=0.99\textwidth}{Gráfico con variables de EPS y estimación de SOC}{ch5:figure:result:soc}{ht!}
+\figura[El sistema de energía se comporta según lo esperado, según lo indicado por las variables de corriente y voltaje. Se observa una correspondencia entre la variable \textit{eps\_charging} y el voltaje de las baterías. El nivel de \gls{SOC} estimado por el \textit{software} de vuelo corresponde a los calculados a \textit{posteriori}.]{img/plot_soc.png}{width=0.99\textwidth}{Gráfico con variables de \gls{EPS} y estimación de \gls{SOC}}{ch5:figure:result:soc}{ht!}
 
-A partir de los datos del gráfico \ref{ch5:figure:result:soc}, se verifica el correcto funcionamiento del sistema de energía. Los valores de corriente leídos en la EPS son normales: al rededor de 30 mA para el bus de 3.3 V, al que se conecta la placa de \textit{payloads}, y 50 mA para el bus de 5.0 V, donde se encuentra el computador a bordo. Las baterías se cargan en cuanto se conecta el puerto USB, lo que es indicado por la variable \texttt{eps\_charging} y se refleja en el voltaje leído. También se verifica el requerimiento de estimar la carga presente en las baterías, a través de la variable \textit{eps\_soc} y contrastando estos datos con valores calculados a \textit{posteriori}, según los datos de voltaje y corriente. Cabe destacar que la diferencia en la estimación del SOC, observada en los registros de las 20:01 hrs. es normal, producto de una corrección según los datos de temperatura, realizada por el \textit{software} de vuelo.
+A partir de los datos del gráfico \ref{ch5:figure:result:soc}, se verifica el correcto funcionamiento del sistema de energía. Los valores de corriente leídos en la \gls{EPS} son normales: al rededor de 30 mA para el bus de 3.3 V, al que se conecta la placa de \textit{payloads}, y 50 mA para el bus de 5.0 V, donde se encuentra el computador a bordo. Las baterías se cargan en cuanto se conecta el puerto \gls{USB}, lo que es indicado por la variable \texttt{eps\_charging} y se refleja en el voltaje leído. También se verifica el requerimiento de estimar la carga presente en las baterías, a través de la variable \textit{eps\_soc} y contrastando estos datos con valores calculados a \textit{posteriori}, según los datos de voltaje y corriente. Cabe destacar que la diferencia en la estimación del \gls{SOC}, observada en los registros de las 20:01 hrs. es normal, producto de una corrección según los datos de temperatura, realizada por el \textit{software} de vuelo.
 
 \paragraph{Presupuesto de energía:}
-el nivel de SOC, como variable de estado, indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \texttt{Dispatcher}, quien realiza una comparación entre la energía requerida por un comando y la disponible en ese momento.
+el nivel de \gls{SOC}, como variable de estado, indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \texttt{Dispatcher}, quien realiza una comparación entre la energía requerida por un comando y la disponible en ese momento.
 
-Para verificar el requerimiento de contar con un presupuesto de energía, que guía las operaciones del satélite, se lleva a cabo el test de SOC. Para esto, de manera simulada, se cambian los requerimientos energéticos de una serie de comandos, a niveles mayores que la energía disponible, para luego intentar su ejecución. El comando correspondiente es el \texttt{0x8006} o \texttt{tcm\_set\_sysreq}, que cambia los requerimientos energéticos de todas las funciones del grupo \texttt{TCM}, encargadas de generar telemetría y \textit{beacons}. En el registro \ref{ch5:reg:test_soc} se observa la ejecución de este comando, cambiando los requerimientos a nivel 10, cuando se dispone de un SOC de 4. Así cuando se intenta ejecutar un comando del grupo \texttt{0x8000} estos son rechazados por el \textit{Dispatcher} evitando su ejecución.
+Para verificar el requerimiento de contar con un presupuesto de energía, que guía las operaciones del satélite, se lleva a cabo el test de \gls{SOC}. Para esto, de manera simulada, se cambian los requerimientos energéticos de una serie de comandos, a niveles mayores que la energía disponible, para luego intentar su ejecución. El comando correspondiente es el \texttt{0x8006} o \texttt{tcm\_set\_sysreq}, que cambia los requerimientos energéticos de todas las funciones del grupo \texttt{TCM}, encargadas de generar telemetría y \textit{beacons}. En el registro \ref{ch5:reg:test_soc} se observa la ejecución de este comando, cambiando los requerimientos a nivel 10, cuando se dispone de un \gls{SOC} de 4. Así cuando se intenta ejecutar un comando del grupo \texttt{0x8000} estos son rechazados por el \textit{Dispatcher} evitando su ejecución.
 
 \begin{lstlisting}[numbers=none,label=ch5:reg:test_soc,caption=Registro de la prueba de nivel SOC bajo]
 //Se elevan los requerimientos del grupo TCM a un SOC de 10
@@ -630,7 +630,7 @@ Para verificar el requerimiento de contar con un presupuesto de energía, que guí
 [20:19:11.231369] [Dispatcher] CMD Result: 1
 \end{lstlisting}
 
-Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras algunas operaciones que demandan grandes cantidades de energía, el nivel de SOC disminuya, quedando bajo el umbral que requieren los comandos. Este es el caso de las transmisiones de telemetría y \textit{beacons}, como se observa en el registro \ref{ch5:reg:low_soc}, donde luego de dos envíos de telemetría el nivel de SOC baja a 3, causando que una posterior solicitud de descarga de datos sea rechazada.
+Esta situación no solo ocurre bajo condiciones de prueba, puede ocurrir que tras algunas operaciones que demandan grandes cantidades de energía, el nivel de \gls{SOC} disminuya, quedando bajo el umbral que requieren los comandos. Este es el caso de las transmisiones de telemetría y \textit{beacons}, como se observa en el registro \ref{ch5:reg:low_soc}, donde luego de dos envíos de telemetría el nivel de \gls{SOC} baja a 3, causando que una posterior solicitud de descarga de datos sea rechazada.
 
 \begin{lstlisting}[numbers=none,label=ch5:reg:low_soc,caption=Comando rechazado debido a un nivel de SOC bajo]
 //Se producen la transmisión de dos frames de telemetría sucesivos.
@@ -681,7 +681,7 @@ La tabla \ref{ch5:table:test_soc} resume los resultados de la prueba de SOC. Se 
 \end{tabular} \label{ch5:table:test_soc}
 \end{table}
 
-El \textit{power budget} se aplica a diferentes niveles dentro del sistema que representa el satélite. La parte que corresponde al \textit{software} de vuelo, tiene relación con la estimación de la cantidad de energía disponible en base a los parámetros que entrega la EPS, y con evitar la ejecución de comandos que requieren más recursos energéticos que los disponibles. El resto de la planificación energética queda por parte del equipo de operación del sistema, en lo que refiere a determinar la cantidad de energía correcta para cada comando, la frecuencia de ejecución de aquellos de alto consumo, como el envío de \textit{beacon}, o la correcta programación del plan de vuelo.
+El \textit{power budget} se aplica a diferentes niveles dentro del sistema que representa el satélite. La parte que corresponde al \textit{software} de vuelo, tiene relación con la estimación de la cantidad de energía disponible en base a los parámetros que entrega la \gls{EPS}, y con evitar la ejecución de comandos que requieren más recursos energéticos que los disponibles. El resto de la planificación energética queda por parte del equipo de operación del sistema, en lo que refiere a determinar la cantidad de energía correcta para cada comando, la frecuencia de ejecución de aquellos de alto consumo, como el envío de \textit{beacon}, o la correcta programación del plan de vuelo.
 
 \subsubsection{Órbita}
 \paragraph{Actualizar parámetros de órbita:}

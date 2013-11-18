@@ -4,7 +4,7 @@
 \title{DISEÑO E IMPLEMENTACIÓN DEL SOFTWARE DE VUELO PARA UN NANO-SATÉLITE TIPO CUBESAT}
 
 \auspicio{\ }
-\date{NOVIEMBRE 2013}
+\date{AÑO 2013}
 \guia{MARCOS DÍAZ QUEZADA}
 \carrera{INGENIERO CIVIL ELÉCTRICO}
 \comision{CLAUDIO ESTÉVEZ MONTERO}{ALEX BECERRA SAAVEDRA}{\ }
@@ -15,13 +15,6 @@
 \usepackage[T1]{fontenc}
 \usepackage{subfig}  %Subfloat
 %\usepackage[printonlyused,withpage]{acronym} %Acronimos
-
-\usepackage[acronym,xindy={language=spanish,codepage=utf8},nonumberlist,style=super]{glossaries}
-\makeglossaries
-\include{glosario}
-\GlsSetXdyLanguage{spanish} 
-\renewcommand*{\glsgroupskip}{}  
-\renewcommand*{\glsdescwidth}{7in}
 
 \usepackage{tabularx}
 \usepackage{listings} %Codigo
@@ -50,6 +43,17 @@
 
 \captionsetup{labelfont=bf,font={normal,sl},justification=centerlast}
 \renewcommand{\lstlistingname}{Código}
+
+\addto\captionsspanish{\renewcommand{\listfigurename}{Índice de ilustraciones}}
+\addto\captionsspanish{\renewcommand{\contentsname}{Tabla de contenido}}
+
+\usepackage[xindy={language=spanish,codepage=utf8},nonumberlist,style=super]{glossaries}
+\makeglossaries
+\include{glosario}
+\GlsSetXdyLanguage{spanish} 
+\renewcommand*{\glsgroupskip}{}  
+\renewcommand*{\glsdescwidth}{7in}
+\renewcommand{\glossaryname}{Glosario}
 
 
 % ========== COMANDOS PERSONALIZADOS =======
@@ -156,17 +160,33 @@ A todos, muchas gracias.
 \input{el6908_ch5.tex}
 \input{el6908_ch6.tex}
 
+% ============= GLOSARIO ==========
+\newpage
+\addcontentsline{toc}{chapter}{Glosario}
+\nocite{*}
+\glsaddall
+\printglossaries
+
 % ============= BIBLIOGRAFIA ==========
 \newpage
 \addcontentsline{toc}{chapter}{Bibliografía}
 \nocite{*}
-\bibliographystyle{plain}
+\bibliographystyle{ieeetr}
 \bibliography{bibliografia.bib}
 
 % ============= APENDICES ==========
 \newpage
-% \printindex
-% \printglossary[type=\acronymtype] % prints just the list of acronyms
+% \addcontentsline{toc}{chapter}{}
+% \nocite{*}
+\chapter*{Anexos}
+Los anexos de trabajo se presentan en un CD-ROM adjunto en la parte posterior del documento. En este encuentran las siguientes carpetas:
+
+\begin{itemize}
+    \item \textbf{Anexo A - Sistema Base}: contiene los programas desarrollados en la sección \ref{ch4} que conforman la base de la aplicación.
+    
+    \item \textbf{Anexo B - \textit{Software SUCHAI}}: contiene todos los códigos del \textit{software} de vuelo de satélite, en su versión 1.1. Este fue el programa sobre el cual se desarrollaron las pruebas del capítulo \ref{ch5}.
+\end{itemize}
+
 
 \end{document}
 
@@ -188,7 +208,3 @@ A todos, muchas gracias.
 
 % %------------------- MONITORIZAR - RAE --------------
 %monitorear. A partir del sustantivo monitor (del ingl. monitor ?dispositivo o pantalla de control?), se han creado en español los verbos monitorizar y monitorear, con el sentido de ?vigilar o seguir [algo] mediante un monitor?: ``Durante estos experimentos [...] se monitorizaron los cambios fisiológicos de los animales'' (Mundo [Esp.] 10.4.97); ``Desde la pantalla se puede monitorear la ubicación de las unidades de emergencia'' (Clarín [Arg.] 11.9.97). En España se emplea solo monitorizar, mientras que en América se usa casi exclusivamente monitorear, que ha adquirido incluso el sentido general de ?supervisar o controlar?: ``La misión de la ONU [...] terminará con la salida de los oficiales que actúan monitoreando los acuerdos alcanzados entre las facciones'' (Observador [Ur.] 10.2.97). Derivados de los respectivos verbos son los sustantivos monitoreo y monitorización, con la misma distribución geográfica antes señalada.
-
-%TODO:
-%Lista de acronimos
-%Formato de las referencias

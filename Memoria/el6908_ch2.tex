@@ -2,18 +2,6 @@
 % En este capítulo se hace una revisión bibliográfica del los conceptos fundamentales para el desarrollo del trabajo de título. 
 % Se puede considerar como una contextualización en cuanto sirve como base para comprender el trabajo realizado.
 
-\newacronym{RAM}{RAM}{\textit{Random Access Memory}}
-\newacronym{RISC}{RISC}{\textit{Reduced Instruction Set Computing}}
-\newacronym{ALU}{ALU}{\textit{Arithmetic Logic Unit}}
-\newacronym{EULA}{EULA}{\textit{End-User License Agreement}}
-\newacronym{GPL}{GPL}{\textit{General Public License}}
-\newacronym{RTOS}{RTOS}{\textit{Real Time Operating System}}
-\newacronym{API}{API}{\textit{Application Programming Interface}}
-\newacronym{MVC}{MVC}{Modelo-Vista-Controlador}
-\newacronym{EPS}{EPS}{\textit{Energy Power System}}
-\newacronym{UHF}{UHF}{\textit{Ultra High Frequency}}
-\newacronym{IARU}{IARU}{\textit{International Amateur Radio Union}}
-
 \chapter{Marco teórico}\label{ch2}
 
 % ============= SISTEMAS EMBEBIDOS ==============
@@ -51,7 +39,7 @@ A continuación, se describen las características específicas de los microcontrol
 
 \newpage
 \subsubsection{Arquitectura.}
-Poseen un juego de instrucciones \gls{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \gls{RAM}, separada de la memoria de datos, pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \gls{RAM}. La arquitectura de la CPU la completa una \gls{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
+Poseen un juego de instrucciones \gls{risc} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \gls{RAM}, separada de la memoria de datos, pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \gls{RAM}. La arquitectura de la CPU la completa una \gls{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
 en una rutina de atención de la interrupción.
 
 % ················ IMAGEN ·················
@@ -59,7 +47,7 @@ en una rutina de atención de la interrupción.
 %··········································
 
 \subsubsection{Periféricos.}\label{ch2:embedded:perif}
-La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, SPI o I2C, USB o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
+La familia de microcontroladores PIC24F, integra en el mismo chip una serie de periféricos que permiten realizar funciones específicas a través de \textit{hardware}. Esto hace que el PIC24F se convierta en un sistema embebido capaz de ser utilizado en aplicaciones que requieran: conversores análogo-digital, temporizadores, comunicación síncrona y asíncrona como RS232, \gls{SPI} o \gls{I2C}, \gls{USB} o Ethernet, manteniendo acotados los costos del sistema. Una lista de los periféricos disponibles para estos microcontroladores se detalla en la figura \ref{pic_perif}. Los periféricos son controlados a través de registros mapeados en la memoria del microcontrolador, por lo que su acceso y configuración se realiza mediante instrucciones típicas de lecturas y escritura en memoria. Los compiladores para lenguaje C de Microchip proveen librerías de más alto nivel así como una completa documentación sobre el funcionamiento de cada periférico.
 
 % ················ IMAGEN ·················
 \figurabox[Además de la CPU, el PIC24F consta de una serie de periféricos. Fuente: Microchip, \url{http://www.microchip.com/pagehandler/en-us/family/16bit/architecture/pic24f.html}.]{img/pic_perif.jpg}{scale=0.5}{Perifericos del PIC24F}{pic_perif}{ht!}
@@ -479,7 +467,7 @@ A partir del año 1999, se comienza a desarrollar el proyecto Cubesat como una in
 
 El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalmente, se pueden combinar hasta tres unidades para obtener satélites de 2U o 3U. Esto permite contar con mayor volumen, para posicionar los componentes físicos del satélite y una mayor superficie para situar paneles solares y así brindar mayor autonomía energética.
 
-\figura[Fuente: \url{http://www.cubesat.org/index.php/documents/developers}.]{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño y dimensiones del estándar Cubesat de una unidad \cite{CUBESAT_CDS}}{img:ch2:cds}{!h}
+\figura[Fuente: \url{http://www.cubesat.org/index.php/documents/developers}.]{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño del estándar Cubesat de una unidad}{img:ch2:cds}{!h}
 
 % \newpage
 \paragraph{Aplicaciones.}
@@ -504,6 +492,6 @@ El proyecto satelital impulsado por la Facultad de Ciencias Físicas y Matemática
 
 Se trata de un satélite tipo Cubesat de una unidad, con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} para ser escuchado y decodificado por la estación terrena, también ejecutar experimentos asociados a \textit{payloads} y enviar como telemetría la información de funcionamiento del satélite y los datos recolectados. Por otro lado, su ejecución permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local, que será la base para futuras misiones relacionadas. Además posibilitará la integración de alumnos de pregrado en equipos multidisciplinarios, que requieren proponer soluciones no triviales a un problema abierto.
 
-El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio \gls{UHF}, así como antenas para desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satélite \gls{SUCHAI} en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
+El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio \gls{UHF}, así como antenas para desplegar durante la operación; y un sistema de control de energía o \gls{EPS} que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satélite \gls{SUCHAI} en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
 
 \figura[Imagen tomada durante etapas tempranas de integración.]{img/suchai_satellite.jpg}{width=0.9\textwidth}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{b!}

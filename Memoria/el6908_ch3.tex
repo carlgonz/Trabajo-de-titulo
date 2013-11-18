@@ -8,7 +8,7 @@ Se refieren a las funcionalidades que se espera que el computador a bordo del sa
 
 \subsubsection{Área de comunicaciones}
 \paragraph{Configuración inicial del \textit{transcevier}:}
-el satélite debe ser capaz de fijar, si lo permite, las configuraciones iniciales del sistema de comunicaciones, por ejemplo: encender el \textit{transcevier}, silenciar las comunicaciones durante determinado tiempo luego del lanzamiento, configurar la frecuencia de transmisión a la asignada por la IARU y la potencia si el equipo lo permite, configurar y encender la baliza o \textit{beacon}, entre otros.
+el satélite debe ser capaz de fijar, si lo permite, las configuraciones iniciales del sistema de comunicaciones, por ejemplo: encender el \textit{transcevier}, silenciar las comunicaciones durante determinado tiempo luego del lanzamiento, configurar la frecuencia de transmisión a la asignada por la \gls{IARU} y la potencia si el equipo lo permite, configurar y encender la baliza o \textit{beacon}, entre otros.
 
 Se debe almacenar de manera permanente estas configuraciones iniciales, para así poder reconfigurar el \textit{transcevier} en caso de reinicio o falla, también para permitir un ajuste de parámetros durante el desarrollo de la misión.
 
@@ -75,7 +75,7 @@ La idoneidad funcional es un requisito importante desde el siguiente punto de vi
 Existen algunas características de calidad que no serán relevantes en este diseño, ya que al ser la primera aproximación en la materia para el equipo de desarrollo, se requiere mantener cierto nivel de simplicidad en la solución, luego probarla y así ganar la experiencia necesaria en proyectos aeroespaciales. Por ejemplo, el desempeño, referido a términos computacionales, no es una restricción importante por la siguientes razones: se cuenta con una plataforma de baja capacidad de cómputo y limitados recursos energéticos; el sistema requiere realizar una cantidad baja de tareas y aquellas de alta demanda computacional pueden ser ejecutadas en tierra; y no se consideran acciones que requieran una gran precisión de tiempo. La seguridad tampoco es una componente fundamental, si bien, se podría tratar de evitar un uso mal intencionado de la plataforma por parte de otros operadores satelitales, salvo por errores, esto es poco probable; por el contrario se busca obtener la mayor cooperación posible de otros operadores 
 como la comunidad de radio-aficionados. Por último en el caso de la portabilidad, lo único importante es determinar claramente los diferentes niveles de abstracción de la arquitectura y su intercomunicación, debido a que las plataformas objetivo cuentan con muy bajo nivel de estandarización en los niveles más cercanos al \textit{hardware}.
 
-En definitiva, la \textbf{tabla \ref{tbl:ch2:req_no_func}} resume los requerimientos no funcionales del proyecto, asignándole una determinada prioridad o importancia a considerar en el diseño.
+En definitiva, la tabla \ref{tbl:ch2:req_no_func} resume los requerimientos no funcionales del proyecto, asignándole una determinada prioridad o importancia a considerar en el diseño.
 
 \tabla{tablas/req_no_operacionales.pdf}{width=\textwidth}{Requerimientos no funcionales}{tbl:ch2:req_no_func}{!hb}
 
@@ -96,10 +96,10 @@ La plataforma para la cual se diseña el \textit{software}, corresponde a un kit 
     \item Programador y \textit{debugger} Microchip ICD3.
 \end{itemize}
 
-Adicionalmente, se cuenta con los siguientes dispositivos para EPS y comunicaciones respectivamente, que completan la base del vehículo satelital:
+Adicionalmente, se cuenta con los siguientes dispositivos para \gls{EPS} y comunicaciones respectivamente, que completan la base del vehículo satelital:
 
 \begin{itemize}
-    \item EPS Clyde Space CS-1UEPS2-NB
+    \item \gls{EPS} Clyde Space CS-1UEPS2-NB
     \item \textit{Transceiver} Allspace AS-COM01
 \end{itemize}
 
@@ -129,19 +129,19 @@ Por lo tanto, se cuenta con todo el \textit{hardware} básico para el funcionamie
 
 El computador a bordo del satélite, está compuesto por una placa madre que contiene una interfaz PC104, a través de la cual se conectan el resto de los subsistemas, y por el módulo para el procesador que se integra directamente a la placa madre, como se muestra en la figura \ref{img:ch3:obc}.
 
-La placa, cuenta además con un reloj de tiempo real que se comunica por un bus I2C, el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo. Cuenta con un \textit{slot} de memoria SD, para albergar un medio de almacenamiento masivo de hasta 2 GB.; una interfaz USB 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador \cite{CUBESAT_MB}.
+La placa, cuenta además con un reloj de tiempo real que se comunica por un bus \gls{I2C}, el cual puede ser usado como reloj, alarma y/o \textit{watchdog} externo. Cuenta con un \textit{slot} de memoria SD, para albergar un medio de almacenamiento masivo de hasta 2 GB.; una interfaz \gls{USB} 2.0 para comunicaciones previas al lanzamiento; así como la electrónica para proveer alimentación al bus PC104 y al módulo del procesador \cite{CUBESAT_MB}.
 
-El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una memoria flash de 64 Mbit con interfaz SPI; osciladores; circuitos de alimentación, protección de sobre corriente y \textit{reset}. El microcontrolador posee la siguientes características \cite{CUBESAT_PPM}:
+El módulo del procesador cuenta con un microcontrolador PIC24FJ256GA110; una memoria flash de 64 Mbit con interfaz \gls{SPI}; osciladores; circuitos de alimentación, protección de sobre corriente y \textit{reset}. El microcontrolador posee la siguientes características \cite{CUBESAT_PPM}:
 
 \begin{itemize}
 	\item Arquitectura de 16 bit.
 	\item Memoria de programa flash de 256 kB.
-	\item 16 kB de memoria SRAM.
+	\item 16 kB de memoria \gls{RAM}.
 	\item Hasta 16MIPS @ 32 MHz.
 	\item 4 UARTs, 3 SPIs, 3 I2Cs.
 	\item ADC de 10 bit, 16 canales, 500 ksps.
 	\item 5 \textit{timers} de 16 bit.
-	\item RTCC, WDT
+	\item \gls{RTCC}, \gls{WDT}
 	\item Selector de pines de periféricos.
 \end{itemize}
 
@@ -167,7 +167,7 @@ Se analizará esta arquitectura a diferentes niveles, partiendo por una visión ge
 \subsection{Arquitectura global}
 A nivel global, el \textit{software} de vuelo, se concibe como una serie de capas que agrupan funcionalidades similares, e interactúan según una dinámica en que la capa inferior es una prestadora de servicios para la superior \cite{SOFTWARE_ING}. Este diseño se denomina arquitectura de capas y es una buena forma de generar sistemas portables entre diferentes plataformas de \textit{hardware}. Esto porque, siempre que se mantengan las interfaces entre capas, cualquiera de ellas puede ser reemplazada por una implementación diferente.
 
-La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada, en general,s para el diseño de \textit{software} en sistemas embebidos donde se pueden distinguir al menos los siguientes niveles: capa de bajo nivel relacionada con los controladores de \textit{hardware}, también llamada capa de abstracción de \textit{hardware} o HAL por sus siglas en inglés; la intermedia que corresponde al nivel del sistema operativo o gestor de tareas; y una superior que corresponde a la aplicación final del proyecto en cuestión.
+La figura \ref{img:ch3:arch_global} detalla una arquitectura de tres capas apropiada, en general,s para el diseño de \textit{software} en sistemas embebidos donde se pueden distinguir al menos los siguientes niveles: capa de bajo nivel relacionada con los controladores de \textit{hardware}, también llamada capa de abstracción de \textit{hardware} o \gls{HAL}; la intermedia que corresponde al nivel del sistema operativo o gestor de tareas; y una superior que corresponde a la aplicación final del proyecto en cuestión.
 
 \figura{img/arch_global.pdf}{scale=0.9}{Arquitectura de tres capas para un sistema embebido.}{img:ch3:arch_global}{!h}
 
@@ -414,7 +414,7 @@ Problemas con despliegue de antenas & Listener (Deployment) & Se chequean sensor
 
 \textit{Watchdog} & Sistema Operativo & Se cuenta con un \textit{watchdog} en el microcontrolador cuyo contador se reinicia periódicamente. Reinicia el sistema si la aplicación no responde.\\\hline
 
-Fallos de \textit{hardware} externo & NA & Se pueden generar comandos para que la EPS apague los buses de energía de los \textit{payloads} y \textit{hardware} externo.\\\hline
+Fallos de \textit{hardware} externo & NA & Se pueden generar comandos para que la \gls{EPS} apague los buses de energía de los \textit{payloads} y \textit{hardware} externo.\\\hline
 
 \textit{Watchdog} Externo & Listener (HouseKeeping) & Generar comandos periódicamente que reinicien el \textit{watchdog} externo, reiniciando el sistema ante fallas generales en el microcontrolador.\\\hline
 \end{tabularx}\label{tab:chp3:analisis:toleranciafallos}
@@ -427,7 +427,7 @@ Fallos de \textit{hardware} externo & NA & Se pueden generar comandos para que l
 \multicolumn{3}{c}{\textbf{Área de energía, órbita y payloads}}\\\hline
 \textbf{Función} & \textbf{Módulo} & \textbf{Implementación} \\\hline
 
-Estimación de la carga de la batería & Listener (HouseKeeping) & De forma periódica se ejecuta comando que lee datos desde EPS y actualiza variables en el repositorio de estado del sistema.\\\hline
+Estimación de la carga de la batería & Listener (HouseKeeping) & De forma periódica se ejecuta comando que lee datos desde \gls{EPS} y actualiza variables en el repositorio de estado del sistema.\\\hline
 
 PowerBudget & Dispatcher & Antes de ejecutar un comando se chequea el estado de energía del sistema. Los comandos tienen niveles de energía aceptables y sólo se ejecuta si su nivel requerido es menor o igual al estado de carga actual.\\\hline
 

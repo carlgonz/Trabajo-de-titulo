@@ -1,31 +1,31 @@
 \chapter{Implementación}\label{ch4}
 
-En este capítulo, se describe el proceso de implementación de la arquitectura de \textit{software} diseñada en el capítulo \ref{ch3}. EL objetivo es completar los requerimientos mínimos del sistema, para alcanzar cierta generalidad que convierta al presente trabajo en la base de futuras misiones satelitales. Para ahondar en los detalles específicos de la misión del proyecto SUCHAI, se puede tomar como referencia el trabajo desarrollado en torno al diseño e integración del satélite \cite{TOOPAZO}. Al presentar en primer lugar la implementación del núcleo de la aplicación, como base de la característica de reusabilidad, se demuestra la capacidad de modificabilidad de la solución, al agregar de manera incremental nuevas funcionalidades que completen los requerimientos esperados.
+En este capítulo, se describe el proceso de implementación de la arquitectura de \textit{software} diseñada en el capítulo \ref{ch3}. El objetivo es completar los requerimientos mínimos del sistema, para alcanzar cierta generalidad que convierta al presente trabajo en la base de futuras misiones satelitales. Para ahondar en los detalles específicos de la misión del proyecto SUCHAI, se puede tomar como referencia el trabajo desarrollado en torno al diseño e integración del satélite \cite{TOOPAZO}. Al presentar en primer lugar la implementación del núcleo de la aplicación, como base de la característica de reusabilidad, se demuestra la capacidad de modificabilidad de la solución, al agregar de manera incremental nuevas funcionalidades que completen los requerimientos esperados.
 
 El proceso consta de tres etapas principales, que se alinean con la visión global del \textit{software} como una arquitectura de tres capas. Primero se detallan los \textit{drivers} que se requieren implementar para esta plataforma, definiendo el tipo de arquitectura utilizada para guiar la implementación. En segundo lugar se detalla la forma de integrar el sistema operativo FreeRTOS. Y tercero, se procede montar la aplicación final la que se implementará módulo a módulo hasta lograr un sistema funcional.
 
 \section{Ambiente de desarrollo}
-La implementación del proyecto comienza por la definición del entorno y herramientas de desarrollo disponibles, pues son elementos esenciales que definen las posibilidades, limitaciones y marco de trabajo durante todo el proceso. El ambiente de desarrollo incluye los siguientes elementos: computadores, sistema operativo, control de versiones, el ambiente de desarrollo integrado o IDE, compilador, programador del microcontrolador y tarjeta de desarrollo.
+La implementación del proyecto comienza por la definición del entorno y herramientas de desarrollo disponibles, pues son elementos esenciales que definen las posibilidades, limitaciones y marco de trabajo durante todo el proceso. El ambiente de desarrollo incluye los siguientes elementos: computadores, sistema operativo, control de versiones, el ambiente de desarrollo integrado o \gls{IDE}, compilador, programador del microcontrolador y tarjeta de desarrollo.
 
 \subsection{Computadores} 
-En general, para el desarrollo de \textit{software} no se tienen requerimientos de \textit{hardware} elevados, considerando que bastaría con ejecutar un procesador de texto, una aplicación de línea de comandos para compilar y la disponibilidad de al menos un puerto USB para utilizar el programador del microcontrolador. La aplicación más demandante en recursos es el IDE, cuyos requerimientos recomendados de \textit{hardware} se encuentran en la tabla \ref{ch4:table:hardware_req}.
+En general, para el desarrollo de \textit{software} no se tienen requerimientos de \textit{hardware} elevados, considerando que bastaría con ejecutar un procesador de texto, una aplicación de línea de comandos para compilar y la disponibilidad de al menos un puerto \gls{USB} para utilizar el programador del microcontrolador. La aplicación más demandante en recursos es el \gls{IDE}, cuyos requerimientos recomendados de \textit{hardware} se encuentran en la tabla \ref{ch4:table:hardware_req}.
 
 \begin{table}[ht!] \caption{Requerimientos de \textit{hardware} recomendados para desarrollo \cite{MPLAB}.}
 \centering
 \begin{tabular}{ll}\hline
 \textbf{Procesador} & Intel Pentium 4 @ 2.6 GHz o equivalente\\
-\textbf{Memoria RAM} & 2 GB\\
+\textbf{Memoria \gls{RAM}} & 2 GB\\
 \textbf{Espacio en disco} & 1 GB\\\hline
 \end{tabular} \label{ch4:table:hardware_req}
 \end{table}
 
-En principio no existen restricciones sobre el sistema operativo a utilizar, dado que las principales herramientas como el IDE y el compilador son multiplataforma. Sin embargo, el presente trabajo se ha desarrollado sobre plataformas GNU/Linux por su flexibilidad, libertad de distribución, disponibilidad de herramientas y estabilidad. Las principales distribuciones de Linux utilizadas fueron Kubuntu 12.04 LTS amd64 y LinuxMint 14 amd64.
+En principio no existen restricciones sobre el sistema operativo a utilizar, dado que las principales herramientas como el \gls{IDE} y el compilador son multiplataforma. Sin embargo, el presente trabajo se ha desarrollado sobre plataformas GNU/Linux por su flexibilidad, libertad de distribución, disponibilidad de herramientas y estabilidad. Las principales distribuciones de Linux utilizadas fueron Kubuntu 12.04 LTS amd64 y LinuxMint 14 amd64.
 
 \subsection{Control de versiones} 
 Un sistema adecuado de control de cambios es fundamental en el desarrollo de un proyecto de \textit{software}, incluyendo el desarrollo de sistemas embebidos. Esto permite no sólo mantener un registro de los cambios del código, si no también revertirlos, abrir ramas paralelas, controlar las versiones estables y el trabajo colaborativo entre un equipo de programadores. En este proyecto se utilizó el \textit{software} Subversion, con un servidor propio, dedicado netamente a proveer el servicio de almacenamiento del código, junto al control de versiones. Subversion permite mantener un repositorio remoto y hacer copias de trabajo locales en el equipo de cada desarrollador (\textit{checkout}). Los programadores realizan cambios sobre el código y suben las modificaciones al servidor como una nueva versión (\textit{commit}). Estos cambios se ven reflejados cuando el resto del equipo sincroniza sus copias de trabajo con el servidor (\textit{update}). Si bien Subversion es una herramienta adecuada, existen herramientas mas avanzadas y flexibles como Git, que se característica por ser un sistema distribuido, donde cada copia local actúa como un repositorio en si mismo, haciéndolo más robusto. Si no se cuenta con servidores propios, se pueden utilizar servicio de almacenamiento en línea, como GitHub, que se integra con Git y es gratuito para repositorios públicos.
 
 \subsection{IDE}\label{ch4:para:ide} 
-El ambiente de desarrollo integrado o IDE es la aplicación fundamental en el proceso. Un buen ambiente de producción proveerá las herramientas adecuadas para el desarrollo organizado y consistente del \textit{software}, integrando el editor de texto, servicio de control de versiones, integración con el compilador y con el programador, herramienta de \textit{debug}, sistema de documentación, entre otros. En este proyecto se utiliza el IDE de Microchip denominado MPLABX, que se caracteriza por ser un entorno multiplataforma, basado en el proyecto de código libre NetBeans. Integra un avanzado editor de texto, con funcionalidades de control de cambios, múltiples configuraciones para un mismo proyecto, integración con múltiples compiladores, acceso directo a la programación y depuración del dispositivo, todo desde la misma aplicación, centralizando el proceso de desarrollo en un ambiente adecuado, como se muestra en la figura \ref{ch4:img:mplabx}.
+El ambiente de desarrollo integrado o \gls{IDE} es la aplicación fundamental en el proceso. Un buen ambiente de producción proveerá las herramientas adecuadas para el desarrollo organizado y consistente del \textit{software}, integrando el editor de texto, servicio de control de versiones, integración con el compilador y con el programador, herramienta de \textit{debug}, sistema de documentación, entre otros. En este proyecto se utiliza el \gls{IDE} de Microchip denominado MPLABX, que se caracteriza por ser un entorno multiplataforma, basado en el proyecto de código libre NetBeans. Integra un avanzado editor de texto, con funcionalidades de control de cambios, múltiples configuraciones para un mismo proyecto, integración con múltiples compiladores, acceso directo a la programación y depuración del dispositivo, todo desde la misma aplicación, centralizando el proceso de desarrollo en un ambiente adecuado, como se muestra en la figura \ref{ch4:img:mplabx}.
 
 \figura{img/mplabx.png}{width=\textwidth}{Entorno de desarrollo integrado MPLABX}{ch4:img:mplabx}{!h}
 
@@ -33,9 +33,9 @@ El ambiente de desarrollo integrado o IDE es la aplicación fundamental en el pro
 El compilador es específico a cada microcontrolador que se desee programar. En este caso, corresponde al compilador Microchip XC16 en su versión 1.1, adecuado para la familia de microcontroladores PIC24. El programador utilizado es el Microchip ICD3, indicado para ambientes de producción.
 
 \subsection{Tarjeta de desarrollo}
-Permite realizar las pruebas sobre el sistema embebido funcionando y es fundamental para el desarrollo de la aplicación, debido a que el producto final no se puede ejecutar en el mismo computador, sino que en el \textit{hardware} objetivo que corresponda. En este caso se utiliza la plataforma de desarrollo que provee el Cubesat Kit de Pumpkin \cite{CUBESAT_DB}. Esta tarjeta permite montar un módulo de procesador con un PIC24F256GA110 en un bus PC104, al cual se conectan todos los componentes del satélite. Cuenta además con un \textit{slot} de memoria SD, un reloj de tiempo real y un conversor RS232 a USB para fines de \textit{debug} (ver figura \ref{img:ch4:cubesat_db}). Es eléctricamente idéntica a la placa madre que se utilizará en el satélite, por lo tanto es la herramienta adecuada para realizar todo el trabajo de programación y pruebas del \textit{software}. Se debe hacer hincapié en lo fundamental de esta herramienta en el proceso de desarrollo de un sistema embebido, debido a que la aplicación compilada es específica para el dispositivo objetivo, las herramientas de simulación de microcontroladores no son suficientes para probar las reales condiciones de ejecución del \textit{software}, y porque el ciclo de desarrollo se completa con la solución y ajuste de problemas observados durante la ejecución de la aplicación en su sistema objetivo, de manera dinámica, como resultado de respuestas a entradas no deterministas.
+Permite realizar las pruebas sobre el sistema embebido funcionando y es fundamental para el desarrollo de la aplicación, debido a que el producto final no se puede ejecutar en el mismo computador, sino que en el \textit{hardware} objetivo que corresponda. En este caso se utiliza la plataforma de desarrollo que provee el Cubesat Kit de Pumpkin \cite{CUBESAT_DB}. Esta tarjeta permite montar un módulo de procesador con un PIC24F256GA110 en un bus PC104, al cual se conectan todos los componentes del satélite. Cuenta además con un \textit{slot} de memoria SD, un reloj de tiempo real y un conversor RS232 a \gls{USB} para fines de \textit{debug} (ver figura \ref{img:ch4:cubesat_db}). Es eléctricamente idéntica a la placa madre que se utilizará en el satélite, por lo tanto es la herramienta adecuada para realizar todo el trabajo de programación y pruebas del \textit{software}. Se debe hacer hincapié en lo fundamental de esta herramienta en el proceso de desarrollo de un sistema embebido, debido a que la aplicación compilada es específica para el dispositivo objetivo, las herramientas de simulación de microcontroladores no son suficientes para probar las reales condiciones de ejecución del \textit{software}, y porque el ciclo de desarrollo se completa con la solución y ajuste de problemas observados durante la ejecución de la aplicación en su sistema objetivo, de manera dinámica, como resultado de respuestas a entradas no deterministas.
 
-\figura[Es eléctricamente igual a la placa madre del computador abordo del satélite. Permite conecta un módulo de procesador al bus PC104, cuenta con un conector de memoria SD, conversor RS232 a USB, alimentación y protección de sobre corriente.]{img/cubesat_db.jpg}{scale=0.5}{Tarjeta de desarrollo para Cubesat Kit de Pumpkins}{img:ch4:cubesat_db}{!h}
+\figura[Es eléctricamente igual a la placa madre del computador abordo del satélite. Permite conecta un módulo de procesador al bus PC104, cuenta con un conector de memoria SD, conversor RS232 a \gls{USB}, alimentación y protección de sobre corriente.]{img/cubesat_db.jpg}{scale=0.5}{Tarjeta de desarrollo para Cubesat Kit de Pumpkins}{img:ch4:cubesat_db}{!h}
 
 \section{Organización del proyecto}
 
@@ -72,14 +72,14 @@ Los desarrolladores deben seguir esta estructura al momento de agregar un archiv
 \texttt{Payloads} & Comandos y \textit{drivers} relacionados con \textit{payloads}. Se encuentra en un directorio aparte pues acá se concentrarán la mayoría del \textit{software} específico de la misión.\\
 \texttt{Payloads/Cmd} & Implementación de comandos del sistema relacionados con \textit{payloads}.\\
 \texttt{Payloads/Drivers} & Implementación de \textit{drivers} relacionados con \textit{payloads}.\\
-\texttt{SUCHAI.X} & Directorio con la configuración del proyecto generado por el IDE MPLABX.\\
+\texttt{SUCHAI.X} & Directorio con la configuración del proyecto generado por el \gls{IDE} MPLABX.\\
 \texttt{System} & Archivos con las fuentes del sistema base, incluye implementación de comandos, repositorios y tareas.\\
 \hline
 \end{tabularx} \label{ch4:table:directory}
 \end{table}
 
 \subsection{Configuración del IDE}
-La estructura de directorios creada, es la base para configurar adecuadamente los archivos con las fuentes del proyecto en el IDE, en este caso MPLAB X. Para la correcta compilación del \textit{software}, en el IDE se deben ajustar las configuraciones del compilador, según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion}, donde los parámetros no mencionados mantienen su configuración por defecto. %Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se detallan en la figura \ref{ch4:xc16:config}.
+La estructura de directorios creada, es la base para configurar adecuadamente los archivos con las fuentes del proyecto en el \gls{IDE}, en este caso MPLAB X. Para la correcta compilación del \textit{software}, en el \gls{IDE} se deben ajustar las configuraciones del compilador, según las indicaciones de la tabla \ref{ch4:table:xc16:configuracion}, donde los parámetros no mencionados mantienen su configuración por defecto. %Ejemplos del dialogo para configurar las opciones del compilador en MPLAB X se detallan en la figura \ref{ch4:xc16:config}.
 
 \begin{table}[ht!] \caption{Configuración del compilador XC16}
 \centering
@@ -103,7 +103,7 @@ Optimization level & 0 & Las optimizaciones pueden introducir cambios en la form
 
 \multicolumn{3}{c}{\textbf{Categoria: Preprocessing and messages}}\\\hline
 \textbf{Opción} & \textbf{Valor} & \textbf{Observaciones}\\\hline
-C include dirs & \texttt{..; ../Drivers/include; ../System/include; ../<RTOS>/<include>; ../Payloads/Cmd/include; ../Payloads/Drivers/include} & Configura los directorios donde el IDE busca las cabeceras para poder incluirlas solo por su nombre y activar el auto completado.\\
+C include dirs & \texttt{..; ../Drivers/include; ../System/include; ../<RTOS>/<include>; ../Payloads/Cmd/include; ../Payloads/Drivers/include} & Configura los directorios donde el \gls{IDE} busca las cabeceras para poder incluirlas solo por su nombre y activar el auto completado.\\
 Additional warnings & Seleccionada & Permite un nivel mayor de advertencias en tiempo de compilación\\
 \hline
 
@@ -147,28 +147,28 @@ int suma(unsigned int a, unsigned int b)
 \figura{img/doxygen.png}{width=\textwidth}{Documento HTML generado por Doxygen}{ch4:img:doxygen}{ht!}
 
 \section{Controladores de \textit{hardware}}
-La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de \textit{hardware}. Un módulo, significa una librería que consiste en una serie de funciones escritas en lenguaje C, las cuales acceden a funcionalidades específicas de cierto \textit{hardware} respetando sus protocolos o API. La librería consta de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
+La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de \textit{hardware}. Un módulo, significa una librería que consiste en una serie de funciones escritas en lenguaje C, las cuales acceden a funcionalidades específicas de cierto \textit{hardware} respetando sus protocolos o \gls{API}. La librería consta de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
 
 La hoja de datos de cada dispositivo de \textit{hardware} entrega la información necesaria para poder configurarlo y acceder a sus funciones. Se pueden requerir diferentes niveles de abstracción a la hora de implementar un controlador:
 \begin{enumerate}
     \item Programar en lenguaje ensamblador (\textit{assembler}): se maneja directamente el juego de instrucciones del procesador (también conocido como lenguaje máquina) para configurar sus registros, manejar periféricos o ejecutar un programa general. Requiere de un compilador de \textit{assembler} para generar el binario.
     \item Utilizar un compilador en C: el compilador provee un nivel mayor de abstracción al permitir programar en un lenguaje de alto nivel y portable como C. Además, posee librerías básicas para las funciones de cada dispositivo.
-    \item Utilizar una librería externa: un controlador de \textit{hardware} puede requerir los servicios de otro controlador para su funcionamiento. Es el caso típico de dispositivos que utilizan algún protocolo de comunicación (RS232, SPI, I2C) puessu controlador consiste en implementar una API de llamadas sobre este protocolo.
+    \item Utilizar una librería externa: un controlador de \textit{hardware} puede requerir los servicios de otro controlador para su funcionamiento. Es el caso típico de dispositivos que utilizan algún protocolo de comunicación (RS232, \gls{SPI}, \gls{I2C}), pues su controlador consiste en implementar una \gls{API} de llamadas sobre este protocolo.
 \end{enumerate}
 
 En este caso se hará un uso extensivo de las librerías escritas en C, que provee el compilador XC16, para construir \textit{drivers} más complejos a través de sus funciones base. Lo principal es implementar los \textit{drivers} de cada periférico disponible en el microcontrolador, pues serán los recursos que utilizarán los dispositivos externos que completan el sistema del satélite. 
 
-En la sección \ref{ch2:embedded:perif} se revisaron los periféricos disponibles en el PIC24F256GA110. De ellos, se requieren al menos los siguientes \textit{drivers} para soportar el resto de las funcionalidades: Timers, I2C, SPI y UART. En la tabla \ref{ch4:table:perif_list} se detalla la arquitectura que se utilizará en cada uno de ellos.
+En la sección \ref{ch2:embedded:perif} se revisaron los periféricos disponibles en el PIC24F256GA110. De ellos, se requieren al menos los siguientes \textit{drivers} para soportar el resto de las funcionalidades: Timers, \gls{I2C}, \gls{SPI} y \gls{UART}. En la tabla \ref{ch4:table:perif_list} se detalla la arquitectura que se utilizará en cada uno de ellos.
 
 \begin{table}[ht!] \caption{\textit{Drivers} para periféricos del microcontrolador}
 \centering
 \begin{tabular}{ll}\hline
 \textbf{Periférico} & \textbf{Arquitectura} \\\hline
 Timers & Síncrono\\
-I2C & Síncrono\\
-SPI & Síncrono\\
-UART Escritura & Síncrono\\
-UART Lectura & Cola de entrada de datos seriales\\\hline
+\gls{I2C} & Síncrono\\
+\gls{SPI} & Síncrono\\
+\gls{UART} Escritura & Síncrono\\
+\gls{UART} Lectura & Cola de entrada de datos seriales\\\hline
 \end{tabular} \label{ch4:table:perif_list}
 \end{table}
 
@@ -329,7 +329,7 @@ Cómo se describe en la sección \ref{ch2:sec:214}, se debe implementar un patrón 
     
 	\item \textbf{Comandos:} están representados por un nuevo tipo definido en C que hace referencia a una función con una firma específica. Toda función cumpla esta firma podrá ser considerada un comando y ejecutarse como tal. Se necesita una segunda estructura de C que represente al objeto comando, encapsulando la función a ejecutar y los meta datos asociados.
     
-    \item \textbf{Repositorios:} Los repositorios o proveedores de servicios, se implementan en librerías. Se genera una API que da acceso a funciones de las capas inferiores del sistema, como \textit{drivers} para dispositivos de entrada y salida, manejo de memoria y almacenamiento persistente.
+    \item \textbf{Repositorios:} Los repositorios o proveedores de servicios, se implementan en librerías. Se genera una \gls{API} que da acceso a funciones de las capas inferiores del sistema, como \textit{drivers} para dispositivos de entrada y salida, manejo de memoria y almacenamiento persistente.
 \end{itemize}
 
 \subsection{Comandos}
@@ -412,7 +412,7 @@ Además de la implementación de la función, se debe generar un método de registro
 \begin{enumerate}
     \item Un arreglo único de comandos centralizado en el repositorio: los comandos se registran manualmente, agregándolos un arreglo de punteros a funciones tipo \textit{cmdFunction}.
     \begin{itemize}
-        \item \textbf{Ventajas:} se puede ahorrar memoria RAM creando un arreglo de tipo \texttt{const}, que se almacena en memoria de programa.
+        \item \textbf{Ventajas:} se puede ahorrar memoria \gls{RAM} creando un arreglo de tipo \texttt{const}, que se almacena en memoria de programa.
         \item \textbf{Desventajas:} es complejo seguir cambios en el orden en que se registran los comandos y, por lo tanto, su código asociado. Ofrece pocas posibilidades de agrupar comandos según funciones. Alto impacto al agregar un nuevo comando pues implica la modificación de múltiples archivos fuente, incluyendo el repositorio de comandos.
     \end{itemize}
     
@@ -432,7 +432,7 @@ Además de la implementación de la función, se debe generar un método de registro
     \begin{itemize}
         \item \textbf{V:} Agregar un comando sólo requiere cambios locales en el archivo que agrupa un determinado tipo. Se facilita el seguimiento de cambios en los comandos disponibles, pues la definición textual de la enumeración es fija.
         
-        \item \textbf{D:} Aún se requiere modificar el repositorio de comandos cuando se agrega un archivo con un nuevo grupo de funciones. Al completar los arreglos de funciones a través de las enumeraciones, no se puede crear un arreglo de manera manual en memoria de programa y se utiliza más memoria RAM. Se requiere una función que configure los arreglos cada vez que se inicia el sistema.
+        \item \textbf{D:} Aún se requiere modificar el repositorio de comandos cuando se agrega un archivo con un nuevo grupo de funciones. Al completar los arreglos de funciones a través de las enumeraciones, no se puede crear un arreglo de manera manual en memoria de programa y se utiliza más memoria \gls{RAM}. Se requiere una función que configure los arreglos cada vez que se inicia el sistema.
     \end{itemize}
 \end{enumerate}
 
@@ -612,27 +612,27 @@ void dat_onResetCubesatVar(void)
 Durante el desarrollo del proyecto, se estudiaron varias alternativas de implementación del repositorio de estados en lo referente al lugar de almacenamiento, modo de acceso y sistemas de tolerancia a fallos. Entre los métodos explorados se encuentra:
 
 \begin{enumerate}
-    \item Almacenamiento interno en RAM: un arreglo de enteros en memoria RAM donde la posición de cada variable se maneja a través de una estructura de enumeración.
+    \item Almacenamiento interno en \gls{RAM}: un arreglo de enteros en memoria \gls{RAM} donde la posición de cada variable se maneja a través de una estructura de enumeración.
     \begin{itemize}
         \item \textbf{V:} Rápido acceso a los datos. Puede no requerir de sincronización si la lectura y escritura se implementan como operaciones atómicas. Puede ser utilizado como método de respaldo en caso de fallas.
         \item \textbf{D:} Memoria volátil, los datos no se mantienen entre reinicios del sistema. No ofrece mecanismos de tolerancia a fallos.
     \end{itemize}
     
-    \item Almacenamiento en memoria EEPROM externa: se utiliza una memoria EEPROM a través de un bus I2C para guardar los datos de manera permanente. Este tipo de dispositivos pueden usarse como memorias de acceso aleatorio no volátiles.
+    \item Almacenamiento en memoria \gls{EEPROM} externa: se utiliza una memoria \gls{EEPROM} a través de un bus \gls{I2C} para guardar los datos de manera permanente. Este tipo de dispositivos pueden usarse como memorias de acceso aleatorio no volátiles.
     \begin{itemize}
         \item \textbf{V:} Memoria no volátil, los datos persisten entre reinicios del sistema. Acceso aleatorio a los datos.
         \item \textbf{D:} Escritura y lectura no atómica, requiere sincronización. No ofrece mecanismos de tolerancia a fallos. Acceso a datos es más lento.
     \end{itemize}
     
-    \item Almacenamiento redundante en dos memorias EEPROM: se utiliza una como respaldo en caso de falla, escribiendo siempre una copia de los datos en ambas. Cuando se detectan problemas en la operación de una memoria, el sistema activa la lectura desde el dispositivo de respaldo.
+    \item Almacenamiento redundante en dos memorias \gls{EEPROM}: se utiliza una como respaldo en caso de falla, escribiendo siempre una copia de los datos en ambas. Cuando se detectan problemas en la operación de una memoria, el sistema activa la lectura desde el dispositivo de respaldo.
     \begin{itemize}
         \item \textbf{V:} Almacenamiento no volátil. Acceso aleatorio a los datos. Provee un mecanismo de tolerancia ante fallos.
         \item \textbf{D:} Requiere sincronización de la lectura y escritura. Requiere método de detección de fallos. Acceso a datos es más lento.
     \end{itemize}
     
-    \item Almacenamiento redundante en dos memorias EEPROM, más memoria interna: la escritura y lectura de variables se realiza sobre una copia en memoria interna de los datos. De manera periódica las variables se respaldan en dos memorias EEPROM con sumas de verificación. Al inicio del sistema se cargan los datos desde la memoria que contenga la suma de verificación correcta.
+    \item Almacenamiento redundante en dos memorias \gls{EEPROM}, más memoria interna: la escritura y lectura de variables se realiza sobre una copia en memoria interna de los datos. De manera periódica las variables se respaldan en dos memorias \gls{EEPROM} con sumas de verificación. Al inicio del sistema se cargan los datos desde la memoria que contenga la suma de verificación correcta.
     \begin{itemize}
-        \item \textbf{V:} Almacenamiento no volátil de los datos. Acceso aleatorio a los datos. Rápida escritura y lectura. Puede no requerir sincronización si se implementa con operaciones atómicas. Menor deterioro de las memorias EEPROM. Provee tolerancia a fallos y detección de fallos.
+        \item \textbf{V:} Almacenamiento no volátil de los datos. Acceso aleatorio a los datos. Rápida escritura y lectura. Puede no requerir sincronización si se implementa con operaciones atómicas. Menor deterioro de las memorias \gls{EEPROM}. Provee tolerancia a fallos y detección de fallos.
         \item \textbf{D:} Dependiendo del periodo de respaldo, las copias pueden no contar con toda la información actualizada de las variables. El cálculo de sumas de verificación puede tener un alto costo computacional.
     \end{itemize}
 \end{enumerate}
@@ -641,7 +641,7 @@ En general, cualquier tipo de memoria no volátil se puede usar para estos fines,
 
 El primer método es el más simple en cuanto no requiere de controladores externos para su funcionamiento y la sincronización no es crítica. Por esto, y para mantener la generalidad, en el código \ref{ch4:code:dataRepository.c} se implementa este diseño en el repositorio de estados. Sin embargo, no contar con un almacenamiento persistente de los datos es una limitación crítica, ya que el objetivo de este módulo es que el sistema de vuelo sea tolerante a reinicios inesperados, volviendo a funcionar según sus últimos estados almacenados. Este método es factible de utilizar para pruebas o bien como un sistema de respaldo en caso de que una falla fuerce al sistema a trabajar con funcionalidades mínimas.
 
-El diseño implementado en el sistema de vuelo del proyecto SUCHAI es el tercero de la lista, y cuenta con dos memorias EEPROM de 512 bytes, comunicadas a través de un bus I2C exclusivo. Esto otorga la suficiente funcionalidad para que el sistema se mantenga consistente ante reinicios y además, entrega redundancia como medida de tolerancia a fallos \cite{TOOPAZO}.
+El diseño implementado en el sistema de vuelo del proyecto SUCHAI es el tercero de la lista, y cuenta con dos memorias \gls{EEPROM} de 512 bytes, comunicadas a través de un bus \gls{I2C} exclusivo. Esto otorga la suficiente funcionalidad para que el sistema se mantenga consistente ante reinicios y además, entrega redundancia como medida de tolerancia a fallos \cite{TOOPAZO}.
 
 %\subsection{Repositorio de datos}
 %TODO: Repositorio de datos
@@ -850,7 +850,7 @@ void taskHouskeeping(void *param)
 % \newpage
 \subsection{Funcionamiento de la aplicación}
 
-Con la implementación del primer \textit{listener} y la correcta inicialización del sistema operativo, las tareas y los repositorios, se tiene la primera versión funcional del \textit{software} de vuelo. Si bien no se realiza ninguna tarea fundamental para la misión satelital, la generalidad de la implementación responde, principalmente, a los requerimientos no operacionales del proyecto y se convierte en la base para trabajos futuros. Para unir el desarrollo anterior, se debe programar el punto de entrada de la aplicación: la función \texttt{main}. Esto se muestra en el código \ref{ch4:code:main.c}, dónde se han omitido las configuraciones de \textit{hardware} específicas. Este punto del desarrollo está marcado como la versión \texttt{v0.1-base} dentro del sistema control de versiones.
+Con la implementación del primer \textit{listener} y la correcta inicialización del sistema operativo, las tareas y los repositorios, se tiene la primera versión funcional del \textit{software} de vuelo. Si bien no se realiza ninguna tarea fundamental para la misión satelital, la generalidad de la implementación responde, principalmente, a los requerimientos no operacionales del proyecto y se convierte en la base para trabajos futuros. Para unir el desarrollo anterior, se debe programar el punto de entrada de la aplicación: la función \texttt{main}. Esto se muestra en el código \ref{ch4:code:main.c}, dónde se han omitido las configuraciones de \textit{hardware} específicas. Este punto del desarrollo está marcado como la versión \texttt{v0.1-base} dentro del sistema control de versiones y se puede encontrar en los anexos.
 
 \begin{lstlisting}[float,label=ch4:code:main.c,caption=main.c]
 #include <stdio.h>
@@ -913,7 +913,7 @@ El resultado de la programación y ejecución del \textit{software} en el microcon
 
 % De la salida se observa la inicialización de todas las tareas del sistema. \textit{Houskeeping} se ejecuta de manera periódica enviado comandos al \textit{dispatcher}, lo que provoca la activación de este módulo que registra el nuevo comando recibido, su parámetro y su origen. El efecto en cadena provoca la activación del \textit{executer} quien registra el inicio de la ejecución del comando. Si el comando considera salida de datos por la consola serial, se ve reflejado en este punto, sino de todas maneras el \textit{Executer} muestra el resultado de la operación.
 
-\begin{lstlisting}[float,label=ch4:reg:main,caption=Registro de ejecución del \textit{software} de vuelo]
+\begin{lstlisting}[label=ch4:reg:main,caption=Registro de ejecución del \textit{software} de vuelo]
 //Se inicia el sistema operativo y las tareas
 >>Starting FreeRTOS [->]
 >>[Executer] Started
@@ -972,12 +972,12 @@ En las secciones anteriores se implementa la base del sistema de vuelo, con míni
 \subsection{Consola serial}
 La consola serial es una herramienta fundamental para el proceso de depuración y pruebas del sistema en desarrollo. Se implementa sobre el protocolo de transferencia de datos seriales RS232, a través de los periféricos disponibles en la plataforma de \textit{hardware}:
 \begin{itemize}
-    \item Módulos UART en el microcontrolador.
+    \item Módulos \gls{UART} en el microcontrolador.
     \item Puerto serial DB9 con conversor de voltaje en la placa de desarrollo.
-    \item Puerto USB con conversor USB-Serial (FT232R) en la placa madre del computador abordo.
+    \item Puerto \gls{USB} con conversor USB-Serial (FT232R) en la placa madre del computador abordo.
 \end{itemize}
 
-La salida de datos hacia el puerto serial es bastante directa, pues uso del controlador implementado para los módulos UART, además de la adaptación de funciones comunes como \texttt{printf}. Como los mensajes de \textit{debug} están bastante extendidos a lo largo del programa, las tareas que se ejecutan de manera concurrente, pueden requerir el acceso simultaneo a este recurso compartido. Por esto, una adaptación importante consiste en convertir a \textit{printf} en una función \textit{thread safe}, mediante la utilización de herramientas de sincronización que provean la exclusión mutua sobre este recurso.
+La salida de datos hacia el puerto serial es bastante directa, pues uso del controlador implementado para los módulos \gls{UART}, además de la adaptación de funciones comunes como \texttt{printf}. Como los mensajes de \textit{debug} están bastante extendidos a lo largo del programa, las tareas que se ejecutan de manera concurrente, pueden requerir el acceso simultaneo a este recurso compartido. Por esto, una adaptación importante consiste en convertir a \textit{printf} en una función \textit{thread safe}, mediante la utilización de herramientas de sincronización que provean la exclusión mutua sobre este recurso.
 
 La entrada de datos requiere mayor detalle en la implementación, pues debe permitir el reconocimiento de las cadenas de caracteres que se ingresan como órdenes al sistema. Para esto, se implementa un \textit{listener}, dedicado exclusivamente a tomar los caracteres de la consola serial, formar las cadenas de texto, separar parámetros e interpretar la entrada como comandos del \textit{software} de vuelo, los que serán encolados para su ejecución. El detalle de la implementación de esta tarea se ilustra a través del diagrama de flujo de la figura \ref{ch4:img:console-flow}.
 
