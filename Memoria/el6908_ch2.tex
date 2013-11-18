@@ -49,6 +49,7 @@ Todo sistema embebido está formado fundamentalmente por un microcontrolador, que
 
 A continuación, se describen las características específicas de los microcontroladores PIC24 que corresponde al dispositivo utilizado en este trabajo.
 
+\newpage
 \subsubsection{Arquitectura.}
 Poseen un juego de instrucciones \gls{RISC} (80 instrucciones) de ancho fijo en 24 bits que en su mayoría se ejecutan en un solo ciclo, excepto: divisiones, cambios de contexto y acceso por tabla a memoria de programa \cite{PIC24_PROG}. Se basa en una arquitectura Harvard modificada de 16 bits de datos \cite{PIC24F}, lo que significa que el dispositivo posee una memoria de datos tipo \gls{RAM}, separada de la memoria de datos, pudiendo acceder de manera independiente e incluso simultánea a las instrucciones del programa y a los datos de este alojados en \gls{RAM}. La arquitectura de la CPU la completa una \gls{ALU}, con \textit{hardware} dedicado para realizar multiplicaciones y divisiones. El detalle de la arquitectura del microcontrolador PIC24 se muestra en la figura \ref{pic_cpu}. También posee un vector de hasta 128 interrupciones, con capacidad para atender hasta 8 de ellas de manera simultánea, lo que permite liberar al procesador de la espera de sucesos asíncronos, ya que son notificados y atendidos de manera específica 
 en una rutina de atención de la interrupción.
@@ -84,10 +85,10 @@ Para grabar el \textit{software} desarrollado para estos dispositivos se debe ut
 
 % ============= SISTEMAS OPERATIVOS ==============
 \section{Sistemas operativos}\label{ch2:sistema_operativo}
-Un sistema operativo es la aplicación base de un sistema computacional, pues brinda servicios básicos al resto de las aplicaciones de uso general ejecutadas en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro. Por lo tanto se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto, el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware}, las cuales no están disponibles para la aplicación como se ilustra en la figura \ref{os}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
+Un sistema operativo es la aplicación base de un sistema computacional, pues brinda servicios básicos al resto de las aplicaciones de uso general ejecutadas en el computador. El sistema operativo es la capa entre el \textit{hardware} y las aplicaciones, el cual puede variar considerablemente entre un sistema y otro. Por lo tanto se necesita una capa de abstracción que haga a la aplicación independiente de la plataforma en que se ejecuta. Para esto, el sistema operativo provee servicios que usan interfaces de bajo nivel con el \textit{hardware}, las cuales no están disponibles para la aplicación como se ilustra en la figura \ref{ch2:os}. Ejemplos de sistemas operativos los son UNIX, GNU/Linux, FreeRTOS, entre otros.
 
 % ················ IMAGEN ·················
-\figurabox[Accede directamente al \textit{hardware} y provee servicios a la capa de aplicación.]{img/os.pdf}{scale=0.7}{Sistema operativo como capa de abstracción de \textit{hardware}}{os}{ht!}
+\figurabox[Accede directamente al \textit{hardware} y provee servicios a la capa de aplicación.]{img/os.pdf}{scale=0.7}{Sistema operativo como capa de abstracción de \textit{hardware}}{ch2:os}{h!}
 %··········································
 
 Los servicios básicos que provee a través de su kernel son:
@@ -95,18 +96,18 @@ Los servicios básicos que provee a través de su kernel son:
 \begin{itemize}
     \item \textbf{Gestión de tareas:} También denominada gestión de procesos o \textit{scheduler}. El sistema operativo ve a la aplicación como una serie de tareas o procesos, a las cuales se deben entregar los servicios de creación, ejecución y asignación de prioridades. Cada tarea cumple objetivos específicos en la aplicación,posee sus propios recursos y limitaciones de tiempo. Pueden existir varios procesos funcionando a la vez, y el sistema operativo se encarga de proveer tiempo de procesamiento a cada una de ellos. Existen diferentes alternativas para gestionar la ejecución de las tareas entre las que sobresalen dos: \textit{preemptive} y cooperativo. La implementación de la aplicación depende mucho del tipo de \textit{scheduler} disponible por lo cual se describe cada uno a continuación:
     \begin{itemize}
-        \item \textbf{Modo \textit{preemptive}:} El sistema operativo puede interrumpir la actual tarea en cualquier momento de su ejecución, para realizar el cambio de contexto y ceder el procesador a una diferente. Por lo general se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, así el \textit{scheduler} se asegura que siempre se esté ejecutando la tarea de mayor prioridad disponible.
+        \item \textbf{Modo \textit{preemptive}:} el sistema operativo puede interrumpir la actual tarea en cualquier momento de su ejecución, para realizar el cambio de contexto y ceder el procesador a una diferente. Por lo general se realiza a intervalos fijos, denominados \textit{ticks}. Esto puede ir acompañado de un sistema de prioridades, así el \textit{scheduler} se asegura que siempre se esté ejecutando la tarea de mayor prioridad disponible.
         
-        \item \textbf{Modo cooperativo:} En el modo cooperativo, el sistema operativo nunca inicia un cambio de contexto, sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva. El sistema operativo es quien decide la siguiente tarea a ejecutar ya, sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas, y cooperar con la ejecución del resto iniciado el proceso de cambio de contexto.
+        \item \textbf{Modo cooperativo:} en el modo cooperativo, el sistema operativo nunca inicia un cambio de contexto, sino que cada tarea en ejecución cede voluntariamente el procesador a una nueva. El sistema operativo es quien decide la siguiente tarea a ejecutar ya, sea por el algoritmo de \textit{round robin}, un sistema de prioridades o ambos. Se denomina cooperativo porque todas las tareas deben estar correctamente programadas, y cooperar con la ejecución del resto iniciado el proceso de cambio de contexto.
     \end{itemize}
     
-    \item \textbf{Comunicación y sincronización entre tareas:} Si bien cada tarea posee su propio contexto de ejecución y pueden existir varias funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre ellas, para compartir estados y mensajes, que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de \textit{hardware} o requerirán de memoria compartida, en esquemas tipo productor-consumidor, donde el sistema operativo es quien provee las estructuras de sincronización adecuadas.De este modo los mecanismos de comunicación aseguran que la información compartida no se corrompa, y no existan interferencias entre tareas al acceder simultáneamente a recursos compartidos.
+    \item \textbf{Comunicación y sincronización entre tareas:} si bien cada tarea posee su propio contexto de ejecución y pueden existir varias funcionando de manera concurrente, la verdadera utilidad nace de la posibilidad de comunicación entre ellas, para compartir estados y mensajes, que permitan cambiar el flujo de ejecución de las operaciones en el sistema embebido. Así, las tareas compartirán los mismos recursos de \textit{hardware} o requerirán de memoria compartida, en esquemas tipo productor-consumidor, donde el sistema operativo es quien provee las estructuras de sincronización adecuadas.De este modo los mecanismos de comunicación aseguran que la información compartida no se corrompa, y no existan interferencias entre tareas al acceder simultáneamente a recursos compartidos.
     
-    \item \textbf{Temporización:} Dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs}, para controlar la periodicidad o los límites de tiempo de ejecución de cada tarea.
+    \item \textbf{Temporización:} dado los requerimientos estrictos de tiempo propios de un sistema de tiempo real, el sistema operativo debe proveer servicios de tiempo como \textit{delays} y \textit{time-outs}, para controlar la periodicidad o los límites de tiempo de ejecución de cada tarea.
     
-    \item \textbf{Gestión de memoria:} Las diferentes tareas y procesos que se ejecutan en el sistema requieren reservar, usar y liberar memoria de datos para su ejecución de manera segura, es decir, sin corromper la memoria utilizada por el resto de los procesos o el propio sistema operativo. Por esto, debe proveer servicios de gestión de memoria, como por ejemplo, la reserva dinámica de memoria de datos.
+    \item \textbf{Gestión de memoria:} las diferentes tareas y procesos que se ejecutan en el sistema requieren reservar, usar y liberar memoria de datos para su ejecución de manera segura, es decir, sin corromper la memoria utilizada por el resto de los procesos o el propio sistema operativo. Por esto, debe proveer servicios de gestión de memoria, como por ejemplo, la reserva dinámica de memoria de datos.
     
-    \item \textbf{Gestión de dispositivos de entrada y salida:} Los dispositivos de entrada y salida son compartidos por todas las tareas que se ejecutan, por lo tanto, el sistema operativo provee el servicio de gestionar el acceso a estos dispositivos de manera uniforme y organizada.
+    \item \textbf{Gestión de dispositivos de entrada y salida:} los dispositivos de entrada y salida son compartidos por todas las tareas que se ejecutan, por lo tanto, el sistema operativo provee el servicio de gestionar el acceso a estos dispositivos de manera uniforme y organizada.
 \end{itemize}
 
 % En cuanto a la arquitectura de \textit{software} presente en un sistema operativo, se pueden encontrar al menos tres opciones bien conocidas que corresponden al kernel monolítico, arquitectura en capas y micro kernel \cite{EMBEDDED_ARCHITECTURE} como se detalla a continuación:
@@ -184,7 +185,7 @@ El \textit{scheduler} es la parte fundamental del kernel, que controla la ejecuc
 El algoritmo de \textit{scheduling} se basa en un sistema de prioridades donde la tarea, en condiciones de ejecutarse, que tenga la mayor prioridad siempre debe ser procesada. Si varias tareas en estado ``listo'' comparten la misma prioridad, se aplica un algoritmo de \textit{round-robin}. Las que están en estado ``suspendido'' y ``bloqueado'' nunca son seleccionadas por el \textit{scheduler} y por lo tanto no consumen recursos. Haciendo un correcto uso de las prioridades y los diferentes estados se consigue un sistema que se ejecuta de manera fluida, haciendo un uso óptimo del procesador.
 
 % ============= INGENIERIA DE SOFTWARE ==============
-\section{Ingeniería de Software}
+\section{Ingeniería de \textit{software}}
 
 % % ============= LICENCIAS DE SOFTWARE ==============
 % \subsubsection{Licencias de Software}
@@ -248,7 +249,7 @@ El algoritmo de \textit{scheduling} se basa en un sistema de prioridades donde l
 % 
 
 % ============= CALIDAD DE SOFTWARE =============
-\subsection{Calidad de software}
+\subsection{Calidad de \textit{software}}
 Los requerimientos no funcionales de un proyecto de \textit{software} se pueden definir como los parámetros de calidad buscados en el producto, entre los que se encuentran una serie de calificativos muy subjetivos, y tal vez difícilmente medibles como rapidez, seguridad, escalabilidad y modularidad. Algunos conceptos pueden ser utilizados de manera poco clara o equivalentes como lo extensible o escalable que puede ser un \textit{software}, sin dejar claro las diferencias o acotaciones entre ellos. Es por esto, que se han creado normas en torno a las metodologías para desarrollar y utilizar modelos de calidad de \textit{software}, que permitan establecer de manera clara los parámetros a medir. 
 
 En especial se tratará la norma ISO/IEC 25010, una actualización a la antigua ISO/IEC 9126, que plantea un modelo de calidad \textit{software} que consta de ocho características con sus respectivos sub-atributos, y puede ser utilizado para evaluación o especificación de una aplicación durante las etapas de: identificación de requerimientos; validación de la integralidad de la lista de requerimientos; definición de los objetivos del diseño del \textit{software}; determinar de los objetivos de las pruebas; identificación de los criterios de calidad; o la definición de criterios para determinar si un producto está completo \cite{ISO25010}.
@@ -426,7 +427,7 @@ Dentro de los patrones clasificados como de comportamiento, se encuentra el deno
 
 % ============= SATELITES ==============
 
-\section{Pequeños Satélites}
+\section{Pequeños satélites}
 %TODO: Agregar una descripcion breve
 
 \subsection{Satélites tipo Cubesat}
@@ -480,7 +481,7 @@ El estándar mencionado corresponde a un Cubesat de una unidad (1U). Opcionalment
 
 \figura[Fuente: \url{http://www.cubesat.org/index.php/documents/developers}.]{img/cubesat_cds.png}{width=\textwidth}{Especificaciones de diseño y dimensiones del estándar Cubesat de una unidad \cite{CUBESAT_CDS}}{img:ch2:cds}{!h}
 
-\newpage
+% \newpage
 \paragraph{Aplicaciones.}
 En la actualidad cerca de un centenar de satélites tipo Cubesat han sido lanzados de manera exitosa. Las aplicaciones con posibilidades de ser desarrolladas a través de este tipo de tecnologías incluyen proyectos con fines educacionales, pruebas de nuevas tecnologías espaciales, proyectos de investigación científica y desarrollos privados.
 
@@ -499,10 +500,10 @@ Iniciativas privadas o de propósito general, tales como redes de comunicaciones 
 \section{Proyecto SUCHAI}
 El proyecto satelital impulsado por la Facultad de Ciencias Físicas y Matemáticas de la Universidad de Chile, con la participación de académicos, ingenieros y estudiantes, se denomina \textit{Satellite of University of Chile for Aerospace Investigation} (SUCHAI) y consiste en el desarrollo, puesta en órbita y operación del primer satélite creado netamente en el país.
 
-% \figura{img/suchai_logo.png}{scale=0.25}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
+\figura{img/suchai_logo.png}{scale=0.25}{Logo del proyecto SUCHAI}{img:ch2:suchai_logo}{!h}
 
 Se trata de un satélite tipo Cubesat de una unidad, con fines educacionales y científicos. El objetivo del proyecto es poner en órbita un satélite, desarrollado por estudiantes de la carrera de ingeniería, que sea capaz de enviar un \textit{beacon} para ser escuchado y decodificado por la estación terrena, también ejecutar experimentos asociados a \textit{payloads} y enviar como telemetría la información de funcionamiento del satélite y los datos recolectados. Por otro lado, su ejecución permitirá adquirir el conocimiento necesario para desarrollar proyectos satelitales de manera local, que será la base para futuras misiones relacionadas. Además posibilitará la integración de alumnos de pregrado en equipos multidisciplinarios, que requieren proponer soluciones no triviales a un problema abierto.
 
 El satélite se compone de tres sistemas básicos: el computador a bordo, que consiste en un microcontrolador de gama media, para ejecutar el \textit{software} que controla su operación en órbita; el sistema de comunicaciones, compuesto por un transmisor y receptor de radio \gls{UHF}, así como antenas para desplegar durante la operación; y un sistema de control de energía o EPS que incluye baterías y paneles solares, para proveer la energía eléctrica que permite operar al satélite así como también, cargar baterías. Como carga útil se considera la integración: una cámara digital que pueda realizar tomas de la tierra; sensores de temperatura; giróscopos; un sensor para medir la densidad y temperatura de partículas de la ionosfera con una \textit{langmuir probe}; y un dispositivo para realizar un estudio estadístico de la transferencia de potencia en ambientes de microgravedad y la disipación de calor de la electrónica en ambientes escaso de aire. En la figura \ref{ch2:img:suchai_satellite} se observa el satélite \gls{SUCHAI} en una etapa temprana de integración junto a uno de los \textit{payloads} de la misión.
 
-\figura{img/suchai_satellite.jpg}{scale=0.6}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{b!}
+\figura[Imagen tomada durante etapas tempranas de integración.]{img/suchai_satellite.jpg}{width=0.9\textwidth}{Satélite SUCHAI junto a una \textit{langmuir probe}}{ch2:img:suchai_satellite}{b!}

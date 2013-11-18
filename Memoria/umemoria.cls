@@ -28,7 +28,7 @@
 %% Pasar Opciones a clase Book
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessOptions\relax
-\LoadClass[12pt, openany]{book}
+\LoadClass[12pt, openany, oneside]{book}
 
 %% Packages necesarios
 \RequirePackage[top=2cm, left=3cm, bottom=2cm, right=2cm, paper=letterpaper]{geometry}	%%Margenes

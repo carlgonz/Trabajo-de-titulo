@@ -1,3 +1,5 @@
+\renewcommand{\lstlistingname}{Registro}
+
 \chapter{Pruebas y resultados}\label{ch5}
 En este capítulo se detallan y discuten los resultados obtenidos luego de la implementación del sistema. Se analiza el funcionamiento del satélite, con sus tres subsistemas básicos integrados, y se revisa el cumplimiento de las funcionalidades esperadas por el equipo del proyecto SUCHAI.
 Se realizan pruebas de rendimiento y se obtienen estadísticas del uso de los recursos de \textit{hardware}, para así determinar si la solución es adecuada para la plataforma objetivo.
@@ -243,7 +245,15 @@ el \textit{software} de vuelo se encarga de generar \textit{beacons} de manera p
 
 A los cuatro minutos de funcionamiento se genera el primer \textit{beacon}, cuyo contenido es: \texttt{SUCHAIATINGDOTUCHILEDOTCL-0}. Esto es el identificador seguido de un guión y un número que indica que este mensaje no tiene más información. El siguiente \textit{beacon} corresponde al texto: \texttt{SUCHAIATINGDOTUCHILEDOTCL-11000017H30761940780001} e incluye variables de estado en su contenido, según lo especificado en la tabla \ref{ch5:table:result:beacon}.
 
-Para comprobar el correcto funcionamiento de la lógica que genera la información de cada \textit{beacon}, se realiza la tabla \ref{ch5:table:result:beacon}, donde se compara el contenido generado y el valor de las variables de estado en ese momento.
+Para comprobar el correcto funcionamiento de la lógica que genera la información de cada \textit{beacon}, se realiza la tabla \ref{ch5:table:result:beacon}, donde se compara el contenido generado y el valor de las variables de estado en ese momento. Se debe notar que, en el texto del \textit{beacon}, la hora del despliegue se codifica de 1 a N, por lo tanto, cuando se lee una \texttt{H} se interpreta como un \texttt{17}, lo cual es consistente con el valor de la variable en memoria. Con esto, se concluye que la lógica que permite rastrear al satélite y recuperar información esencial de su funcionamiento, actúa según lo esperado.
+
+En la estación terrena se reciben estas señales y son procesadas por el \textit{software} que permite decodificar el código Morse. Un ejemplo de la señal recibida en la estación terrena se muestra en la figura \ref{ch5:result:beacon}. Los textos obtenidos para una secuencia de tres \textit{beacons} transmitidos fueron:
+
+\begin{verbatim}
+O0000V0000000XHX02000000000000000GBW00000000DK000024,
+O0000V0000000XHX02000000000000000GBW00000000DK000025,
+O0000V0000000XHX02000000000026.
+\end{verbatim}
 
 \begin{table}[h]\caption{\textit{Beacons} generados por el \textit{software} de vuelo}
 \begin{tabular}{lllllllll}
@@ -268,26 +278,14 @@ Estado memoria SD        & 1  & 1  & 1  & 1  & 1  & 1  \\ \hline
 \end{tabular}\label{ch5:table:result:beacon}
 \end{table}
 
-Se debe notar que, en el texto del \textit{beacon}, la hora del despliegue se codifica de 1 a N, por lo tanto, cuando se lee una \texttt{H} se interpreta como un \texttt{17}, lo cual es consistente con el valor de la variable en memoria. Con esto, se concluye que la lógica que permite rastrear al satélite y recuperar información esencial de su funcionamiento, actúa según lo esperado.
-
-En la estación terrena se reciben estas señales y son procesadas por el \textit{software} que permite decodificar el código Morse. Un ejemplo de la señal recibida en la estación terrena se muestra en la figura \ref{ch5:result:beacon}.
-
 %···················· FIGURE ····················
 \begin{figure}[ht!] \centering
 \subfloat[Beacon 1]{\includegraphics[width=0.45\textwidth]{img/beacon1.png}}
 \hspace{0.3cm}
 \subfloat[Beacon 2]{\includegraphics[width=0.45\textwidth]{img/beacon2.png}}
-\caption[Beacon recibido en la estación terrena]{Se utiliza el \textit{software} MixW para decodificar una transmisión de radio demodulada por la estación terrena.}\label{ch5  :result:beacon}
+\caption[Beacon recibido en la estación terrena]{Beacon recibido en la estación terrena. Se utiliza el \textit{software} MixW para decodificar una transmisión de radio demodulada por la estación terrena.}\label{ch5:result:beacon}
 \end{figure}
 %················································
-
-Los textos obtenidos para una secuencia de tres \textit{beacons} transmitidos fueron:
-
-\begin{verbatim}
-O0000V0000000XHX02000000000000000GBW00000000DK000024,
-O0000V0000000XHX02000000000000000GBW00000000DK000025,
-O0000V0000000XHX02000000000026.
-\end{verbatim}
 
 Lo anterior claramente significa una falla, debido a que no se recibe el texto esperado, y se debe a un error del equipo de comunicaciones al configurar el nuevo texto del \textit{beacon}. Se descartan errores en la estación terrena debido a que la secuencia decodificada tiene sentido: al final de cada linea recibida se observa un contador, que es agregado automáticamente por el \textit{transcevier}, y que aumenta de manera secuencial en cada transmisión. El cero al inicio de la secuencia, también es parte del formato agregado por el dispositivo transmisor, lo cual permite concluir que es este quien no configura de manera correcta el mensaje.
 
@@ -335,7 +333,7 @@ el envío de telemetría es activado desde la estación terrena, por alguno de los 
 
 Durante la prueba sólo estuvo disponible el modo de respaldo, por lo que se transmite la portadora durante el tiempo especificado en la configuración de la aplicación, en este caso, 10 segundos. El satélite detecta la señal y el \textit{software} determina si estuvo presente el tiempo necesario, como se detalla en el registro \ref{ch5:reg:rssi_2}.
 
-\begin{lstlisting}[numbers=none,label=ch5:reg:rssi,caption=Descarga de telemetría en modo de respaldo]
+\begin{lstlisting}[float,numbers=none,label=ch5:reg:rssi_2,caption=Descarga de telemetría en modo de respaldo]
 //Se detecta la portadora y se inicia el conteo 
 [19:37:55.076357] RSSI_CNT=2
 [19:37:57.480979] RSSI_CNT=4
@@ -359,14 +357,8 @@ Durante la prueba sólo estuvo disponible el modo de respaldo, por lo que se tran
 [19:38:13.104915] >> Telemetry transmited [OK]
 \end{lstlisting}
 
-De esta manera se induce el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado, registradas cada 20 minutos. En la estación terrena se reciben los datos decodificados por el TNC y los resultados se detallan en la figura \ref{ch5:result:telemetria}.
+De esta manera se induce el envío de toda la telemetría almacenada, que corresponde al valor de las variables de estado, registradas cada 20 minutos. En la estación terrena se reciben los datos decodificados por el TNC y los resultados se detallan en la figura \ref{ch5:result:telemetria}. Se observa que, a pesar de las fallas en el sistema de comunicaciones, el \textit{software} de vuelo puede efectuar la descarga de telemetría operando en modo de respaldo. Al igual que el \textit{beacon}, la señal es recibida, pero los datos no son decodificados correctamente y el programa indica este error.
 
-% %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-% \figura{img/test_telemetria.png}{width=0.8\textwidth}{Recepción de telemetría en la estación terrena}{ch5:result:telemetria}{hb!}
-
-Se observa que, a pesar de las fallas en el sistema de comunicaciones, el \textit{software} de vuelo puede efectuar la descarga de telemetría operando en modo de respaldo. Al igual que el \textit{beacon}, la señal es recibida, pero los datos no son decodificados correctamente y el programa indica este error.
-
-%TODO: REVISAR ACA
 \subsubsection{Control central}
 \paragraph{Organizar telemetría:}
 durante la misión, se generarán datos que provienen de diferentes subsistemas o \textit{payloads}. Se debe contar con un medio de almacenamiento con la capacidad adecuada para mantenerlos y un sistema de organización de los diferentes datos guardados, con el objetivo de ser requeridos de manera selectiva para ser enviados como telemetría a la estación terrena. En esta etapa del desarrollo el repositorio de datos cuenta con una serie de \textit{buffers} para este propósito.
@@ -478,18 +470,19 @@ en el módulo \texttt{taskHousekeeping}, las variables de estado son actualizadas
 
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[Arriba, variables relacionadas con el computador a bordo, las horas de funcionamiento aumentan con el tiempo y durante pruebas de reinicio aumenta el contador y el indicador del tipo de reinicio. Abajo, el valor de la intensidad de señal (RSSI) del \textit{transcevier}, los máximos coinciden con las transmisiones de \textit{beacon}.]{img/plot_status_var.png}{width=0.99\textwidth}{Gráfico con el valor de las variables de estado en el tiempo}{ch5:figure:result:status_var}{ht!}
+\figura[Arriba, variables relacionadas con el computador a bordo. Abajo, el valor de la intensidad de señal (RSSI) del \textit{transcevier}, los máximos coinciden con las transmisiones de \textit{beacon}.]{img/plot_status_var.png}{width=0.99\textwidth}{Gráfico con el valor de las variables de estado en el tiempo}{ch5:figure:result:status_var}{ht!}
 
 El set de variables consideradas en el gráfico \ref{ch5:figure:result:status_var}, tiene por objetivo mostrar el funcionamiento del repositorio de estados, más que un análisis exhaustivo de sus valores instantáneos. Los resultados muestran cómo este repositorio permite mantener actualizado el estado de funcionamiento del satélite, retroalimentando al resto de los módulos de \textit{software} con esta información. Acá se almacenan variables con información instantánea, como el caso de los voltajes y corrientes en el sistema de energía, o el nivel RSSI presente el sistema de comunicaciones. Otras son modificadas de manera periódica como la hora actual del sistema o el tiempo total de operación. Algunas variables representan configuraciones del satélite y no varían, a menos que se instruya una modificación manual de ellas, como el caso de las potencias de transmisión de telemetría y \textit{beacon}.
 
 Es muy importante que ciertas variables mantengan su valor entre cada reinicio del sistema, para que el software de vuelo retome su estado de operación anterior a una falla o \textit{reset}. Esto se verifica en las pruebas de reinicio, revisando el valor de las siguientes variables: \texttt{ppc\_lastResetSource}, \texttt{ppc\_hoursAlive}, \texttt{ppc\_hoursWithoutReset}, \texttt{ppc\_resetCounter} y \texttt{dep\_ant\_deployed}. La información se resume en el gráfico de la figura \ref{ch5:figure:result:status_var_reset}. Se observa que ciertas variables se van actualizando con el tiempo, como el caso de las horas de funcionamiento y las horas sin reinicio. Las pruebas de \textit{reset} comienzan a las 19:44 hrs. lo cual se refleja en el valor de las variables \texttt{ppc\_hoursWithoutReset} y \texttt{ppc\_resetCounter}, que indican la cantidad de horas que el sistema ha funcionado sin reiniciarse y el contador de estos eventos, respectivamente. La prueba incluye reinicios generados por diferentes fuentes, como \textit{software}, \textit{hardware} y el \textit{watchdog}, las cuales se observan en la variable \texttt{ppc\_lastResetSource}. La prueba del buen funcionamiento del sistema, ante estos eventos, es que los valores de las variables de estado siguen siendo coherentes cada vez que el sistema se vuelve a iniciar, como se ve en el caso del indicador de antenas desplegadas (\texttt{dep\_ant\_deployed}), el contador de reinicios y la cantidad total de horas de funcionamiento.
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[El repositorio de estados mantiene el valor de las variables consistentes ante fallas o reinicios, como se observa en el indicador de antena desplegada y el contador de reinicios.]{img/plot_status_reset.png}{scale=0.7}{Variables de estado ante un reinicio}{ch5:figure:result:status_var_reset}{ht!}
+\figura[El repositorio de estados mantiene consistente el valor de las variables ante fallas o reinicios.]{img/plot_status_reset.png}{width=0.99\textwidth}{Variables de estado ante un reinicio}{ch5:figure:result:status_var_reset}{h!}
 
 \paragraph{Inicio del sistema:}
-el inicio del sistema cuenta de dos etapas. En la primera, se inician funciones de bajo nivel como configuraciones de periféricos del procesador, puertos de entrada-salida, instanciar variables del sistema operativo e iniciarlo. De la correcta ejecución de esta etapa depende la posibilidad de contar con la salida para la consola serial, por lo que se comprueba su funcionamiento a través de la salida de depuración que se encuentra en el registro \ref{ch5:reg:init}.
+el inicio del sistema cuenta de dos etapas. En la primera, se inician funciones de bajo nivel como configuraciones de periféricos del procesador, puertos de entrada-salida, instanciar variables del sistema operativo e iniciarlo. Cuanto esta etapa se ejecuta correctamente, se han configurado los puertos seriales y por lo tanto está disponible la salida de depuración a través de la consola. En el registro \ref{ch5:reg:init} se muestra este proceso, que concluye con el inicio de FreeRTOS y la tarea de \textit{deployment} encargada de ejecutar la segunda etapa.
 
+\vspace*{1.5cm}
 \begin{lstlisting}[numbers=none,label=ch5:reg:init,caption=Secuencia de inicio de bajo nivel]
 //La salida serial es la primera en configurarse
 --------- SUCHAI BOOT SEQUENCE ---------
@@ -517,7 +510,7 @@ Starting FreeRTOS [->]
 >>[Deployment] Started
 \end{lstlisting}
 
-Desde este momento comienza la segunda etapa de inicialización, implementada en \texttt{taskDeployment}. En este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo se encuentra funcionando. Así, se procede al inicio de los servicios de la capa de aplicación, incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En este momento se ejecuta, si corresponde, el periodo de inactividad, así como el despliegue de antenas. 
+Desde este momento comienza la segunda etapa de inicialización, implementada en el módulo \texttt{taskDeployment}. En este punto ya se cuenta con todas las funcionalidades de bajo nivel y el sistema operativo se encuentra funcionando. Así, se procede al inicio de los servicios de la capa de aplicación, incluyendo: periféricos externos, repositorios, estructuras de datos y el resto de los \textit{listeners}. En este momento se ejecuta, si corresponde, el periodo de inactividad, así como el despliegue de antenas. 
 
 La salida por consola, que se muestra en el registro \ref{ch5:reg:init2}, es incremental a cada función ejecutada y demuestra la correcta operación de cada etapa de la secuencia de inicio. También se demuestra la capacidad del \textit{software} para recordar el estado anterior a su reinicio, siendo capaz de determinar si es la primera vez que se inicia y en tal caso, ejecutar el periodo de inactividad junto al despliegue de antenas.
 
@@ -608,9 +601,9 @@ este función es parte del controlador de la EPS. La estimación se actualiza de m
 % \figura{img/plot_eps_var.png}{scale=0.7}{Gráfico con variables de EPS}{ch5:figure:result:eps_var}{ht!}
 
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
-\figura[El sistema de energía se comporta según lo esperado, según lo indicado por las variables de corriente y voltaje. Se observa una correspondencia entre la variable \textit{eps\_charging} y el voltaje de las baterías. El nivel de SOC estimado por el \textit{software} de vuelo corresponde a los calculados a \textit{posteriori}.]{img/plot_soc.png}{width=0.95\textwidth}{Gráfico con variables de EPS y estimación de SOC}{ch5:figure:result:soc}{ht!}
+\figura[El sistema de energía se comporta según lo esperado, según lo indicado por las variables de corriente y voltaje. Se observa una correspondencia entre la variable \textit{eps\_charging} y el voltaje de las baterías. El nivel de SOC estimado por el \textit{software} de vuelo corresponde a los calculados a \textit{posteriori}.]{img/plot_soc.png}{width=0.99\textwidth}{Gráfico con variables de EPS y estimación de SOC}{ch5:figure:result:soc}{ht!}
 
-A partir de los datos del gráfico \ref{ch5:figure:result:soc}, se verifica el correcto funcionamiento del sistema de energía. Los valores de corriente leídos en la EPS son normales: al rededor de 30mA para el bus de 3.3V, al que se conecta el computador a bordo, y 50mA para el bus de 5.0V, donde se encuentra el \textit{transcevier}. Las baterías se cargan en cuanto se conecta el puerto USB, lo que es indicado por la variable \texttt{eps\_charging} y se refleja en el voltaje leído. También se verifica el requerimiento de estimar la carga presente en las baterías, a través de la variable \textit{eps\_soc} y contrastando estos datos con valores calculados a \textit{posteriori}, según los datos de voltaje y corriente. Cabe destacar que la diferencia en la estimación del SOC, observada en los registros de las 20:01 hrs. es normal, producto de una corrección según los datos de temperatura, realizada por el \textit{software} de vuelo.
+A partir de los datos del gráfico \ref{ch5:figure:result:soc}, se verifica el correcto funcionamiento del sistema de energía. Los valores de corriente leídos en la EPS son normales: al rededor de 30mA para el bus de 3.3V, al que se conecta la placa de \textit{payloads}, y 50mA para el bus de 5.0V, donde se encuentra el computador a bordo. Las baterías se cargan en cuanto se conecta el puerto USB, lo que es indicado por la variable \texttt{eps\_charging} y se refleja en el voltaje leído. También se verifica el requerimiento de estimar la carga presente en las baterías, a través de la variable \textit{eps\_soc} y contrastando estos datos con valores calculados a \textit{posteriori}, según los datos de voltaje y corriente. Cabe destacar que la diferencia en la estimación del SOC, observada en los registros de las 20:01 hrs. es normal, producto de una corrección según los datos de temperatura, realizada por el \textit{software} de vuelo.
 
 \paragraph{Presupuesto de energía:}
 el nivel de SOC, como variable de estado, indicará la energía que se dispone para ejecutar comandos en el sistema. El encargado de velar por el cumplimiento del presupuesto energético es el módulo \texttt{Dispatcher}, quien realiza una comparación entre la energía requerida por un comando y la disponible en ese momento.

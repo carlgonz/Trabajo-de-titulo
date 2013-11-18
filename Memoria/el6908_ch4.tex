@@ -146,7 +146,7 @@ int suma(unsigned int a, unsigned int b)
 %[1: ruta imagen, 2: medida, 3: caption, 4: label, 5: posicion]
 \figura{img/doxygen.png}{width=\textwidth}{Documento HTML generado por Doxygen}{ch4:img:doxygen}{ht!}
 
-\section{Controladores de hardware}
+\section{Controladores de \textit{hardware}}
 La primera capa de la aplicación corresponde a una serie de módulos que implementan los controladores de \textit{hardware}. Un módulo, significa una librería que consiste en una serie de funciones escritas en lenguaje C, las cuales acceden a funcionalidades específicas de cierto \textit{hardware} respetando sus protocolos o API. La librería consta de su correspondiente archivo fuente con extensión \texttt{.c} y un archivo de cabecera con extensión \texttt{.h} que contiene la declaración de las funciones.
 
 La hoja de datos de cada dispositivo de \textit{hardware} entrega la información necesaria para poder configurarlo y acceder a sus funciones. Se pueden requerir diferentes niveles de abstracción a la hora de implementar un controlador:
@@ -272,7 +272,7 @@ void taskTest(void *param)
 
 Una vez programada la tarea se puede indicar al sistema operativo que la ejecute. Esto se realiza en el archivo \texttt{main.c}, donde se realizan las configuraciones del \textit{hardware}, se crean las tareas y se inicia el sistema operativo. Para crear tareas se utiliza la función \texttt{xTaskCreate}, indicando la función a ejecutar, un nombre, prioridad, memoria asignada y parámetros; para detalles referirse a la documentación \cite{FREERTOS_API}. El sistema operativo se inicia con la llamada a \texttt{vTaskStartScheduler()} y una vez alcanzado este punto, el control de los procesos queda en manos de FreeRTOS, quien según su algoritmo de \textit{scheduling}, seleccionará la tarea que debe ejecutarse en cada instante. El llamado a la función \texttt{vTaskStartScheduler} no retorna a menos que se produzca un error en la ejecución. El código \ref{ch4:code:test:main.c} ilustra la forma de iniciar FreeRTOS con dos tareas ejecutándose de manera simultanea. Para mantener la generalidad no se incluyen configuraciones de \textit{hardware} específicas.
 
-\begin{lstlisting}[float,label=ch4:code:test:main.c,caption=main.c]
+\begin{lstlisting}[float=bh,label=ch4:code:test:main.c,caption=main.c]
 /* RTOS Includes */
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
@@ -298,7 +298,7 @@ int main(void)
 
 El resultado de ejecutar el programa anterior se puede visualizar a través de la consola serial conectada al sistema objetivo. El registro \ref{ch4:reg:freertos} se observa que la tarea de mayor prioridad es la primera en ejecutarse y por lo tanto imprime su mensaje en pantalla: \texttt{[taskTest] T2 Running...}. Luego pasa a estado suspendido y por lo tanto, la siguiente en orden de prioridad tiene acceso al procesador para ejecutarse, imprimir su mensaje: \texttt{[taskTest] T1 Running...} y pasar a estado suspendido. Cuando no hay alguna disponible, FreeRTOS ejecuta la tarea \texttt{Idle}, iniciada por defecto por el sistema operativo. Luego de 500 ms. la tarea de mayor prioridad despierta y toma el control del procesador repitiendo el ciclo anterior.
 
-\begin{lstlisting}[float,label=ch4:reg:freertos,caption=Prueba de ejecución de FreeRTOS con dos tareas]
+\begin{lstlisting}[float=bh,label=ch4:reg:freertos,caption=Prueba de ejecución de FreeRTOS con dos tareas]
 >>Starting FreeRTOS scheduler [->]
 [taskTest] T2 Running...
 [taskTest] T1 Running...
@@ -334,13 +334,14 @@ Cómo se describe en la sección \ref{ch2:sec:214}, se debe implementar un patrón 
 
 \subsection{Comandos}
 Los comandos se han implementado como funciones que poseen una firma específica y que se convierte en un nuevo tipo de dato. En este caso, la función debe retornar un entero y recibir sólo un parámetro, como se detalla en el código \ref{ch4:code:cmdFunction}, lo que define dos aspectos fundamentales del \textit{software}:
+
 \begin{itemize}
     \item Todo comando debe retornar un valor que puede tomar un significado dentro de la aplicación, en este caso, se define que el comando ha terminado su ejecución de manera insatisfactoria si retorna un valor cero, al contrario, un valor no cero para indica el éxito de la operación. Con esa convención se hace natural utilizar el llamado a las funciones dentro de una sentencia condicional, que utilice directamente el valor retornado como condición. 
     
     \item Los comandos reciben un sólo parámetro, en principio de cualquier tipo, a través de un puntero \textit{void}. Esto tiene una serie de consecuencias. Por un lado se hace flexible la llamada a la función ya que los comandos podrían recibir diferentes tipos de datos, siempre que se desreferencien adecuadamente. También hace eficiente la llamada a la función, pues los parámetros no son copiados. La desventaja es natural al uso de punteros, pues este debe seguir siendo válido en el momento la ejecución del comando para evitar desreferenciar un puntero nulo o corromper algún sector de memoria.
 \end{itemize}
 
-\begin{lstlisting}[float,label=ch4:code:cmdFunction,caption=Prototipo de un comando]
+\begin{lstlisting}[float=h,label=ch4:code:cmdFunction,caption=Prototipo de un comando]
 /**
  *  Defines the prototype that every command must conform
  */
@@ -350,7 +351,7 @@ typedef int (*cmdFunction)( void * );
 Para encapsular la información asociada a los comandos que llegan hasta el módulo \textit{executer}, se crea una nueva estructura de datos definida como se muestra en el código \ref{ch4:code:ExeCmd}. La estructura contiene dos campos: el puntero a la función que implementa el comando según la definición del código \ref{ch4:code:cmdFunction} y su parámetro. Si solo se utilizara esta estructura para representar los comandos dentro del \textit{sfotware}, cada vez que se desee ejecutar uno, se debería agregar a mano el puntero a la función objetivo. Esto supone un inconveniente para los \textit{listeners}, quienes deberían conocer todas las funciones disponibles y agregar sus definiciones mediante la inclusión de todos los archivos de cabecera que fueran necesario. Como consecuencia, se obtendría un método poco práctico, que no posibilita la generación de comandos en serie ni de manera automatizada en la estación terrena.
 
 %TODO: CHECK FLOAT
-\begin{lstlisting}[float,label=ch4:code:ExeCmd,caption=Estructura de comandos para \textit{executer}]
+\begin{lstlisting}[float=th,label=ch4:code:ExeCmd,caption=Estructura de comandos para \textit{executer}]
 /**
  * Structure that represents a command passed to executer. Contains a 
  * pointer of type cmdFunction with the function to execute and one 
@@ -371,7 +372,7 @@ Para evitar estos inconvenientes, los comandos serán representados a través de u
 \end{itemize}
 
 %TODO: CHECK FLOAT
-\begin{lstlisting}[float,label=ch4:code:DispCmd,caption=Estructura de comandos para \textit{dispatcher}]
+\begin{lstlisting}[float=h,label=ch4:code:DispCmd,caption=Estructura de comandos para \textit{dispatcher}]
 /**
  * Structure that represent a command passed to dispatcher. Contains 
  * only a code that represent the function to call, a paremeter and 
@@ -390,7 +391,7 @@ Todas estas definiciones son incluidas en un archivo de cabecera denominado \tex
 La implementación de un comando en específico requiere la definición de una función que cumpla con la firma del código \ref{ch4:code:cmdFunction}. Un ejemplo es el código \ref{ch4:code:get_rtos_memory}, donde se programa el comando \texttt{get\_rtos\_memory}. Cabe notar que este comando forma parte del archivo \texttt{cmdOBC.c}, por lo tanto, cada función y definición incluye el prefijo \texttt{obc\_} como parte del estándar de nombres utilizado en el proyecto. Este ejemplo es tiene una gran funcionalidad dentro del \textit{software} de vuelo, pues permite obtener información sobre el uso de memoria del sistema operativo. El objetivo es utilizar la función \texttt{xPortGetFreeHeapSize} de FreeRTOS, que entrega la cantidad de memoria en \textit{bytes} disponible en el \textit{heap} \cite{FREERTOS_API} para desplegarla en consola. La convención utilizada indica que retornar un valor cero desde el comando significa error, lo cual demuestra su conveniencia en este caso, pues el comando puede retornar directamente la cantidad de memoria disponible.
 
 %TODO: CHECK FLOAT
-\begin{lstlisting}[float,label=ch4:code:get_rtos_memory,caption=Ejemplo de comando]
+\begin{lstlisting}[float=h,label=ch4:code:get_rtos_memory,caption=Ejemplo de comando]
 /**
  * Performs debug taks over current RTOS. Get rtos memory usage in bytes
  *
@@ -440,7 +441,7 @@ Todas las estrategias mencionadas fueron implementadas y probadas en algún momen
 Cada archivo con un grupo de comandos, debe tener una estructura de enumeración (\texttt{enum} en C) que representan los códigos de cada comando. El primer valor de la enumeración debe ser diferente para cada grupo para evitar ambigüedades y para agruparlos también por su identificador. El último valor de la enumeración es un elemento \textit{dummy}, que sólo es utilizado para controlar el tamaño del arreglo. Luego, por cada función que implemente un comando, se agrega un valor en la enumeración, como en el código \ref{ch4:code:OBC_CmdIndx}.
 
 %TODO: CHECK FLOAT
-\begin{lstlisting}[float,label=ch4:code:OBC_CmdIndx,caption=Lista de comandos disponibles]
+\begin{lstlisting}[float=hb,label=ch4:code:OBC_CmdIndx,caption=Lista de comandos disponibles]
 /**
  * List of availible commands
  */
@@ -456,7 +457,7 @@ En este caso se registran dos comandos, \texttt{obc\_reset} y \texttt{obc\_get\_
 
 También en el archivo \texttt{cmdOBC.c} se debe crear el arreglo que contiene la lista de funciones, en este caso denominado \texttt{obc\_Function} cuyo tamaño se determina a través del último elemento de la enumeración. Esta lista debe ser inicializada a través de una función que se ejecutará al inicio del sistema, en este caso se denomina \texttt{obc\_onResetCmdOBC}. El código \ref{ch4:code:obc_onResetCmdOBC} detalla este proceso.
 
-\begin{lstlisting}[float,label=ch4:code:obc_onResetCmdOBC,caption=Registro de comandos]
+\begin{lstlisting}[float=bh,label=ch4:code:obc_onResetCmdOBC,caption=Registro de comandos]
 cmdFunction obc_Function[OBC_NCMD];
 
 /**
@@ -664,8 +665,9 @@ Sin embargo, FreeRTOS provee una estructura de datos adecuada para esta tarea, d
 
 El flujo de trabajo cuando se utilizan colas en FreeRTOS se ilustra en la figura \ref{ch4:img:freertos-queue}.
 
-\figura[Fuente: \url{http://www.freertos.org/Embedded-RTOS-Queues.html}]{img/freertos-queue.png}{width=0.8\textwidth}{FreeRTOS Queue}{ch4:img:freertos-queue}{!h}
+\figura[Permiten el acceso sincronizado a datos en una cola, para la comunicación entre tareas. Se crean con un taño fijo y los elementos son almacenados por copia. Fuente: \url{http://www.freertos.org/Embedded-RTOS-Queues.html}]{img/freertos-queue.png}{width=0.8\textwidth}{FreeRTOS Queue}{ch4:img:freertos-queue}{!h}
 
+\newpage
 La implementación de este módulo corresponde al diagrama de flujo de la figura \ref{ch4:img:dispatcher-flow}. Las tres funcionalidades básicas del procesador de comandos son: recibir un comando y obtener sus meta datos; determinar si su ejecución es posible; y construir la estructura que se entregará al ejecutor. El código \ref{ch4:code:taskDispatcher.c} implementa este diagrama de flujo, agregando una tarea de FreeRTOS basada en eventos, pues despierta solamente cuándo existe algún comando disponible en la cola. La función \texttt{check\_if\_executable} contiene la lógica que decide si puede ejecutarse o no, en base a sus meta datos y el estado actual del sistema. Finalmente, se consulta al repositorio por la función asociada al código entregado y se construye la estructura de datos que representa un comando para el \textit{executer}, que contiene el puntero a la función y su parámetro. Como sólo existe un proceso que ejecuta los comandos, el \textit{dispatcher} debe esperar a que termine su ejecución antes recuperar uno nuevo. Esta comunicación también se logra a través de una cola, de un sólo elemento, donde el \textit{executer} envía el resultado que retornó el comando que acaba de ejecutar.
 
 \figura{img/dispatcher-flow.png}{scale=0.35}{Diagrama de flujo para \textit{dispatcher}}{ch4:img:dispatcher-flow}{!h}
@@ -719,6 +721,7 @@ void taskDispatcher(void *param)
 }
 \end{lstlisting}
 
+\newpage
 \subsection{Implementación del \textit{executer}}
 Según lo detallado en el capítulo \ref{ch3}, este módulo es el último eslabón en la cadena de acciones que involucran la ejecución de un comando. Sus responsabilidades incluyen: recibir en una estructura la función que se requiere ejecutar junto a su parámetro; realizar el llamado a la función y obtener su resultado; y notificar el resultado de la operación al \textit{dispatcher}. Esta tarea es activada mediante eventos, en específico, la llegada de un comando. El \textit{executer} se debe comunicar con el \textit{dispatcher} de dos maneras:
 
@@ -731,7 +734,6 @@ Para la comunicación entre tareas, involucrando el intercambio de mensajes, se u
 
 El flujo de operación del \textit{executer} se detalla en la figura \ref{ch4:img:executer-flow}, y es bastante simple, en cuánto cumple sus tres obligaciones de manera secuencial. Esta simplicidad, sin embargo, no revela la verdadera utilidad de este módulo: proveer un ambiente de ejecución exclusivo al comando. Por diseño, sólo un módulo ejecutor existe en el sistema, por lo que una vez alcanzado este punto, el comando toma el control exclusivo del procesador, de todos los recursos de \textit{hardware} y \textit{software}, para realizar su tarea. Además aprovecha la generalidad definida por la interfaz de los comandos para permitir la ejecución de cualquier función que implemente la firma requerida.
 
-%TODO: revisar tamaño
 \figura{img/executer-flow.png}{scale=0.35}{Diagrama de flujo para \textit{executer}}{ch4:img:executer-flow}{!h}
 
 El código \ref{ch4:code:taskExecuter.c} detalla la implementación de este módulo. Al momento de crear esta tarea se deben tener en cuenta las siguientes consideraciones:
@@ -742,7 +744,7 @@ El código \ref{ch4:code:taskExecuter.c} detalla la implementación de este módulo
 \end{itemize}
 
 
-\begin{lstlisting}[float,label=ch4:code:taskExecuter.c,caption=taskExecuter.c]
+\begin{lstlisting}[float=hb,label=ch4:code:taskExecuter.c,caption=taskExecuter.c]
 #include "taskExecuter.h"
 
 extern xQueueHandle executerCmdQueue; /* Comands queue*/
@@ -777,6 +779,7 @@ void taskExecuter(void *param)
 }
 \end{lstlisting}
 
+\newpage
 \subsection{Implementación de \textit{listeners}}
 Los \textit{listeners}, como se describe en el capítulo \ref{ch3}, son los módulos encargados de implementar la lógica de generación de comandos dentro la aplicación. Existen una serie de \textit{listeners} bajo la premisa de que, a cada uno, le corresponde controlar un determinado subsistema del satélite. Estos módulos se implementan como tareas de FreeRTOS, que se activan de manera periódica, ejecutando operaciones de control que tienen como resultado una serie de comandos, que son agregados a la cola del \textit{dispatcher}. La lógica de operación se detalla en el diagrama de la figura \ref{ch4:img:freertos:periodic-task}. FreeRTOS ofrece dos funciones para obtener periodicidad en la ejecución de las tareas, mediante la técnica de suspender su ejecución por una cantidad determinada de \textit{ticks}, estas son, \texttt{vTaskDelay} y \texttt{vTaskDelayUntil}. Cada una de estas funciones cambia el estado de la tarea a suspendida, donde no utiliza ningún recurso del procesador, para que luego del tiempo especificado retome su ejecución. La diferencia entre ambos métodos, es que el primero siempre suspende la tarea durante un tiempo fijo, mientras que el segundo mantiene fijo el tiempo que transcurre entre ambas llamadas de \textit{delay} \cite{FREERTOS_API}. \texttt{vTaskDelayUntil} es más adecuada para tareas de tipo \textit{hard real-time}, por lo que es la utilizada en los \textit{listeners} para proveer una resolución de tiempo más precisa.
 
@@ -786,7 +789,6 @@ Los \textit{listeners} y su implementación pueden ser bastantes específicos en c
 
 Una de las funcionalidades principales que se puede esperar del sistema es la ejecución de acciones de manera periódica, las que incluyen tareas de control interno del propias del susbsistema del computador a bordo. Este \textit{listener} es denominado \textit{housekeeping} y su lógica de operación consiste en ejecutar comandos de control interno a periodos fijos de tiempo. Según las necesidades del sistema, se puede implementar varios periodos de tiempo, en este caso ejecutarán comandos cada 10 segundos, 1 minuto, y 1 hora. Para guiar la programación de este módulo, su lógica se detalla en la figura \ref{ch4:img:housekeeping-flow}.
 
-%TODO: actualizar tiempo en el diagrama
 \figura{img/housekeeping-flow.png}{scale=0.4}{Diagrama de flujo para \textit{housekeeping}}{ch4:img:housekeeping-flow}{!h}
 
 Los comandos que se ejecutan en cada intervalo de tiempo, dependerán de la aplicación. En este  se desea mostrar la cantidad de memoria libre del sistema operativo cada diez segundos, imprimir por consola las variables de estado del sistema cada diez minutos y, cada una hora, aumentar el contador de horas de funcionamiento. La implementación de esta tarea se detalla en el código \ref{ch4:code:taskHouskeeping.c}.
@@ -845,6 +847,7 @@ void taskHouskeeping(void *param)
 }
 \end{lstlisting}
 
+% \newpage
 \subsection{Funcionamiento de la aplicación}
 
 Con la implementación del primer \textit{listener} y la correcta inicialización del sistema operativo, las tareas y los repositorios, se tiene la primera versión funcional del \textit{software} de vuelo. Si bien no se realiza ninguna tarea fundamental para la misión satelital, la generalidad de la implementación responde, principalmente, a los requerimientos no operacionales del proyecto y se convierte en la base para trabajos futuros. Para unir el desarrollo anterior, se debe programar el punto de entrada de la aplicación: la función \texttt{main}. Esto se muestra en el código \ref{ch4:code:main.c}, dónde se han omitido las configuraciones de \textit{hardware} específicas. Este punto del desarrollo está marcado como la versión \texttt{v0.1-base} dentro del sistema control de versiones.
@@ -858,10 +861,6 @@ Con la implementación del primer \textit{listener} y la correcta inicialización 
 /* RTOS Includes */
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
-#include "list.h"
 
 /* Task includes */
 #include "taskDispatcher.h"
@@ -885,9 +884,9 @@ int main(void)
     dataRepositorySem = xSemaphoreCreateMutex();
 
     /* Crating all tasks */
-    xTaskCreate(taskDispatcher,"dispatcher", 2*configMINIMAL_STACK_SIZE, NULL, 3, NULL);
-    xTaskCreate(taskExecuter, "executer", 5*configMINIMAL_STACK_SIZE, NULL, 4, NULL);
-    xTaskCreate(taskHouskeeping, "housekeeping", 2*configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+    xTaskCreate(taskDispatcher,"disp", 2*115, NULL, 3, NULL);
+    xTaskCreate(taskExecuter, "exec", 5*115, NULL, 4, NULL);
+    xTaskCreate(taskHouskeeping, "house", 2*115, NULL, 2, NULL);
 
     /* Performs initialization actions */
     on_reset();
@@ -910,7 +909,9 @@ void on_reset(void)
 }
 \end{lstlisting}
 
-El resultado de la programación y ejecución del \textit{software} en el microcontrolador, se muestra en el registro \ref{ch4:reg:main}. De la salida se observa la inicialización de todas las tareas del sistema. \textit{Houskeeping} se ejecuta de manera periódica enviado comandos al \textit{dispatcher}, lo que provoca la activación de este módulo que registra el nuevo comando recibido, su parámetro y su origen. El efecto en cadena provoca la activación del \textit{executer} quien registra el inicio de la ejecución del comando. Si el comando considera salida de datos por la consola serial, se ve reflejado en este punto, sino de todas maneras el \textit{Executer} muestra el resultado de la operación.
+El resultado de la programación y ejecución del \textit{software} en el microcontrolador, se muestra en el registro \ref{ch4:reg:main}. 
+
+% De la salida se observa la inicialización de todas las tareas del sistema. \textit{Houskeeping} se ejecuta de manera periódica enviado comandos al \textit{dispatcher}, lo que provoca la activación de este módulo que registra el nuevo comando recibido, su parámetro y su origen. El efecto en cadena provoca la activación del \textit{executer} quien registra el inicio de la ejecución del comando. Si el comando considera salida de datos por la consola serial, se ve reflejado en este punto, sino de todas maneras el \textit{Executer} muestra el resultado de la operación.
 
 \begin{lstlisting}[float,label=ch4:reg:main,caption=Registro de ejecución del \textit{software} de vuelo]
 //Se inicia el sistema operativo y las tareas
@@ -964,6 +965,7 @@ Free RTOS memory: 2282
 [Executer] Command result: 1
 \end{lstlisting}
 
+\newpage
 \section{Específico al proyecto SUCHAI}
 En las secciones anteriores se implementa la base del sistema de vuelo, con mínimas funcionalidades, básicamente completando la arquitectura de \textit{software} propuesta. Sobre esta base, se agrega el resto de los requerimientos operacionales del satélite, lo que implica extender el \textit{software} mediante dos métodos: agregar \textit{listeners} que controlan subsistemas específicos del satélite y programar comandos para cada función que sea necesaria.
 
@@ -993,7 +995,6 @@ La solución implica la implementación de comandos que realicen las siguientes op
     \item Borrar completamente el plan de vuelo
 \end{itemize}
 
-%TODO: Corregir la imagen
 \figura{img/fplan-flow.png}{scale=0.4}{Diagrama de flujo para \textit{taskFlightPlan}}{ch4:img:fplan-flow}{!h}
 
 \subsection{Comunicaciones}
