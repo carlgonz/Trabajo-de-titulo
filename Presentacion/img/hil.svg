@@ -499,9 +499,9 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
      inkscape:cx="257.51123"
-     inkscape:cy="92.7278"
+     inkscape:cy="92.013514"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g15631"
      showgrid="false"
      fit-margin-top="5"
      fit-margin-left="5"
@@ -520,7 +520,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2782,7 +2782,7 @@
                id="tspan3000-52"
                y="306.16678"
                x="311.87961"
-               sodipodi:role="line">Estimulos simulados</tspan></text>
+               sodipodi:role="line">Estímulos simulados</tspan></text>
           <g
              transform="translate(-0.04784847,0)"
              id="g15626">
