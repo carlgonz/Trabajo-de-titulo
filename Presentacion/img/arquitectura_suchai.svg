@@ -44,13 +44,13 @@
      fit-margin-bottom="5"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="1.26"
-     inkscape:cx="259.07535"
-     inkscape:cy="148.09268"
+     inkscape:zoom="1.7819091"
+     inkscape:cx="261.73487"
+     inkscape:cy="150.66468"
      inkscape:window-x="0"
      inkscape:window-y="28"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g5455"
+     inkscape:current-layer="g5398"
      inkscape:connector-spacing="7"
      units="px" />
   <title
@@ -481,10 +481,10 @@
        font-style="normal"
        font-weight="400"
        font-size="9"
-       y="99.349205"
+       y="97.349205"
        x="119.89683"
        xml:space="preserve"><tspan
-         style="font-weight:bold;fill:#214478;-inkscape-font-specification:DejaVu Sans Bold"
+         style="font-size:12px;font-weight:bold;fill:#214478;-inkscape-font-specification:DejaVu Sans Bold"
          id="tspan4938">Clientes</tspan></text>
   </g>
   <g
@@ -617,7 +617,7 @@
          sodipodi:role="line"
          x="-352.76239"
          y="401.89282"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan4692-7-5-5">Comando</tspan></text>
   </g>
   <g
@@ -633,12 +633,12 @@
          sodipodi:role="line"
          x="-103.2448"
          y="278.47595"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan4692-7-5-5-8">Repositorio</tspan><tspan
          sodipodi:role="line"
          x="-103.2448"
          y="289.72595"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan5268">de comandos</tspan></text>
     <rect
        rx="0"
@@ -663,12 +663,12 @@
          sodipodi:role="line"
          x="-103.2448"
          y="278.47595"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan4692-7-5-5-8-4">Repositorio</tspan><tspan
          sodipodi:role="line"
          x="-103.2448"
          y="289.72595"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan5268-8">de datos</tspan></text>
     <rect
        rx="0"
@@ -693,12 +693,12 @@
          sodipodi:role="line"
          x="-103.2448"
          y="278.47595"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan4692-7-5-5-8-3">Repositorio</tspan><tspan
          sodipodi:role="line"
          x="-103.2448"
          y="289.72595"
-         style="font-size:9px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
+         style="font-size:12px;font-style:oblique;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Oblique"
          id="tspan5268-86">de estados</tspan></text>
     <rect
        rx="0"
@@ -740,11 +740,11 @@
      font-style="normal"
      font-weight="400"
      font-size="9"
-     transform="matrix(1.042521,0,0,1.1707077,29.473293,-155.21618)">
+     transform="matrix(1.042521,0,0,1.1707077,-156.84373,-192.25511)">
     <path
        inkscape:connector-curvature="0"
        id="path56-5"
-       d="m 323.86036,253.41052 116.48244,0 0,137.82012 -116.48244,0 0,-137.82012"
+       d="m 505.26966,285.04859 116.48244,0 0,137.82012 -116.48244,0 0,-137.82012"
        vector-effect="non-scaling-stroke"
        style="fill:#9f9f9f;fill-opacity:0.03137255;stroke:#a0a0a0;stroke-width:0.44984531;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
   </g>
@@ -761,10 +761,10 @@
        font-style="normal"
        font-weight="400"
        font-size="9"
-       y="99.349205"
-       x="114.56984"
+       y="97.349205"
+       x="118.56984"
        xml:space="preserve"><tspan
-         style="font-weight:bold;fill:#214478;-inkscape-font-specification:DejaVu Sans Bold"
+         style="font-size:12px;font-weight:bold;fill:#214478;-inkscape-font-specification:DejaVu Sans Bold"
          id="tspan4938-3">Repositorios</tspan></text>
   </g>
   <path
@@ -774,13 +774,13 @@
      inkscape:connector-curvature="0" />
   <path
      style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker-start:url(#Arrow1Mstart);marker-end:none"
-     d="m 455.11455,83.980032 0,51.984128"
+     d="m 465.11455,83.980032 0,51.984128"
      id="path6534-0"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cc" />
   <g
      id="g5398-4"
-     transform="translate(576.93994,-305.84326)">
+     transform="matrix(1.3026606,0,0,1.3026606,714.81735,-387.52368)">
     <g
        id="g10403">
       <rect

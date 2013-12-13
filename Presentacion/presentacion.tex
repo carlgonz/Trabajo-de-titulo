@@ -23,6 +23,9 @@
 \usepackage{times}
 \usepackage[T1]{fontenc}
 
+\usepackage{listings}
+
+
 \setbeamertemplate{blocks}[rounded][shadow=false] %cajas redondeadas y con sombra
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{caption}{\insertcaption} %solo el caption, sin anteceder la palabra Figura
@@ -36,7 +39,7 @@ Carlos González Cortés\\
 Dr. Marcos Díaz Quezada\\
 Dr. Claudio Estévez Montero\\
 Ing. Alex Díaz Becerra}
-\date{}
+\date[Universidad de Chile]{}
 \institute[]{Universidad de Chile}
 
 \begin{document}
@@ -53,10 +56,10 @@ Ing. Alex Díaz Becerra}
 	\end{frame}
 
 %% TABLA DE CONTENIDOS %%	
-	\begin{frame}
-		\transdissolve
+	\begin{frame}[shrink]
+% 		\transdissolve
 		\frametitle{Tabla de contenidos}
-		\tableofcontents[pausesections]
+		\tableofcontents
 	\end{frame}
 
 %% INTRODUCCIÓN %%	
@@ -72,7 +75,7 @@ Ing. Alex Díaz Becerra}
 		\end{block}
 		
 		\begin{figure}[b]\centering
-            \subfloat[Estandar Cubesat]{\includegraphics[height=0.5\textheight]{img/cubesat.png}}
+            \subfloat[Estandar Cubesat]{\includegraphics[height=0.5\textheight]{img/estandar.png}}
             \hspace{2cm}
             \subfloat[Cubesat SUCHAI]{\includegraphics[height=0.5\textheight]{img/satelite.jpg}}
         \end{figure}
@@ -105,9 +108,9 @@ Ing. Alex Díaz Becerra}
 %% OBJETIVOS %%
     \begin{frame}
         \frametitle{Introducción}
-        \framesubtitle{Objetivos}
+        \framesubtitle{Objetivos del trabajo}
         
-        \begin{block}{Objetivos generales}<+->
+        \begin{block}{Objetivos generales del trabajo}
             Diseñar e implementar el software que controla las operaciones del satélite una vez en órbita
         \end{block}
         
@@ -125,9 +128,11 @@ Ing. Alex Díaz Becerra}
         \framesubtitle{Sistemas embebidos}
         
 %         \begin{block}{Objetivos generales}<+->
-            Sistemas computacionales diseñados para cumplir funciones específicas, en aplicaciones de tiempo real. 
-            Integran en un mismo chip un microcontrolador y una serie de periféricos.
-%         \end{block}
+        \begin{itemize}
+            \item Diseñados para cumplir funciones específicas .
+            \item Aplicaciones de tiempo real.
+            \item Alto nivel de integración: CPU y periféricos
+        \end{itemize}
         
         \vspace{0.5cm}
         \centering
@@ -141,17 +146,16 @@ Ing. Alex Díaz Becerra}
         \frametitle{Marco teórico}
         \framesubtitle{Sistemas operativos}
         
-%         \begin{block}{Objetivos generales}<+->
-            Los sistemas operativos de tiempo real (RTOS) se caracterizan por:
             \begin{itemize}
-                    \item Ser una capa de abstracción entre la aplicación y el \textit{hardware}
-                \item Funcionar bajo requerimientos de \textit{timing} estrictos.
-                \item Ser deterministas en la ejecución de tareas.
-                \item Funcionamiento basado en eventos y prioridades.
+                \item Sistemas operativos de tiempo real (RTOS)
+                \begin{itemize}
+                    \item Capa de abstracción entre la aplicación y el \textit{hardware}
+                    \item Funcionan bajo requerimientos de \textit{timing} estrictos.
+                    \item Deterministas en la ejecución de tareas.
+                    \item Funcionamiento basado en eventos y prioridades.
+                \end{itemize}
             \end{itemize}
-
-%         \end{block}
-        
+            
         \vspace{0.5cm}
         \centering
         \includegraphics[width=0.99\textwidth]{img/rtos.pdf}
@@ -164,52 +168,45 @@ Ing. Alex Díaz Becerra}
         \frametitle{Marco teórico}
         \framesubtitle{Patrones de diseño}
         
-        %TODO: Mejorar
+        \begin{itemize}
+            \item Técnica usada en desarrollo de software orientado a objetos.
+            \item Soluciones bien probadas para cierto tipo de problemas.
+            \item Patrón Procesador de Comandos.
+            \begin{itemize}
+                \item Separa la solicitud de una acción de su ejecución.
+                \item Encapsula los requerimientos en comandos.
+                \item Aplicaciones que soportan una gran cantidad de funciones.
+            \end{itemize}
+
+        \end{itemize}
+
+        \vspace{0.3cm}
         \centering
-        \includegraphics[height=0.4\textheight]{img/command_processor_class.png}
-        \vspace{0.5cm}
-        \includegraphics[height=0.5\textheight]{img/command_processor_colab.png}
+        \includegraphics[height=0.6\textheight]{img/command_processor_class.png}
+    \end{frame}
+    
+%% PROCESO DE DISEÑO %%
+%     \section{Diseño}
+%     \subsection{Requerimientos operacionales}
+    \begin{frame}
+%         \frametitle{}
+%         \framesubtitle{}
+%         \vspace{0.3\textheight}
+        \centering \Large \structure{Proceso de diseño}
         
     \end{frame}
     
 %% REQUERIMIENTOS OPERACIONALES %%
     \section{Diseño}
     \subsection{Requerimientos operacionales}
-    \begin{frame}[squeeze, allowframebreaks]
+    \begin{frame}
         \frametitle{Diseño}
-        \framesubtitle{Requerimientos operacionales}
+        \framesubtitle{Requerimientos operacionales y no operacionales}
         
-        \begin{block}{Área de control central}
-            \begin{itemize}
-                \item Inicialización.
-                \item Estado del sistema.
-                \item Plan de vuelo.
-                \item Tolerancia a fallos.
-            \end{itemize}
-        \end{block}
-        
-        \begin{block}{Área de comunicaciones}
-            \begin{itemize}
-                \item Configuración del TRX.
-                \item Despliegue de antenas.
-                \item Generar y enviar \textit{beacon}.
-                \item Telecomandos y telemetría.
-            \end{itemize}
-        \end{block}
-        
-        \begin{block}{Area de energía}
-            \begin{itemize}
-                \item Estimar nivel de carga de baterías
-                \item Operar según un presupuesto de energía.
-            \end{itemize}
-        \end{block}
-        
-        \begin{block}{Area de \textit{payloads}}
-            \begin{itemize}
-                \item Integrar diferentes \textit{payloads}
-                \item Ejecutar acciones de \textit{payloads}
-            \end{itemize}
-        \end{block}
+        \centering
+        \includegraphics[height=0.45\textheight]{img/requerimientos_op.pdf}<+->
+        \vspace{0.5cm}
+        \includegraphics[height=0.40\textheight]{img/requerimientos_noop.pdf}<+->
     \end{frame}
 
 %% ARQUITECTURA GLOBAL %%
@@ -238,7 +235,7 @@ Ing. Alex Díaz Becerra}
 %     \end{frame}
     
 %% ARQUITECTURA GLOBAL %%
-    \subsection{Arquitectura aplicación}
+%     \subsection{Arquitectura aplicación}
     \begin{frame}
         \frametitle{Diseño}
         \framesubtitle{Aplicación}
@@ -248,30 +245,33 @@ Ing. Alex Díaz Becerra}
         
     \end{frame}
     
+%% PROCESO DE IMPLEMENTACION %%
+%     \section{Diseño}
+%     \subsection{Requerimientos operacionales}
+    \begin{frame}
+%         \frametitle{}
+%         \framesubtitle{}
+%         \vspace{0.3\textheight}
+        \centering \Large \structure{Proceso de implementación}
+        
+    \end{frame}
+    
 %% IMPLEMENTACION CLIENTES %%
     \section{Implementación}
     \subsection{Clientes}
     \begin{frame}
         \frametitle{Implementación}
         \framesubtitle{Clientes}
+
+        \begin{itemize}
+            \item Implementan la inteligencia del sistema.
+            \item Tareas de FreeRTOS, concurrentes y de baja prioridad.
+            \item Ejecución periódica, \textit{hard-realtime} o \textit{soft-realtime}.
+        \end{itemize}
+        
         \begin{center}
             \includegraphics[width=0.99\textwidth]{img/implementacion_clientes.pdf}
         \end{center}
-                    
-%         Implementan la inteligencia del sistema, son específicos a cada funcionalidad.
-        \begin{columns}
-            \column[t]{7cm}
-                \begin{itemize}
-                    \item Implementan la inteligencia del sistema
-                    \item Tareas de FreeRTOS, concurrentes y de igual prioridad.
-                    \item Ejecución periódica, \textit{hard-realtime} o \textit{soft-realtime}
-                \end{itemize}
-            \column[t]{4cm}
-                \begin{center}
-                    \vspace{-1.5cm}
-                    \includegraphics[scale=0.3]{img/listeners-flow.png}
-                \end{center}
-        \end{columns}
         
     \end{frame}
     
@@ -280,8 +280,15 @@ Ing. Alex Díaz Becerra}
     \begin{frame}
         \frametitle{Implementación}
         \framesubtitle{Comandos}
+        
+        \begin{itemize}
+            \item Representados por estructura de datos.
+            \item Se reconocen por su identificador y metadatos.
+            \item Todo comando es una función.
+        \end{itemize}
+        
         \begin{center}
-            \includegraphics[width=0.99\textwidth]{img/implementacion_comandos.pdf}
+            \includegraphics[width=0.8\textwidth]{img/implementacion_comandos.pdf}
         \end{center}
         
     \end{frame}
@@ -291,8 +298,15 @@ Ing. Alex Díaz Becerra}
     \begin{frame}
         \frametitle{Implementación}
         \framesubtitle{Procesador de comandos}
+        
+        \begin{itemize}
+            \item Operaciones de control sobre comandos.
+            \item Tareas de FreeRTOS, prioridad media.
+            \item Ejecución basada en eventos.
+        \end{itemize}
+        
         \begin{center}
-            \includegraphics[height=0.99\textheight]{img/implementacion_dispatcher.pdf}
+            \includegraphics[height=0.75\textheight]{img/implementacion_dispatcher.pdf}
         \end{center}
         
     \end{frame}
@@ -302,9 +316,27 @@ Ing. Alex Díaz Becerra}
     \begin{frame}
         \frametitle{Implementación}
         \framesubtitle{Ejecutor de comandos}
+        
+        \begin{itemize}
+            \item Entorno de ejecución para el comando.
+            \item Tareas de FreeRTOS, alta prioridad.
+            \item Ejecución basada en eventos.
+        \end{itemize}
+        
         \begin{center}
-            \includegraphics[height=0.99\textheight]{img/implementacion_executer.pdf}
+            \includegraphics[height=0.75\textheight]{img/implementacion_executer.pdf}
         \end{center}
+        
+    \end{frame}
+    
+%% PROCESO DE IMPLEMENTACION %%
+%     \section{Diseño}
+%     \subsection{Requerimientos operacionales}
+    \begin{frame}
+%         \frametitle{}
+%         \framesubtitle{}
+%         \vspace{0.3\textheight}
+        \centering \Large \structure{Pruebas y resultados}
         
     \end{frame}
     
@@ -346,70 +378,62 @@ Ing. Alex Díaz Becerra}
 %% RESULTADOS CONTROL CENTRAL %%
     \section{Resultados}
     \subsection{Control central}
-    \begin{frame}[allowframebreaks]
+    \begin{frame}[squeeze]
         \frametitle{Resultados}
         \framesubtitle{Control central}
         
-%         \begin{itemize}
-%             \item \structure{Inicio del sistema}
-%             \item Plan de vuelo
-%             \item Variables de estado
-%             \item Tolerancia a fallos
-%         \end{itemize}
-%         
-%         \begin{center}
-%             \alert{TO DO}
-%             \includegraphics[height=0.6\textheight]{img/plot_fplan.png}
-%         \end{center}
-        
-        %------%
-        
         \begin{itemize}
             \item Inicio del sistema
-            \item \structure{Plan de vuelo}
+                \begin{itemize}
+                    \item Correcta inicialización de subsistemas.
+                    \item Disponibilidad de consola serial para pruebas.
+                \end{itemize}
+            \item Plan de vuelo
+            \begin{itemize}
+                \item Se ejecuta un plan de vuelo con comandos cada 10 minutos.
+                \item Se verifica la ejecución de los comandos.
+            \end{itemize}
             \item Variables de estado
-            \item Tolerancia a fallos
+            \begin{itemize}
+                \item Se registran variable, se generan gráficos para verificar.
+                \item Pruebas de reinicio y verificación de consistencia de variables.
+            \end{itemize}
         \end{itemize}
         
         \begin{center}
-            \includegraphics[height=0.6\textheight]{img/plot_fplan.png}
+            \includegraphics[height=0.35\textheight]{img/prompt.png}
         \end{center}
-        
-        %------%
-        \begin{center}
-            \includegraphics[height=0.95\textheight]{img/plot_status_var.png}
-        \end{center}
+
     \end{frame}
     
 %% RESULTADOS ENERGIA %%
     \subsection{Energía}
-    \begin{frame}[allowframebreaks]
+    \begin{frame}
         \frametitle{Resultados}
         \framesubtitle{Energía}
         
         \begin{itemize}
-            \item \structure{Estado de carga de baterías}
+            \item Estado de carga de baterías
+            \begin{itemize}
+                \item Se verifica la lectura de datos desde EPS.
+                \item Se verifica la carga de la batería.
+                \item Se verifica la estimación de SOC.
+            \end{itemize}
+
             \item Presupuesto de energía
+            \begin{itemize}
+                \item Implementado en el procesador de comandos.
+                \item Se simula operación con baja carga en baterías.
+            \end{itemize}
+            \item Resultados satisfactorios.
         \end{itemize}
                 
-        \begin{center}
-            \includegraphics[height=0.65\textheight]{img/plot_eps_var.png}
-        \end{center}
-        
-        %--------%
-        \begin{itemize}
-            \item Estado de carga de baterías
-            \item \structure{Presupuesto de energía}
-        \end{itemize}
-        
         \small
         \begin{table}[b]
         \centering
         \begin{tabular}{llllll}
         \hline
         \textbf{Hora} & \textbf{Comando} & \textbf{SysReq} & \textbf{SOC} & \textbf{Resultado} \\ \hline
-        20:18:10 & 0x8006 &  1 & 4  & Ejecutado \\
-        20:18:19 & 0x5000 &  1 & 4  & Ejecutado \\
         20:18:33 & 0x300C &  4 & 4  & Ejecutado \\
         20:19:10 & 0x8000 & 10 & 4  & Rechazado \\
         20:19:13 & 0x8000 &  10 & 4  & Rechazado \\
@@ -424,7 +448,7 @@ Ing. Alex Díaz Becerra}
     
 %% RESULTADOS COMUNICACIONES %%
     \subsection{Comunicaciones}
-    \begin{frame}[allowframebreaks]
+    \begin{frame}
         \frametitle{Resultados}
         \framesubtitle{Comunicaciones}
         
@@ -438,35 +462,40 @@ Ing. Alex Díaz Becerra}
             \subfloat[Antenas desplegadas]{\includegraphics[width=0.45\textwidth]{img/test_deploy_post.jpg}}
         \end{figure}
         
-        \newpage
-        %-----------%
+    \end{frame}
+        
+    \begin{frame}
+    \frametitle{Resultados}
+    \framesubtitle{Comunicaciones}
         
         \begin{itemize}
             \item Generación, transmisión y recepción de \textit{beacons}.
             \begin{itemize}
-                \item TX: \texttt{SUCHAIATINGDOTUCHILEDOTCL-11000017H30761940780001}
-                \item RX: \texttt{00V0000000XHX02000000000000000GBW00000000DK000024}
+                \item \texttt{SUCHAIATINGDOTUCHILEDOTCL-11000017H30761940780001}
+                \item \texttt{00V0000000XHX02000000000000000GBW00000000DK000024}
             \end{itemize}
-        \end{itemize}
-
-        \begin{center}
-            \includegraphics[height=0.65\textheight]{img/beacon2.png}
-        \end{center}
-        
-        %-----------%
-        \newpage
-        \begin{itemize}
-            \item Transmisión y recepción de telemetría.
-            \item Transmisión y recepción de telecomandos.
+            \item Transmisión y recepción de telemetría y telecomandos.
             \item  \alert{Pruebas insatisfactorias}
         \end{itemize}
 
-        \begin{center}
-            \includegraphics[height=0.65\textheight]{img/test_telemetria.png}
-        \end{center}
+        \begin{figure}[b]\centering
+            \subfloat[Recepción beacon]{\includegraphics[height=0.55\textheight]{img/beacon2.png}}
+            \hspace{0.5cm}
+            \subfloat[Recepción telemetría]{\includegraphics[height=0.55\textheight]{img/test_telemetria.png}}
+        \end{figure}
 
     \end{frame}
     
+%% PROCESO DE IMPLEMENTACION %%
+%     \section{Diseño}
+%     \subsection{Requerimientos operacionales}
+    \begin{frame}
+%         \frametitle{}
+%         \framesubtitle{}
+%         \vspace{0.3\textheight}
+        \centering \Large \structure{Conclusiones}
+        
+    \end{frame}
 
 %% CONCLUSIONES %%
     \section{Conclusiones}
@@ -486,14 +515,14 @@ Ing. Alex Díaz Becerra}
                 \item Se cumplen los requerimientos operacionales del área de control central, energía y \textit{payloads}
                 \item No se cumplen los requerimientos del área de comunicaciones debido a fallas en el equipo.
             \end{itemize}
-            \item Desarrollo de un proyecto de ingeniería, inter-disciplinario, como parte del proceso de formación profesional.
+            \item Desarrollo de un proyecto de ingeniería, como parte del proceso de formación profesional: experiencia y desarrollo de habilidades blandas.
 
         \end{itemize}
 
     \end{frame}
     
 %% TRABAJOS FUTUROS %%
-    \section{Trabajos futuros}
+%     \section{Trabajos futuros}
     \begin{frame}
         \frametitle{Trabajos futuros}
 %         \framesubtitle{Procesador y ejecutor de comandos}
@@ -507,7 +536,7 @@ Ing. Alex Díaz Becerra}
     \end{frame}
     
 %% CONSULTAS %%
-    \section{Consultas}
+%     \section{Consultas}
     \begin{frame}
         \frametitle{Consultas}
 %         \framesubtitle{Procesador y ejecutor de comandos}
@@ -518,6 +547,53 @@ Ing. Alex Díaz Becerra}
         
         \vspace{1cm}
         \includegraphics[width=0.7\textwidth]{img/suchai_satellite.jpg}
+    \end{frame}
+    
+%% PROCESO DE IMPLEMENTACION %%
+%     \section{Diseño}
+%     \subsection{Requerimientos operacionales}
+    \begin{frame}
+%         \frametitle{}
+%         \framesubtitle{}
+%         \vspace{0.3\textheight}
+        \centering \Large \structure{ANEXOS}
+        
+    \end{frame}
+    
+%% VARIABLES DE ESTADO %%
+    \begin{frame}
+        \frametitle{Variables de estado}
+%         \framesubtitle{}
+        \centering
+        \includegraphics[height=0.99\textheight]{img/plot_status_var.png}
+        
+    \end{frame}
+    
+%% DATOS EPS %%
+    \begin{frame}
+        \frametitle{Variables EPS}
+%         \framesubtitle{}
+        \centering
+        \includegraphics[height=0.99\textheight]{img/plot_soc.png}
+        
+    \end{frame}
+    
+%% DRIVERS %%
+    \begin{frame}
+        \frametitle{Drivers}
+%         \framesubtitle{}
+        \centering
+        \includegraphics[height=0.3\textheight]{img/driver_sincrono.pdf}\\
+        \includegraphics[height=0.3\textheight]{img/driver_asincrono.pdf}\\
+        \includegraphics[height=0.3\textheight]{img/driver_serial.pdf}
+    \end{frame}
+    
+%% DRIVERS %%
+    \begin{frame}
+        \frametitle{Calidad de software: ISO-25010}
+%         \framesubtitle{}
+        \centering
+        \includegraphics[width=0.99\textwidth]{img/ISO25010.pdf}\\
     \end{frame}
     
 \end{document}
